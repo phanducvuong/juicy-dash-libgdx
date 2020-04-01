@@ -20,7 +20,7 @@ public class GMain extends GDirectedGame {
   public static int screenHeight = 0;
   public static int screenWidth = 0;
   public static final int testType = 2;
-  public static TextureAtlas textureAtlas;
+  public static TextureAtlas liengAtlas, cardAtlas;
   public static float ratioX, ratioY;
 
   public static IPlatform platform;
@@ -59,8 +59,8 @@ public class GMain extends GDirectedGame {
       n5 = 0.0f;
     }
 
-    screenWidth = 720;
-    screenHeight = 1280;
+    screenWidth = 1280;
+    screenHeight = 720;
     n = 720;
     n6 = 1280;
 
@@ -86,7 +86,8 @@ public class GMain extends GDirectedGame {
 
   public void create()
   {
-//      textureAtlas = GAssetsManager.getTextureAtlas("ColorMatch.atlas");
+      liengAtlas = GAssetsManager.getTextureAtlas("lieng.atlas");
+      cardAtlas = GAssetsManager.getTextureAtlas("card.atlas");
       this.init();
       C.init();
       this.setScreen(menuScreen());

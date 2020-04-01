@@ -1,78 +1,67 @@
 package com.ss.gameLogic.logic;
 
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.ss.gameLogic.card.Number;
+import com.ss.gameLogic.card.Type;
+import com.ss.gameLogic.config.Config;
+import com.ss.gameLogic.objects.Card;
+import java.util.List;
 
 public class Logic {
+
     private static Logic instance;
-    private float r;
-    private Vector2 c;
-    public float degree;
 
     public static Logic getInstance() {
         return instance == null ? instance = new Logic() : instance;
     }
 
-    public void calRC(Image img) {
-        c = new Vector2(img.getX() + img.getWidth()/2, img.getY() + img.getHeight()/2);
-        r = c.dst(img.getX(), img.getY());
+    private Logic(){}
+
+    public Card getCardBuyTypeAndNumber(Type type, Number number, List<Card> lsCard) {
+
+      for (Card card : lsCard)
+        if (card.number == number && card.type == type)
+          return card;
+      return null;
+
     }
 
-    public float vDomain(Image shape, Image img) {
-        float deg = 90 - (shape.getRotation() + degree);
-        Vector2 a = new Vector2(c.x + r* MathUtils.cosDeg(deg), c.y - r*MathUtils.sinDeg(deg));
-        Vector2 b = new Vector2(c.x - r* MathUtils.cosDeg(deg), c.y + r*MathUtils.sinDeg(deg));
-
-        return (img.getX() - a.x)*(b.y - a.y) - (img.getY() - a.y)*(b.x - a.x);
+    public float rndRotate() {
+      return Math.round(Math.random() * 360);
     }
 
-    public float vDomain(Image shape, Vector2 v) {
-        float deg = 90 - (shape.getRotation() + degree);
-        Vector2 a = new Vector2(c.x + r* MathUtils.cosDeg(deg), c.y - r*MathUtils.sinDeg(deg));
-        Vector2 b = new Vector2(c.x - r* MathUtils.cosDeg(deg), c.y + r*MathUtils.sinDeg(deg));
+    public Vector2 getPosByIdBot(int id) {
 
-        return (v.x - a.x)*(b.y - a.y) - (v.y - a.y)*(b.x - a.x);
+      Vector2 tempV = new Vector2();
+      switch (id) {
+        case 0:
+          tempV.x = Config.POS_BOT_0.x;
+          tempV.y = Config.POS_BOT_0.y;
+          break;
+        case 1:
+          tempV.x = Config.POS_BOT_1.x;
+          tempV.y = Config.POS_BOT_1.y;
+          break;
+        case 2:
+          tempV.x = Config.POS_BOT_2.x;
+          tempV.y = Config.POS_BOT_2.y;
+          break;
+        case 3:
+          tempV.x = Config.POS_BOT_3.x;
+          tempV.y = Config.POS_BOT_3.y;
+          break;
+        case 4:
+          tempV.x = Config.POS_BOT_4.x;
+          tempV.y = Config.POS_BOT_4.y;
+          break;
+        case 5:
+          tempV.x = Config.POS_BOT_5.x;
+          tempV.y = Config.POS_BOT_5.y;
+          break;
+      }
+
+      return tempV;
+
     }
 
-    public float[] getVertices(Image box, float d, int quadrant) {
-        float[] v = new float[]{};
-        switch (quadrant) {
-            case 1:
-                v = new float[] {
-                        box.getX() + d, box.getY() + d,
-                        box.getX()+ d + box.getWidth(), box.getY() + d,
-                        box.getX() + box.getWidth() + d, box.getY()+box.getHeight() + d,
-                        box.getX() + d, box.getY()+box.getHeight() + d
-                };
-                break;
-            case 2:
-                v = new float[] {
-                        box.getX() + box.getWidth()/2, box.getY() + d,
-                        box.getX() + box.getWidth(), box.getY() + box.getHeight()/2 + d,
-                        box.getX() + box.getWidth()/2, box.getY() + box.getHeight() + d,
-                        box.getX(), box.getY() - box.getHeight()/2 + d
-                };
-                break;
-            case 3:
-                v = new float[] {
-                        box.getX() - d, box.getY() + d,
-                        box.getX() + box.getWidth() - d, box.getY() + d,
-                        box.getX() + box.getWidth() - d, box.getY() + box.getHeight() + d,
-                        box.getX() - d, box.getY() + box.getHeight() + d
-                };
-                break;
-            case 4:
-
-                break;
-            case 5:
-
-                break;
-            case 6:
-
-                break;
-        }
-
-        return v;
-    }
 }
