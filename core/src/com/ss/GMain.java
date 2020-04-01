@@ -86,7 +86,7 @@ public class GMain extends GDirectedGame {
 
   public void create()
   {
-      textureAtlas = GAssetsManager.getTextureAtlas("ColorMatch.atlas");
+//      textureAtlas = GAssetsManager.getTextureAtlas("ColorMatch.atlas");
       this.init();
       C.init();
       this.setScreen(menuScreen());
