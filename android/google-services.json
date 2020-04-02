@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:707532446921:android:d31348002d773f15584118",
         "android_client_info": {
-          "package_name": "jk.colormatch"
+          "package_name": "com.mygdx.game"
         }
       },
       "oauth_client": [

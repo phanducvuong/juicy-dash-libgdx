@@ -11,6 +11,7 @@ import com.ss.gameLogic.objects.Card;
 import com.ss.gameLogic.ui.GamePlayUI;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Game {
@@ -19,13 +20,15 @@ public class Game {
 
   public Group gBackground, gCard;
 
-  public List<Bot> lsBot;
-  public List<Card> lsCardDown;
-  public List<Card> lsCardUp;
+  public List<Bot> lsBot, lsBotActive; //reset lsBotActive when change numOfPlayer
+  public List<Card> lsCardDown, lsCardUp;
+  public int numOfPlayer = 6;
 
   private GamePlayUI gamePlayUI;
 
   public Game() {
+
+    this.lsBotActive = new ArrayList<>();
 
     initLayer();
     initBotAndCard();
@@ -58,6 +61,49 @@ public class Game {
 
     GStage.addToLayer(GLayer.ui, gBackground);
     GStage.addToLayer(GLayer.ui, gCard);
+
+  }
+
+  public void setNumOfPlayer(int num) {
+    this.numOfPlayer = num;
+  }
+
+  public void getLsBotActive() {
+
+    lsBotActive.clear();
+    switch (numOfPlayer) {
+
+      case 2:
+        lsBotActive.add(lsBot.get(0));
+        lsBotActive.add(lsBot.get(3));
+        break;
+      case 3:
+        lsBotActive.add(lsBot.get(0));
+        lsBotActive.add(lsBot.get(2));
+        lsBotActive.add(lsBot.get(4));
+        break;
+      case 4:
+        lsBotActive.add(lsBot.get(0));
+        lsBotActive.add(lsBot.get(2));
+        lsBotActive.add(lsBot.get(3));
+        lsBotActive.add(lsBot.get(4));
+        break;
+      case 5:
+        lsBotActive.add(lsBot.get(0));
+        lsBotActive.add(lsBot.get(1));
+        lsBotActive.add(lsBot.get(2));
+        lsBotActive.add(lsBot.get(4));
+        lsBotActive.add(lsBot.get(5));
+        break;
+      case 6:
+        lsBotActive.add(lsBot.get(0));
+        lsBotActive.add(lsBot.get(1));
+        lsBotActive.add(lsBot.get(2));
+        lsBotActive.add(lsBot.get(3));
+        lsBotActive.add(lsBot.get(4));
+        lsBotActive.add(lsBot.get(5));
+
+    }
 
   }
 

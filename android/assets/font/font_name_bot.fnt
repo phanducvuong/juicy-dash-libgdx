@@ -174,7 +174,7 @@ char id=67 x=128 y=259 width=22 height=27 xoffset=0 yoffset=53 xadvance=20 page=
 char id=68 x=103 y=436 width=23 height=27 xoffset=0 yoffset=53 xadvance=21 page=0 chnl=0 letter="D"
 char id=69 x=256 y=421 width=19 height=27 xoffset=0 yoffset=53 xadvance=17 page=0 chnl=0 letter="E"
 char id=70 x=256 y=213 width=19 height=27 xoffset=0 yoffset=53 xadvance=17 page=0 chnl=0 letter="F"
-char id=71 x=103 y=350 width=23 height=27 xoffset=0 yoffset=53 xadvance=21 page=0 chnl=0 letter="G"
+char id=71 x=103 y=350 width=23 height=27 xoffset=0 yoffset=53 xadvance=21 page=0 chnl=0 letter="game"
 char id=72 x=128 y=196 width=22 height=27 xoffset=0 yoffset=53 xadvance=20 page=0 chnl=0 letter="H"
 char id=73 x=290 y=161 width=10 height=27 xoffset=0 yoffset=53 xadvance=8 page=0 chnl=0 letter="I"
 char id=74 x=194 y=462 width=20 height=27 xoffset=0 yoffset=53 xadvance=18 page=0 chnl=0 letter="J"

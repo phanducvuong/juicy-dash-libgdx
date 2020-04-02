@@ -14,7 +14,7 @@ buildscript {
     }
     dependencies {
         classpath 'org.wisepersist:gwt-gradle-plugin:1.0.6'
-        classpath 'com.android.tools.build:gradle:3.4.2'
+        classpath 'com.android.tools.build:gradle:3.2.0'
         classpath 'de.richsource.gradle.plugins:gwt-gradle-plugin:0.6'
         classpath 'org.multi-os-engine:moe-gradle:1.4.0'
         classpath 'com.google.gms:google-services:4.0.1'
@@ -23,6 +23,7 @@ buildscript {
 
         // Add dependency
         classpath 'io.fabric.tools:gradle:1.31.2'  // Crashlytics plugin
+
     }
 }
 
@@ -32,7 +33,7 @@ allprojects {
 
     version = '1.0'
     ext {
-        appName = "Template"
+        appName = "template"
         gdxVersion = '1.9.9'
         roboVMVersion = '2.3.6'
         box2DLightsVersion = '1.4'
@@ -59,6 +60,7 @@ project(":desktop") {
         implementation "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
         implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         implementation "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
+        
     }
 }
 
@@ -100,16 +102,30 @@ project(":android") {
         implementation 'com.google.android.gms:play-services-games:18.0.1'
 //        compile 'com.google.android.gms:play-services-identity:15.0.0'
         implementation 'com.google.android.gms:play-services-auth:17.0.0'
+        
+    }
+}
 
+project(":html") {
+    apply plugin: "gwt"
+    apply plugin: "war"
+
+
+    dependencies {
+        implementation project(":core")
+        implementation "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion"
+        implementation "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
+        implementation "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion:sources"
+        
     }
 }
 
 project(":core") {
     apply plugin: "java"
 
+
     dependencies {
         implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
     }
 }
 
