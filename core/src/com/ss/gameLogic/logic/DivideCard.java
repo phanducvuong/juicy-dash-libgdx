@@ -53,10 +53,10 @@ public class DivideCard {
               run(() -> effect.formatCardDown(game.lsBotActive))
       ));
 
-      game.lsBotActive.get(0).lsCardUp.get(0).number = Number.four;
-      game.lsBotActive.get(0).lsCardUp.get(1).number = Number.two;
-      game.lsBotActive.get(0).lsCardUp.get(0).number = Number.three;
-      System.out.println(Rule.getInstance().chkLieng(game.lsBotActive.get(0).lsCardUp));
+      game.lsBotActive.get(0).lsCardUp.get(0).number = Number.queen;
+      game.lsBotActive.get(0).lsCardUp.get(1).number = Number.jack;
+      game.lsBotActive.get(0).lsCardUp.get(2).number = Number.ace;
+      System.out.println(Rule.getInstance().chkAnh(game.lsBotActive.get(0).lsCardUp));
 
     }
 
