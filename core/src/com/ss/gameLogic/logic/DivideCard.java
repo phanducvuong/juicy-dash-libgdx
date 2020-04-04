@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.ss.core.action.exAction.GSimpleAction;
 import com.ss.core.util.GStage;
 import com.ss.gameLogic.Game;
+import com.ss.gameLogic.card.Number;
 import com.ss.gameLogic.effects.Effect;
 import com.ss.gameLogic.objects.Bot;
 import com.ss.gameLogic.objects.Card;
@@ -21,31 +22,43 @@ public class DivideCard {
 
   private Game game;
   private Logic logic = Logic.getInstance();
-  private Effect effect = Effect.getInstance();
+  private Effect effect;
 
-  private Game G;
   private int turn = -1, turnCardDown = -1, countTurn = -1; //reset when new game
   private Bot botPresent;
 
   public DivideCard(Game game) {
 
     this.game = game;
+    effect = Effect.getInstance(game);
 
     showCardDown();
+    randLsCardUp();
     game.getLsBotActive();
-    nextTurn();
 
   }
 
-  private void startDivide(Card cardUp) {
+  private void startDivide(Card cardDown) {
 
-    countTurn++; // count number of card in each player (maximum is 3)
+    countTurn++; // count number of cardDown in each player (maximum is 3)
     if (countTurn < game.numOfPlayer*3) {
-      botPresent.lsCardDown.add(cardUp);
-      cardUp.getCard().addAction(GSimpleAction.simpleAction(this::divide));
+      botPresent.lsCardDown.add(cardDown);
+      botPresent.lsCardUp.add(game.lsCardUp.get(turnCardDown));
+      cardDown.getCard().addAction(GSimpleAction.simpleAction(this::divide));
     }
-    else
-      System.out.println("finish divide");
+    else {
+
+      game.gCard.addAction(sequence(
+              delay(.25f),
+              run(() -> effect.formatCardDown(game.lsBotActive))
+      ));
+
+      game.lsBotActive.get(0).lsCardUp.get(0).number = Number.four;
+      game.lsBotActive.get(0).lsCardUp.get(1).number = Number.two;
+      game.lsBotActive.get(0).lsCardUp.get(0).number = Number.three;
+      System.out.println(Rule.getInstance().chkLieng(game.lsBotActive.get(0).lsCardUp));
+
+    }
 
   }
 
@@ -65,7 +78,7 @@ public class DivideCard {
     return true;
   }
 
-  private void nextTurn() {
+  public void nextTurn() {
 
     turn++;
     turnCardDown++;
@@ -87,10 +100,8 @@ public class DivideCard {
 
   }
 
-  public void divideCardUpForBot() {
-
+  private void randLsCardUp() {
     Collections.shuffle(game.lsCardUp, new Random());
-
   }
 
   public void reset() {
@@ -99,6 +110,11 @@ public class DivideCard {
     turnCardDown = -1;
     countTurn = -1;
     botPresent = null;
+
+    for (int i=0; i<game.lsCardDown.size(); i++) {
+      game.lsCardDown.get(i).reset();
+      game.lsCardUp.get(i).reset();
+    }
 
   }
 

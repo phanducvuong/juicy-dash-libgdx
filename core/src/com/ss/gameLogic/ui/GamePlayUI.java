@@ -1,19 +1,25 @@
 package com.ss.gameLogic.ui;
 
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.ss.GMain;
 import com.ss.core.util.GStage;
 import com.ss.core.util.GUI;
 import com.ss.gameLogic.Game;
 import com.ss.gameLogic.effects.Effect;
+import com.ss.gameLogic.interfaces.IClickCard;
 import com.ss.gameLogic.logic.DivideCard;
 import com.ss.gameLogic.logic.Logic;
+import com.ss.gameLogic.objects.Bot;
+import com.ss.gameLogic.objects.Card;
+
 import static com.ss.gameLogic.config.Config.*;
 
-public class GamePlayUI {
+public class GamePlayUI implements IClickCard {
 
   private Logic logic = Logic.getInstance();
-  private Effect effect = Effect.getInstance();
+  private Effect effect;
   private Game game;
 
   private DivideCard divideCard;
@@ -21,9 +27,30 @@ public class GamePlayUI {
   public GamePlayUI(Game game) {
 
     this.game = game;
+    this.effect = Effect.getInstance(game);
 
     initBgGame();
     divideCard = new DivideCard(game);
+    devideCard();
+
+    testClick();
+
+  }
+
+  private void testClick() {
+
+    Image click = GUI.createImage(GMain.liengAtlas, "button_start");
+    game.gBackground.addActor(click);
+
+    click.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        super.clicked(event, x, y);
+
+        showAllCardUp();
+
+      }
+    });
 
   }
 
@@ -35,33 +62,25 @@ public class GamePlayUI {
 
   }
 
-  private void testPosCard() {
-
-    Image card0 = GUI.createImage(GMain.cardAtlas, "ace_club");
-    card0.setScale(1.8f);
-    card0.setPosition(POS_BOT_0.x - card0.getWidth()*1.8f/2, POS_BOT_0.y - card0.getHeight()*1.8f);
-    game.gCard.addActor(card0);
-
-    Image card1 = GUI.createImage(GMain.cardAtlas, "ace_club");
-    card1.setPosition(POS_BOT_1.x - card1.getWidth(), POS_BOT_1.y);
-    game.gCard.addActor(card1);
-
-    Image card2 = GUI.createImage(GMain.cardAtlas, "ace_club");
-    card2.setPosition(POS_BOT_2.x - card2.getWidth(), POS_BOT_2.y);
-    game.gCard.addActor(card2);
-
-    Image card3 = GUI.createImage(GMain.cardAtlas, "ace_club");
-    card3.setPosition(POS_BOT_3.x - card3.getWidth(), POS_BOT_3.y);
-    game.gCard.addActor(card3);
-
-    Image card4 = GUI.createImage(GMain.cardAtlas, "ace_club");
-    card4.setPosition(POS_BOT_4.x, POS_BOT_4.y);
-    game.gCard.addActor(card4);
-
-    Image card5 = GUI.createImage(GMain.cardAtlas, "ace_club");
-    card5.setPosition(POS_BOT_5.x, POS_BOT_5.y);
-    game.gCard.addActor(card5);
-
+  private void devideCard() {
+    divideCard.nextTurn();
   }
 
+  @Override
+  public void click(Card cardDown, Card cardUp) {
+    effect.sclCardWhenClick(cardDown, cardUp);
+  }
+
+  private void showAllCardUp() {
+
+    for (int i=1; i<game.lsBotActive.size(); i++) {
+      Bot bot = game.lsBotActive.get(i);
+      for (int j=0; j<bot.lsCardDown.size(); j++) {
+        Card cardDown = bot.lsCardDown.get(j);
+        Card cardUp = bot.lsCardUp.get(j);
+        effect.showAllCard(cardDown, cardUp);
+      }
+    }
+
+  }
 }

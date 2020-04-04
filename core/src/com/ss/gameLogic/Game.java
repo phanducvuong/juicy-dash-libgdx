@@ -24,7 +24,7 @@ public class Game {
   public List<Card> lsCardDown, lsCardUp;
   public int numOfPlayer = 6;
 
-  private GamePlayUI gamePlayUI;
+  public GamePlayUI gamePlayUI;
 
   public Game() {
 
@@ -104,6 +104,12 @@ public class Game {
         lsBotActive.add(lsBot.get(5));
 
     }
+
+  }
+
+  public void resetGame() {
+
+    //todo: reset lsCardDown and lsCardUp
 
   }
 

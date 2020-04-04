@@ -6,8 +6,15 @@ filter: Nearest,Nearest
 repeat: none
 bg_table
   rotate: false
+  xy: 2, 73
+  size: 1280, 720
+  orig: 1280, 720
+  offset: 0, 0
+  index: -1
+button_start
+  rotate: false
   xy: 2, 2
-  size: 1280, 853
-  orig: 1280, 853
+  size: 159, 69
+  orig: 159, 69
   offset: 0, 0
   index: -1
