@@ -10,6 +10,7 @@ import java.util.List;
 public class Rule {
 
   private static Rule instance;
+  private Logic logic = Logic.getInstance();
 
   private Rule() {}
 
@@ -72,11 +73,83 @@ public class Rule {
 
   }
 
-//  private Card getBestCardInSap(List<List<Card>> lsCards)
+  private Card getBestCardInLsSap(List<List<Card>> lsCards) {
 
-  public int getIdWinner(List<Bot> lsBot) {
+    if (lsCards.size() == 1)
+      return lsCards.get(0).get(0);
+    else if (lsCards.size() > 1)
+      return logic.getBestCardInLsSap(lsCards);
+    return null;
 
+  }
 
+  private Card getBestCardInLsLieng(List<List<Card>> lsCards) {
+
+    if (lsCards.size() == 1)
+      return lsCards.get(0).get(0);
+    else if (lsCards.size() > 1)
+      return logic.getBestCardInLsLieng(lsCards);
+    return null;
+
+  }
+
+  private Card getBestCardInLsAnh(List<List<Card>> lsCards) {
+
+    if (lsCards.size() == 1)
+      return lsCards.get(0).get(0);
+    else if (lsCards.size() > 1)
+      return logic.getBestCardInLsAnh(lsCards);
+    return null;
+
+  }
+
+  private Card getBestCardInLsPoint(List<List<Card>> lsCards) {
+
+    if (lsCards.size() == 1)
+      return lsCards.get(0).get(0);
+    else if (lsCards.size() > 1)
+      return logic.getBestCardInLsPoint(lsCards);
+    return null;
+
+  }
+
+  public Bot getBotWinner(List<Bot> lsBotActive) {
+
+    List<List<Card>> lsSap = new ArrayList<>();
+    List<List<Card>> lsLieng = new ArrayList<>();
+    List<List<Card>> lsAnh = new ArrayList<>();
+    List<List<Card>> lsPoint = new ArrayList<>();
+
+    //find bots have the same best desk card
+    for (Bot bot : lsBotActive) {
+      if (chkSap(bot.lsCardUp))
+        lsSap.add(bot.lsCardUp);
+      else if (chkLieng(bot.lsCardUp))
+        lsLieng.add(bot.lsCardUp);
+      else if (chkAnh(bot.lsCardUp))
+        lsAnh.add(bot.lsCardUp);
+      else
+        lsPoint.add(bot.lsCardUp);
+    }
+
+    Card bestCardInLsSap = getBestCardInLsSap(lsSap);
+    Card bestCardInLsLieng = getBestCardInLsLieng(lsLieng);
+    Card bestCardInLsAnh = getBestCardInLsAnh(lsAnh);
+    Card bestCardInLsPoint = getBestCardInLsPoint(lsPoint);
+
+    System.out.println("SAP: " + bestCardInLsSap);
+    System.out.println("LIENG: " + bestCardInLsLieng);
+    System.out.println("ANH: " + bestCardInLsAnh);
+    System.out.println("POINT: " + bestCardInLsPoint);
+
+    if (bestCardInLsSap != null)
+      return lsBotActive.get(bestCardInLsSap.getIdBot());
+    else if (bestCardInLsLieng != null)
+      return lsBotActive.get(bestCardInLsLieng.getIdBot());
+    else if (bestCardInLsAnh != null)
+      return lsBotActive.get(bestCardInLsAnh.getIdBot());
+    else
+      return lsBotActive.get(bestCardInLsPoint.getIdBot());
 
   }
 

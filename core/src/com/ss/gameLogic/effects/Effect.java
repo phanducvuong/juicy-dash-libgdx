@@ -82,7 +82,7 @@ public class Effect {
 
   }
 
-  public void sclCardWhenClick(Card cardDown, Card cardUp) {
+  public void flipCard(Card cardDown, Card cardUp) {
 
     cardDown.addAction(sequence(
             scaleTo(0, 1.8f, DUR_SCL_CARD_PLAYER, linear),

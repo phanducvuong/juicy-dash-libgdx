@@ -7,6 +7,7 @@ import com.ss.core.action.exAction.GSimpleAction;
 import com.ss.core.util.GStage;
 import com.ss.gameLogic.Game;
 import com.ss.gameLogic.card.Number;
+import com.ss.gameLogic.card.Type;
 import com.ss.gameLogic.effects.Effect;
 import com.ss.gameLogic.objects.Bot;
 import com.ss.gameLogic.objects.Card;
@@ -22,6 +23,7 @@ public class DivideCard {
 
   private Game game;
   private Logic logic = Logic.getInstance();
+  private Rule rule = Rule.getInstance();
   private Effect effect;
 
   private int turn = -1, turnCardDown = -1, countTurn = -1; //reset when new game
@@ -43,7 +45,11 @@ public class DivideCard {
     countTurn++; // count number of cardDown in each player (maximum is 3)
     if (countTurn < game.numOfPlayer*3) {
       botPresent.lsCardDown.add(cardDown);
-      botPresent.lsCardUp.add(game.lsCardUp.get(turnCardDown));
+
+      Card cardUp = game.lsCardUp.get(turnCardDown);
+      cardUp.setIdBot(turn);
+      botPresent.lsCardUp.add(cardUp);
+
       cardDown.getCard().addAction(GSimpleAction.simpleAction(this::divide));
     }
     else {
@@ -53,10 +59,7 @@ public class DivideCard {
               run(() -> effect.formatCardDown(game.lsBotActive))
       ));
 
-      game.lsBotActive.get(0).lsCardUp.get(0).number = Number.queen;
-      game.lsBotActive.get(0).lsCardUp.get(1).number = Number.jack;
-      game.lsBotActive.get(0).lsCardUp.get(2).number = Number.ace;
-      System.out.println(Rule.getInstance().chkAnh(game.lsBotActive.get(0).lsCardUp));
+      game.winner = rule.getBotWinner(game.lsBotActive);
 
     }
 

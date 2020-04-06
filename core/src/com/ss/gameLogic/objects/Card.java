@@ -19,6 +19,7 @@ public class Card {
 
   public Type type;
   public Number number;
+  private int idBot = -1; //save idBot to get bot winner when check all cards in bot
   private IClickCard iClickCard;
 
   private Image card;
@@ -55,11 +56,16 @@ public class Card {
 
   public void reset() {
 
+    idBot = -1;
     iClickCard = null;
     card.clear();
     card.remove();
 
   }
+
+  public void setIdBot(int idBot) { this.idBot = idBot; }
+
+  public int getIdBot() { return idBot; }
 
   public void setScale(float sclX, float sclY) {
     card.setScale(sclX, sclY);

@@ -14,8 +14,6 @@ import com.ss.gameLogic.logic.Logic;
 import com.ss.gameLogic.objects.Bot;
 import com.ss.gameLogic.objects.Card;
 
-import static com.ss.gameLogic.config.Config.*;
-
 public class GamePlayUI implements IClickCard {
 
   private Logic logic = Logic.getInstance();
@@ -68,7 +66,7 @@ public class GamePlayUI implements IClickCard {
 
   @Override
   public void click(Card cardDown, Card cardUp) {
-    effect.sclCardWhenClick(cardDown, cardUp);
+    effect.flipCard(cardDown, cardUp);
   }
 
   private void showAllCardUp() {

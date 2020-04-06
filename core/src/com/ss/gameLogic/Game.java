@@ -22,6 +22,7 @@ public class Game {
 
   public List<Bot> lsBot, lsBotActive; //reset lsBotActive when change numOfPlayer
   public List<Card> lsCardDown, lsCardUp;
+  public Bot winner;
   public int numOfPlayer = 6;
 
   public GamePlayUI gamePlayUI;
@@ -109,7 +110,11 @@ public class Game {
 
   public void resetGame() {
 
-    //todo: reset lsCardDown and lsCardUp
+    winner = null;
+    for (int i=0; i<lsCardDown.size(); i++) {
+      lsCardDown.get(i).reset();
+      lsCardUp.get(i).reset();
+    }
 
   }
 
