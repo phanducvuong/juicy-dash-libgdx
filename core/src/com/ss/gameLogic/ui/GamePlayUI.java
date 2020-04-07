@@ -20,6 +20,8 @@ public class GamePlayUI implements IClickCard {
   private Effect effect;
   private Game game;
 
+  private Image btnUp, btnTo, btnTheo;
+
   private DivideCard divideCard;
 
   public GamePlayUI(Game game) {
@@ -28,10 +30,27 @@ public class GamePlayUI implements IClickCard {
     this.effect = Effect.getInstance(game);
 
     initBgGame();
+    initButtonBet();
     divideCard = new DivideCard(game);
     devideCard();
 
     testClick();
+
+  }
+
+  private void initButtonBet() {
+
+    btnTheo = GUI.createImage(GMain.liengAtlas, "theo");
+    btnTheo.setPosition(600, 700);
+    game.gBtn.addActor(btnTheo);
+
+    btnTo = GUI.createImage(GMain.liengAtlas, "to");
+    btnTo.setPosition(600, 800);
+    game.gBtn.addActor(btnTo);
+
+    btnUp = GUI.createImage(GMain.liengAtlas, "up");
+    btnUp.setPosition(600, 900);
+    game.gBtn.addActor(btnUp);
 
   }
 
@@ -45,7 +64,8 @@ public class GamePlayUI implements IClickCard {
       public void clicked(InputEvent event, float x, float y) {
         super.clicked(event, x, y);
 
-        showAllCardUp();
+//        showAllCardUp();
+        System.out.println(logic.rndMoneyTo(10000));
 
       }
     });

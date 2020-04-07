@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.ss.gameLogic.card.Number;
 import com.ss.gameLogic.card.Type;
 import com.ss.gameLogic.config.Config;
+import com.ss.gameLogic.objects.Bot;
 import com.ss.gameLogic.objects.Card;
 
 import java.util.ArrayList;
@@ -199,7 +200,7 @@ public class Logic {
 
   }
 
-  private int calculatePoint(List<Card> lsCard) {
+  public int calculatePoint(List<Card> lsCard) {
 
     int sum = 0;
     for (Card card : lsCard)
@@ -223,6 +224,39 @@ public class Logic {
       case nine: point = 9; break;
     }
     return point;
+
+  }
+
+  public int getIdBotToStartBet(Bot bot) {
+    return bot != null ? bot.id : 0;
+  }
+
+  public void findIdRuleOfLsBot(List<Bot> lsBot) {
+
+    for (Bot bot : lsBot)
+      bot.findIdRule();
+
+  }
+
+  public int countBotAlive(List<Bot> lsBot) {
+
+    int count = 0;
+    for (Bot bot : lsBot)
+      if (bot.isAlive)
+        count++;
+    return count;
+
+  }
+
+  public long initMoneyBot(long moneyPlayer) {
+    float rnd = (float) Math.round(Math.random() * 10000)/10000;
+    return (long) (moneyPlayer * 10 * rnd);
+  }
+
+  public long rndMoneyTo(long moneyBot) {
+
+    float rnd = Math.round(Math.random() * 1000);
+    return (long) ((rnd/1000 == 0) ? (rnd/1000 + 0.121) * moneyBot : (rnd/1000) * moneyBot);
 
   }
 

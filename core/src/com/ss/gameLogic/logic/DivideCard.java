@@ -56,10 +56,14 @@ public class DivideCard {
 
       game.gCard.addAction(sequence(
               delay(.25f),
-              run(() -> effect.formatCardDown(game.lsBotActive))
+              run(() -> {
+                effect.formatCardDown(game.lsBotActive);
+                logic.findIdRuleOfLsBot(game.lsBotActive);
+              })
       ));
 
-      game.winner = rule.getBotWinner(game.lsBotActive);
+//      game.winner = rule.getBotWinner(game.lsBotActive);
+      game.startBet();
 
     }
 

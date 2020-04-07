@@ -6,15 +6,43 @@ filter: Nearest,Nearest
 repeat: none
 bg_table
   rotate: false
-  xy: 2, 73
+  xy: 2, 244
   size: 1280, 720
   orig: 1280, 720
   offset: 0, 0
   index: -1
+btnSee
+  rotate: false
+  xy: 272, 172
+  size: 170, 70
+  orig: 170, 70
+  offset: 0, 0
+  index: -1
 button_start
   rotate: false
-  xy: 2, 2
+  xy: 1284, 783
   size: 159, 69
   orig: 159, 69
+  offset: 0, 0
+  index: -1
+theo
+  rotate: false
+  xy: 2, 114
+  size: 268, 128
+  orig: 268, 128
+  offset: 0, 0
+  index: -1
+to
+  rotate: false
+  xy: 2, 2
+  size: 229, 110
+  orig: 229, 110
+  offset: 0, 0
+  index: -1
+up
+  rotate: false
+  xy: 1284, 854
+  size: 229, 110
+  orig: 229, 110
   offset: 0, 0
   index: -1

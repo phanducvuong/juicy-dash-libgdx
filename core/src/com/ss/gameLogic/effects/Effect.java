@@ -8,7 +8,6 @@ import com.ss.gameLogic.Game;
 import com.ss.gameLogic.objects.Bot;
 import com.ss.gameLogic.objects.Card;
 import static com.ss.gameLogic.config.Config.*;
-
 import java.util.List;
 
 public class Effect {

@@ -137,19 +137,28 @@ public class Rule {
     Card bestCardInLsAnh = getBestCardInLsAnh(lsAnh);
     Card bestCardInLsPoint = getBestCardInLsPoint(lsPoint);
 
-    System.out.println("SAP: " + bestCardInLsSap);
-    System.out.println("LIENG: " + bestCardInLsLieng);
-    System.out.println("ANH: " + bestCardInLsAnh);
-    System.out.println("POINT: " + bestCardInLsPoint);
-
     if (bestCardInLsSap != null)
       return lsBotActive.get(bestCardInLsSap.getIdBot());
     else if (bestCardInLsLieng != null)
       return lsBotActive.get(bestCardInLsLieng.getIdBot());
     else if (bestCardInLsAnh != null)
       return lsBotActive.get(bestCardInLsAnh.getIdBot());
-    else
+    else if (bestCardInLsPoint != null)
       return lsBotActive.get(bestCardInLsPoint.getIdBot());
+    else {
+      System.out.println("null winner");
+      return lsBotActive.get(0);
+    }
+
+  }
+
+  //-1: special else point
+  public int getIdRuleOfDesk(List<Card> lsCard) {
+
+    if (chkSap(lsCard) || chkLieng(lsCard) || chkAnh(lsCard))
+      return -1;
+    else
+      return logic.calculatePoint(lsCard);
 
   }
 
