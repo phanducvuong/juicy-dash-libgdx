@@ -5,16 +5,17 @@ import com.ss.core.action.exAction.GSimpleAction;
 import com.ss.gameLogic.Game;
 import com.ss.gameLogic.objects.Bot;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
-import static com.badlogic.gdx.math.Interpolation.*;
 
 public class Bet {
 
   private Logic logic = Logic.getInstance();
   private Game game;
 
-  public long totalCoinBet = 0;
+  private long totalMoneyBet = 10000;
+  public long totalMoney = 0; //money all player bet
   private int turn = -1, idBotKeepMaxMoneyTo = -1;
   private Bot botPresent;
+  private boolean isResetBotStartBet = true;
 
   public Bet(Game game) {
     this.game = game;
@@ -23,7 +24,8 @@ public class Bet {
   public void startBet(Bot bot) {
 
     botPresent = bot;
-    game.gBot.addAction(GSimpleAction.simpleAction(this::actionBet));
+    if (game.lsBotActive.indexOf(bot) != 0)
+      game.gBot.addAction(GSimpleAction.simpleAction(this::actionBet));
 
   }
 
@@ -37,10 +39,11 @@ public class Bet {
 
     game.gBot.addAction(sequence(
             run(() -> {
-              if (botPresent.isAlive)
+              if (botPresent.isAlive() && botPresent.getTotalMoney() > 0) {
                 rndBet(botPresent);
+              }
             }),
-            delay(1f),
+            delay(turn != 0 ? logic.timeDelayToNextTurnBet() : 0),
             run(() -> nextTurn(turn))
     ));
 
@@ -48,60 +51,91 @@ public class Bet {
 
   }
 
-  public void nextTurn(int turn) {
+  private void nextTurn(int turn) {
 
     Bot botNext = game.lsBotActive.get(turn);
-
-    System.out.println(turn);
-
-    if (logic.countBotAlive(game.lsBotActive) == 1 || botNext.id == idBotKeepMaxMoneyTo) {
+    if (logic.countBotAlive(game.lsBotActive) == 1) {
       //todo: finished bet
-      System.out.println("FINISHED BET!");
+      Bot winner = game.getWinner();
+      System.out.println("size lsBotActive == 1 " + winner.id);
+    }
+    else if (botNext.id == idBotKeepMaxMoneyTo || botNext.isStartBet) {
+      //todo: find winner
+      Bot winner = game.findWinner();
+      System.out.println("Winner  " + winner.id);
     }
     else if (turn > 0)
       startBet(botNext);
+    else if (!botNext.isAlive()) {
+      //if player is "UP" => next turn (botNext is player)
+      Bot tempBotNext = game.lsBotActive.get(1);
+      if (tempBotNext.id == idBotKeepMaxMoneyTo || tempBotNext.isStartBet) {
+        Bot winner = game.findWinner();
+        System.out.println("FIND WINNER  " + winner.id);
+      }
+      else
+        startBet(tempBotNext);
+    }
     else {
-      // TODO: 4/7/2020 turn player, show btn bet
+      // todo: turn player, show btn bet
+      System.out.println("TURN PLAYER ----------------------------");
     }
 
   }
 
-  private void TO(Bot bot) {
+  public void TO(Bot bot) {
 
     //todo: effect to, theo, up
 
-    long moneyOwe = totalCoinBet - bot.totalMoneyBet;
-    if (bot.totalMoney <= moneyOwe) {
-      bot.totalMoneyBet += bot.totalMoney;
-      bot.totalMoney = 0;
-    } // all-in
+    long moneyOwe = totalMoneyBet - bot.getTotalMoneyBet();
+    if (bot.getTotalMoney() <= moneyOwe) { // all-in
+      bot.AllIn();
+      totalMoney += bot.getTotalMoney();
+
+      game.gamePlayUI.eftLbTotalMoney(bot.getTotalMoney());
+      System.out.println(bot.id + "  TO    MONEY  " + bot.getTotalMoney());
+    }
     else {
-      long tempMoneyBet = logic.rndMoneyTo(bot.totalMoney);
-      bot.totalMoneyBet += tempMoneyBet;
-      bot.totalMoney -= tempMoneyBet;
-      totalCoinBet += tempMoneyBet;
+      long tempMoneyBet = logic.rndMoneyTo(bot.getTotalMoney() - moneyOwe);
+      totalMoneyBet += tempMoneyBet;
+      totalMoney = totalMoney + tempMoneyBet + moneyOwe;
+      bot.TO(tempMoneyBet + moneyOwe);
+
+      game.gamePlayUI.eftLbTotalMoney(tempMoneyBet + moneyOwe);
+      System.out.println(bot.id + "  TO    MONEY  " + bot.getTotalMoney() + "   TO:  " + tempMoneyBet);
+
+      idBotKeepMaxMoneyTo = bot.id;
+      if (isResetBotStartBet) {
+        logic.resetIsStartBetInBot(game.lsBotActive);
+        isResetBotStartBet = false;
+      }
     }// to them
 
   }
 
-  private void THEO(Bot bot) {
+  public void THEO(Bot bot) {
 
-    long moneyOwe = totalCoinBet - bot.totalMoneyBet;
-    if (bot.totalMoney <= moneyOwe) {
-      bot.totalMoneyBet += bot.totalMoney;
-      bot.totalMoney = 0;
-    }// all-in
-    else {
-      bot.totalMoneyBet += moneyOwe;
-      bot.totalMoney -= moneyOwe;
+    long moneyOwe = totalMoneyBet - bot.getTotalMoneyBet();
+    if (bot.getTotalMoney() <= moneyOwe) { // all-in
+      bot.AllIn();
+      totalMoney += bot.getTotalMoney();
+
+      game.gamePlayUI.eftLbTotalMoney(bot.getTotalMoney());
     }
+    else {
+      bot.THEO(moneyOwe);
+      totalMoney += moneyOwe;
+
+      game.gamePlayUI.eftLbTotalMoney(moneyOwe);
+    }
+
+    System.out.println(bot.id + "  THEO    MONEY    " + bot.getTotalMoney());
 
   }
 
-  private void UP(Bot bot) {
-
-    bot.isAlive = false;
-
+  public void UP(Bot bot) {
+    System.out.println(bot.id + "  UP");
+    bot.UP();
   }
 
   private void rndBet(Bot bot) {
@@ -138,9 +172,7 @@ public class Bet {
           THEO(bot);
         else
           TO(bot);
-
         break;
-
     }
 
   }
@@ -152,10 +184,15 @@ public class Bet {
 
   public void reset() {
 
+    isResetBotStartBet = true;
     botPresent = null;
-    totalCoinBet = 0;
+    totalMoney = 0;
     idBotKeepMaxMoneyTo = -1;
 
+  }
+
+  public void setTotalMoneyBet(long money) {
+    totalMoneyBet = money;
   }
 
 }

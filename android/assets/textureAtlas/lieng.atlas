@@ -4,45 +4,66 @@ size: 2048,1024
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+avatar
+  rotate: false
+  xy: 1284, 724
+  size: 159, 145
+  orig: 159, 145
+  offset: 0, 0
+  index: -1
+bg_money_bet
+  rotate: false
+  xy: 347, 182
+  size: 322, 112
+  orig: 322, 112
+  offset: 0, 0
+  index: -1
 bg_table
   rotate: false
-  xy: 2, 244
+  xy: 2, 296
   size: 1280, 720
   orig: 1280, 720
   offset: 0, 0
   index: -1
 btnSee
   rotate: false
-  xy: 272, 172
+  xy: 347, 110
   size: 170, 70
   orig: 170, 70
   offset: 0, 0
   index: -1
+btn_theo
+  rotate: false
+  xy: 1284, 871
+  size: 343, 145
+  orig: 343, 145
+  offset: 0, 0
+  index: -1
+btn_to
+  rotate: false
+  xy: 2, 2
+  size: 343, 145
+  orig: 343, 145
+  offset: 0, 0
+  index: -1
+btn_up
+  rotate: false
+  xy: 2, 149
+  size: 343, 145
+  orig: 343, 145
+  offset: 0, 0
+  index: -1
 button_start
   rotate: false
-  xy: 1284, 783
+  xy: 671, 225
   size: 159, 69
   orig: 159, 69
   offset: 0, 0
   index: -1
-theo
+info_user
   rotate: false
-  xy: 2, 114
-  size: 268, 128
-  orig: 268, 128
-  offset: 0, 0
-  index: -1
-to
-  rotate: false
-  xy: 2, 2
-  size: 229, 110
-  orig: 229, 110
-  offset: 0, 0
-  index: -1
-up
-  rotate: false
-  xy: 1284, 854
-  size: 229, 110
-  orig: 229, 110
+  xy: 1629, 930
+  size: 183, 86
+  orig: 183, 86
   offset: 0, 0
   index: -1

@@ -36,7 +36,6 @@ public class DivideCard {
 
     showCardDown();
     randLsCardUp();
-    game.getLsBotActive();
 
   }
 
@@ -46,14 +45,15 @@ public class DivideCard {
     if (countTurn < game.numOfPlayer*3) {
       botPresent.lsCardDown.add(cardDown);
 
+      cardDown.setActive(true);
       Card cardUp = game.lsCardUp.get(turnCardDown);
-      cardUp.setIdBot(turn);
       botPresent.lsCardUp.add(cardUp);
 
       cardDown.getCard().addAction(GSimpleAction.simpleAction(this::divide));
     }
     else {
 
+      moveCardResidual();
       game.gCard.addAction(sequence(
               delay(.25f),
               run(() -> {
@@ -61,8 +61,6 @@ public class DivideCard {
                 logic.findIdRuleOfLsBot(game.lsBotActive);
               })
       ));
-
-//      game.winner = rule.getBotWinner(game.lsBotActive);
       game.startBet();
 
     }
@@ -73,10 +71,9 @@ public class DivideCard {
 
     Image card = (Image) a;
     card.setZIndex(1000);
-    card.setRotation(logic.rndRotate());
     Vector2 v = logic.getPosByIdBot(botPresent.id);
-    effect.moveCardTo(card, v.x, v.y);
 
+    effect.divide(card, v.x, v.y);
     game.gCard.addAction(sequence(
             delay(.1f),
             run(this::nextTurn)
@@ -103,6 +100,34 @@ public class DivideCard {
       int offset = (game.lsCardDown.size() - i)/2;
       cardDown.setPosition(GStage.getWorldWidth()/2 - cardDown.getWidth()/2 - offset, GStage.getWorldHeight()/2 - cardDown.getHeight()/2 - 50 - offset);
       cardDown.addCardToScene(game.gCard);
+    }
+
+  }
+
+  private void moveCardResidual() {
+
+//    if (i < 0)
+//      return;
+//
+//    final int ii = i;
+//    Runnable run = () -> {
+//      game.gBackground.addAction(
+//              sequence(
+//                      delay(.015f),
+//                      run(() -> moveCardResidual(ii-1))
+//              )
+//      );
+//    };
+//
+//    Card card = game.lsCardDown.get(i);
+//    if (!card.isActive())
+//      effect.moveCardResidual(card, i, run);
+//    else
+//      moveCardResidual(i-1);
+    for (int i=game.lsCardDown.size()-1; i>=0; i--) {
+      Card card = game.lsCardDown.get(i);
+      if (!card.isActive())
+        effect.moveCardResidual(card, i);
     }
 
   }

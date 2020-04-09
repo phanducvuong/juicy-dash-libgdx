@@ -7,6 +7,7 @@ import com.ss.gameLogic.card.Number;
 import com.ss.gameLogic.card.Type;
 import com.ss.gameLogic.logic.Bet;
 import com.ss.gameLogic.logic.Logic;
+import com.ss.gameLogic.logic.Rule;
 import com.ss.gameLogic.objects.Bot;
 import com.ss.gameLogic.objects.Card;
 import com.ss.gameLogic.ui.GamePlayUI;
@@ -22,10 +23,9 @@ public class Game {
 
   public List<Bot> lsBot, lsBotActive; //reset lsBotActive when change numOfPlayer
   public List<Card> lsCardDown, lsCardUp;
-  public Bot winner;
+  public Bot winner; //set null when player go out start screen
   public int numOfPlayer = 6;
-
-  private long tempMoney = 1000000;
+  public long moneyBet = 10000;
 
   public GamePlayUI gamePlayUI;
   public Bet bet;
@@ -37,6 +37,7 @@ public class Game {
     initLayer();
     initBotAndCard();
 
+    getLsBotActive();
     gamePlayUI = new GamePlayUI(this);
     bet = new Bet(this);
 
@@ -115,9 +116,12 @@ public class Game {
     }
 
     for (Bot bot : lsBotActive) {
-      bot.isAlive = true;
-      bot.isActive = true;
-      bot.totalMoney = logic.initMoneyBot(tempMoney);
+      bot.setAlive(true);
+      bot.setActive(true);
+      //todo: replace tempMoney to moneyPlayer in share preference
+//      bot.setTotalMoney(logic.initMoneyBot(tempMoney));
+      bot.setTotalMoney(1000000);
+      bot.setTotalMoneyBet(10000);
     }
 
   }
@@ -129,12 +133,64 @@ public class Game {
       lsCardUp.get(i).reset();
     }
 
+    for (Bot bot : lsBotActive)
+      bot.setTotalMoneyBet(moneyBet);
+
+    bet.setTotalMoneyBet(moneyBet);
+
+  }
+
+  public void newRound() {
+
+    bet.totalMoney = moneyBet * lsBotActive.size();
+    gamePlayUI.eftLbTotalMoney(0);
+
+    for (Bot bot : lsBotActive) {
+      bot.setTotalMoney(bot.getTotalMoney() - moneyBet);
+      bot.convertMoneyToString();
+    }
+
   }
 
   public void startBet() {
 
     int indexBet = logic.getIdBotToStartBet(winner);
+    lsBotActive.get(indexBet).isStartBet = true;
     bet.startBet(lsBotActive.get(indexBet));
+
+  }
+
+  public Bot findWinner() {
+
+    List<Bot> tempLsBot = new ArrayList<>();
+    for (Bot bot : lsBotActive)
+      if (bot.isAlive())
+        tempLsBot.add(bot);
+
+    //label: update idBot of card in lsCardUp buy index lsBot alive
+    for (Bot bot : tempLsBot)
+      for (Card card : bot.lsCardUp)
+        card.setIdBot(tempLsBot.indexOf(bot));
+
+    winner = Rule.getInstance().getBotWinner(tempLsBot);
+    logMoneyBot();
+    return winner;
+
+  }
+
+  public void logMoneyBot() {
+
+    for (Bot bot : lsBotActive)
+      System.out.println(bot.id + "   TOTAL MONEY  " + bot.getTotalMoney() + "  MONEY BET  " + bot.getTotalMoneyBet());
+
+  }
+
+  public Bot getWinner() {
+
+    for (Bot bot : lsBotActive)
+      if (bot.isAlive())
+        winner = bot;
+    return winner;
 
   }
 

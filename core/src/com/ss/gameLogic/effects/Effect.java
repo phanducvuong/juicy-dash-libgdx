@@ -2,16 +2,24 @@ package com.ss.gameLogic.effects;
 
 import static com.badlogic.gdx.math.Interpolation.*;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
+
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.ss.core.action.exAction.GTemporalAction;
 import com.ss.gameLogic.Game;
+import com.ss.gameLogic.config.Config;
+import com.ss.gameLogic.logic.Logic;
 import com.ss.gameLogic.objects.Bot;
+import com.ss.gameLogic.objects.Button;
 import com.ss.gameLogic.objects.Card;
 import static com.ss.gameLogic.config.Config.*;
 import java.util.List;
 
 public class Effect {
 
+  private Logic logic = Logic.getInstance();
   private static Effect instance = null;
   private Game game;
 
@@ -23,9 +31,15 @@ public class Effect {
     return instance == null ? instance = new Effect(game) : instance;
   }
 
-  public void moveCardTo(Image card, float x, float y) {
+  public void divide(Image card, float x, float y) {
 
-    card.addAction(moveTo(x, y, DUR_DIVIDE_CARD, fastSlow));
+    card.addAction(
+            parallel(
+                    moveTo(x, y, DUR_DIVIDE_CARD, fastSlow),
+                    scaleTo(.7f, .7f, DUR_DIVIDE_CARD, fastSlow),
+                    rotateTo(logic.rndRotate(), DUR_DIVIDE_CARD, linear)
+            )
+    );
 
   }
 
@@ -58,6 +72,8 @@ public class Effect {
       else
         cardUp.setScale(0, SCL_CARD_INIT);
 
+      cardUp.setRotate(logic.getDegreeBuyIndex(indexCard));
+
     };
 
     ParallelAction par;
@@ -65,14 +81,14 @@ public class Effect {
       par = parallel(
               scaleTo(1.8f, 1.8f, DUR_SCL_ROTATE_CARD, fastSlow),
               sequence(
-                      rotateTo(0, DUR_SCL_ROTATE_CARD, fastSlow),
-                      moveBy(120*indexCard, 0, DUR_SPREAD_CARD, fastSlow),
+                      rotateTo(logic.getDegreeBuyIndex(indexCard), DUR_SCL_ROTATE_CARD, fastSlow),
+                      moveBy(60*indexCard, 0, DUR_SPREAD_CARD, fastSlow),
                       run(run)
               ));
     else
       par = sequence(
-              rotateTo(0, DUR_SCL_ROTATE_CARD, fastSlow),
-              moveBy(50*indexCard, 0, DUR_SPREAD_CARD, fastSlow),
+              rotateTo(logic.getDegreeBuyIndex(indexCard), DUR_SCL_ROTATE_CARD, fastSlow),
+              moveBy(22*indexCard, 0, DUR_SPREAD_CARD, fastSlow),
               run(run)
       );
 
@@ -96,6 +112,47 @@ public class Effect {
             scaleTo(0, SCL_CARD_INIT, DUR_SCL_CARD_PLAYER, linear),
             run(() -> cardUp.addAction(scaleTo(SCL_CARD_INIT, SCL_CARD_INIT, DUR_SCL_CARD_PLAYER, linear)))
     ));
+
+  }
+
+  public void click(Button btn, Runnable onComplete) {
+
+    btn.getGroup().addAction(sequence(
+            scaleTo(.9f, .9f, .05f, fastSlow),
+            scaleTo(1f, 1f, .05f, fastSlow),
+            run(onComplete)
+    ));
+
+  }
+
+  public void moveCardResidual(Card card, int index, Runnable onComplete) {
+    card.getCard().addAction(
+            parallel(
+                    rotateTo(360, .15f, fastSlow),
+                    moveTo(POS_DESK_RESIDUAL.x + index/2, POS_DESK_RESIDUAL.y + index/2, .15f, fastSlow),
+                    run(onComplete)
+            )
+    );
+  }
+
+  public void moveCardResidual(Card card, int index) {
+    card.getCard().addAction(
+            parallel(
+                    moveTo(POS_DESK_RESIDUAL.x + index/2, POS_DESK_RESIDUAL.y + index/2, .65f, fastSlow),
+                    rotateTo(-360, .65f, fastSlow)
+            )
+    );
+  }
+
+  public void raiseMoney(Label lbMoney, long money) {
+
+    final long tempMoney = game.bet.totalMoney - money;
+    lbMoney.addAction(GTemporalAction.add(.5f, (dt,a) -> {
+
+      long temp = (long) (tempMoney + money*dt);
+      lbMoney.setText(temp+"");
+
+    }));
 
   }
 

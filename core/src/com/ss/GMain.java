@@ -10,7 +10,7 @@ import com.ss.core.util.GDirectedGame;
 import com.ss.core.util.GScreen;
 import com.ss.core.util.GStage;
 import com.ss.core.util.GStage.StageBorder;
-import com.ss.gameLogic.scene.common.config.config.C;
+import com.ss.gameLogic.config.C;
 import com.ss.scenes.GameScene;
 
 public class GMain extends GDirectedGame {

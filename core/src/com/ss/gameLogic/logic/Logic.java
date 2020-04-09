@@ -6,7 +6,6 @@ import com.ss.gameLogic.card.Type;
 import com.ss.gameLogic.config.Config;
 import com.ss.gameLogic.objects.Bot;
 import com.ss.gameLogic.objects.Card;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -242,7 +241,7 @@ public class Logic {
 
     int count = 0;
     for (Bot bot : lsBot)
-      if (bot.isAlive)
+      if (bot.isAlive())
         count++;
     return count;
 
@@ -258,6 +257,33 @@ public class Logic {
     float rnd = Math.round(Math.random() * 1000);
     return (long) ((rnd/1000 == 0) ? (rnd/1000 + 0.121) * moneyBot : (rnd/1000) * moneyBot);
 
+  }
+
+  public float timeDelayToNextTurnBet() {
+    float rnd = (float) (Math.random() * 2)*100;
+    return rnd/100 < 1.0 ? (float) 1.0 : rnd/100;
+  }
+
+  public float getDegreeBuyIndex(int index) {
+
+    if (index == 0)
+      return -15;
+    else if (index == 2)
+      return 15;
+    else
+      return 0;
+  }
+
+  public void resetIsStartBetInBot(List<Bot> lsBot) {
+    for (Bot bot : lsBot)
+      bot.isStartBet = false;
+  }
+
+  public String convertMoney(long money) {
+
+//    if (money/1000 <= 999)
+
+    return "";
   }
 
 }

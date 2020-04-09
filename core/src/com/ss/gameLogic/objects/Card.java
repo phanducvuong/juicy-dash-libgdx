@@ -21,6 +21,7 @@ public class Card {
   public Number number;
   private int idBot = -1; //save idBot to get bot winner when check all cards in bot
   private IClickCard iClickCard;
+  private boolean isActive = false;
 
   private Image card;
 
@@ -57,7 +58,9 @@ public class Card {
   public void reset() {
 
     idBot = -1;
+    isActive = false;
     iClickCard = null;
+    card.setRotation(0);
     card.clear();
     card.remove();
 
@@ -87,6 +90,10 @@ public class Card {
     card.setZIndex(zindex);
   }
 
+  public void setRotate(float degree) {
+    card.setRotation(degree);
+  }
+
   public void addCardToScene(Group group) {
     group.addActor(card);
   }
@@ -105,6 +112,14 @@ public class Card {
 
   public Image getCard() {
     return card;
+  }
+
+  public boolean isActive() {
+    return isActive;
+  }
+
+  public void setActive(boolean active) {
+    this.isActive = active;
   }
 
   public void setiClickCard(IClickCard iClickCard) {
