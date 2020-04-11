@@ -1,11 +1,14 @@
 package com.ss.gameLogic;
 
 import com.badlogic.gdx.scenes.scene2d.Group;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 import com.ss.core.util.GLayer;
 import com.ss.core.util.GStage;
 import com.ss.gameLogic.card.Number;
 import com.ss.gameLogic.card.Type;
+import com.ss.gameLogic.effects.Effect;
 import com.ss.gameLogic.logic.Bet;
+import com.ss.gameLogic.logic.DivideCard;
 import com.ss.gameLogic.logic.Logic;
 import com.ss.gameLogic.logic.Rule;
 import com.ss.gameLogic.objects.Bot;
@@ -18,28 +21,36 @@ import java.util.List;
 public class Game {
 
   private Logic logic = Logic.getInstance();
+  private Effect effect;
 
-  public Group gBackground, gCard, gBtn, gBot;
+  public Group gBackground, gCard, gBtn, gBot, gEffect;
 
   public List<Bot> lsBot, lsBotActive; //reset lsBotActive when change numOfPlayer
   public List<Card> lsCardDown, lsCardUp;
   public Bot winner; //set null when player go out start screen
   public int numOfPlayer = 6;
   public long moneyBet = 10000;
+  private long tempMoneyPlayer = 20000;
 
+  public DivideCard divideCard;
   public GamePlayUI gamePlayUI;
   public Bet bet;
 
   public Game() {
 
     this.lsBotActive = new ArrayList<>();
+    effect = Effect.getInstance(this);
 
     initLayer();
     initBotAndCard();
 
     getLsBotActive();
+
+    divideCard = new DivideCard(this);
     gamePlayUI = new GamePlayUI(this);
     bet = new Bet(this);
+
+    newRound();
 
   }
 
@@ -47,7 +58,7 @@ public class Game {
 
     lsBot = new ArrayList<>();
     for (int i=0; i<6; i++)
-      lsBot.add(new Bot(i));
+      lsBot.add(new Bot(gBot, i));
 
     lsCardDown = new ArrayList<>();
     for (int i=0; i<52; i++)
@@ -63,14 +74,16 @@ public class Game {
   private void initLayer() {
 
     gBackground = new Group();
-    gCard = new Group();
     gBot = new Group();
+    gCard = new Group();
     gBtn = new Group();
+    gEffect = new Group();
 
     GStage.addToLayer(GLayer.ui, gBackground);
-    GStage.addToLayer(GLayer.ui, gCard);
     GStage.addToLayer(GLayer.ui, gBot);
+    GStage.addToLayer(GLayer.ui, gCard);
     GStage.addToLayer(GLayer.ui, gBtn);
+    GStage.addToLayer(GLayer.ui, gEffect);
 
   }
 
@@ -116,25 +129,37 @@ public class Game {
     }
 
     for (Bot bot : lsBotActive) {
+      //todo: get money player in share preference
+      if (lsBotActive.indexOf(bot) == 0)
+        bot.setTotalMoney(20000);
+      else
+        bot.setTotalMoney(logic.initMoneyBot(10000));
       bot.setAlive(true);
       bot.setActive(true);
-      //todo: replace tempMoney to moneyPlayer in share preference
-//      bot.setTotalMoney(logic.initMoneyBot(tempMoney));
-      bot.setTotalMoney(1000000);
+      bot.addToScene();
+      bot.convertTotalMoneyToString();
       bot.setTotalMoneyBet(10000);
     }
 
   }
 
-  public void resetGame() {
+  private void resetGame() {
 
-    for (int i=0; i<lsCardDown.size(); i++) {
-      lsCardDown.get(i).reset();
-      lsCardUp.get(i).reset();
-    }
+    gamePlayUI.reset();
+    bet.reset();
+    divideCard.reset();
+    if (winner == null)
+      divideCard.setTurn(0);
+    else
+      divideCard.setTurn(lsBotActive.indexOf(winner));
 
-    for (Bot bot : lsBotActive)
+    lsBotActive.get(0).setTotalMoney(20000);
+    for (Bot bot : lsBotActive) {
+      if (lsBotActive.indexOf(bot) != 0)
+        logic.chkMoneyBot(bot, moneyBet, tempMoneyPlayer);
+      bot.reset();
       bot.setTotalMoneyBet(moneyBet);
+    }
 
     bet.setTotalMoneyBet(moneyBet);
 
@@ -142,30 +167,41 @@ public class Game {
 
   public void newRound() {
 
+    resetGame();
+
     bet.totalMoney = moneyBet * lsBotActive.size();
     gamePlayUI.eftLbTotalMoney(0);
 
     for (Bot bot : lsBotActive) {
+      //todo: effect through money bet
       bot.setTotalMoney(bot.getTotalMoney() - moneyBet);
-      bot.convertMoneyToString();
+      bot.convertTotalMoneyToString();
     }
+
+    logMoneyBot();
+    divideCard.nextTurn();
 
   }
 
   public void startBet() {
 
-    int indexBet = logic.getIdBotToStartBet(winner);
+    if (winner != null && winner.id == 0)
+      gamePlayUI.showBtnBet();
+
+    int indexBet = logic.getIdBotToStartBet(lsBotActive, winner);
     lsBotActive.get(indexBet).isStartBet = true;
     bet.startBet(lsBotActive.get(indexBet));
 
   }
 
-  public Bot findWinner() {
+  public void findWinner() {
 
     List<Bot> tempLsBot = new ArrayList<>();
     for (Bot bot : lsBotActive)
-      if (bot.isAlive())
+      if (bot.isAlive()) {
         tempLsBot.add(bot);
+        bot.hideConditionBet();
+      }
 
     //label: update idBot of card in lsCardUp buy index lsBot alive
     for (Bot bot : tempLsBot)
@@ -173,24 +209,42 @@ public class Game {
         card.setIdBot(tempLsBot.indexOf(bot));
 
     winner = Rule.getInstance().getBotWinner(tempLsBot);
-    logMoneyBot();
-    return winner;
+    tempLsBot.remove(winner);
 
+    gBot.addAction(
+            sequence(
+                    delay(1f),
+                    run(() -> {
+                      gamePlayUI.showAllWhenFindWinner(tempLsBot, winner);
+                      gamePlayUI.showBannerWin(winner);
+                    })
+            )
+    );
+
+    logMoneyBot();
   }
 
   public void logMoneyBot() {
 
+    System.out.println("-----------------------------------");
     for (Bot bot : lsBotActive)
       System.out.println(bot.id + "   TOTAL MONEY  " + bot.getTotalMoney() + "  MONEY BET  " + bot.getTotalMoneyBet());
 
   }
 
-  public Bot getWinner() {
+  public void getWinner() {
 
     for (Bot bot : lsBotActive)
       if (bot.isAlive())
         winner = bot;
-    return winner;
+
+    if (winner != null) {
+      winner.hideConditionBet();
+      gamePlayUI.showCardWinner(winner);
+      gamePlayUI.showBannerWin(winner);
+    }
+
+    //todo: show bot win
 
   }
 

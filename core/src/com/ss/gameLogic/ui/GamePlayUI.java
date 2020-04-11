@@ -1,5 +1,7 @@
 package com.ss.gameLogic.ui;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -19,6 +21,9 @@ import com.ss.gameLogic.logic.Logic;
 import com.ss.gameLogic.objects.Bot;
 import com.ss.gameLogic.objects.Button;
 import com.ss.gameLogic.objects.Card;
+
+import java.util.List;
+
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
 public class GamePlayUI implements IClickCard {
@@ -28,7 +33,10 @@ public class GamePlayUI implements IClickCard {
   private Game game;
 
   private Button btnUp, btnTo, btnTheo;
-  private Label lbTotoalMoneyBet;
+  private Label lbTotoalMoneyBet, lbWin;
+
+  private Group gBannerWin;
+  private Image bannerWin;
 
   private DivideCard divideCard;
 
@@ -38,12 +46,8 @@ public class GamePlayUI implements IClickCard {
     this.effect = Effect.getInstance(game);
 
     initUIGame();
-    initBot();
     initButtonBet();
     handleClickBtnBet();
-
-    divideCard = new DivideCard(game);
-    devideCard();
 
     testClick();
 
@@ -74,18 +78,17 @@ public class GamePlayUI implements IClickCard {
 
         Runnable run = () -> {
 
-          btnTo.setTouchable(Touchable.enabled);
           game.bet.TO(game.lsBotActive.get(0));
           game.gBackground.addAction(
                   sequence(
                           delay(logic.timeDelayToNextTurnBet()),
-                          run(() -> game.bet.startBet(game.lsBotActive.get(1)))
+                          run(() -> game.bet.nextTurn(1))
                   )
           );
 
         };
 
-        btnTo.setTouchable(Touchable.disabled);
+        hideBtnBet();
         effect.click(btnTo, run);
 
       }
@@ -98,18 +101,17 @@ public class GamePlayUI implements IClickCard {
 
         Runnable run = () -> {
 
-          btnTheo.setTouchable(Touchable.enabled);
           game.bet.THEO(game.lsBotActive.get(0));
           game.gBackground.addAction(
                   sequence(
                           delay(logic.timeDelayToNextTurnBet()),
-                          run(() -> game.bet.startBet(game.lsBotActive.get(1)))
+                          run(() -> game.bet.nextTurn(1))
                   )
           );
 
         };
 
-        btnTheo.setTouchable(Touchable.disabled);
+        hideBtnBet();
         effect.click(btnTheo, run);
 
       }
@@ -122,19 +124,17 @@ public class GamePlayUI implements IClickCard {
 
         Runnable run = () -> {
 
-          btnUp.setTouchable(Touchable.enabled);
           game.bet.UP(game.lsBotActive.get(0));
-          game.lsBotActive.get(0).setAlive(false);
           game.gBackground.addAction(
                   sequence(
                           delay(logic.timeDelayToNextTurnBet()),
-                          run(() -> game.bet.startBet(game.lsBotActive.get(1)))
+                          run(() -> game.bet.nextTurn(1))
                   )
           );
 
         };
 
-        btnUp.setTouchable(Touchable.disabled);
+        hideBtnBet();
         effect.click(btnUp, run);
 
       }
@@ -147,23 +147,31 @@ public class GamePlayUI implements IClickCard {
     Image click = GUI.createImage(GMain.liengAtlas, "button_start");
     game.gBackground.addActor(click);
 
+    Image divideCard = GUI.createImage(GMain.liengAtlas, "divide_card");
+    divideCard.setPosition(click.getX() + divideCard.getWidth(), 0);
+    game.gBackground.addActor(divideCard);
+
+    divideCard.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        super.clicked(event, x, y);
+
+        game.newRound();
+
+      }
+    });
+
     click.addListener(new ClickListener() {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         super.clicked(event, x, y);
 
-        showAllCardUp();
+//        showAllWhenFindWinner();
 //        System.out.println(logic.timeDelayToNextTurnBet());
+        System.out.println(logic.convertMoneyBet(3254870002500005300L));
 
       }
     });
-
-  }
-
-  private void initBot() {
-
-    for (int i=0; i<game.lsBotActive.size(); i++)
-      game.lsBotActive.get(i).initAvatar(game.gBot);
 
   }
 
@@ -186,14 +194,23 @@ public class GamePlayUI implements IClickCard {
                                   bgTotalMoneyBet.getY() + bgTotalMoneyBet.getHeight()*bgTotalMoneyBet.getScaleY()/2 - lbTotoalMoneyBet.getHeight()/2 - 5);
     game.gBackground.addActor(lbTotoalMoneyBet);
 
+    //label: banner win
+    gBannerWin = new Group();
+    bannerWin = GUI.createImage(GMain.liengAtlas, "banner_win");
+    gBannerWin.setSize(bannerWin.getWidth(), bannerWin.getHeight());
+    gBannerWin.addActor(bannerWin);
+
+    lbWin = new Label(C.lang.winner, new Label.LabelStyle(Config.WIN_FONT, null));
+    lbWin.setAlignment(Align.center);
+    lbWin.setFontScale(.7f);
+    lbWin.setPosition(bannerWin.getX() + bannerWin.getWidth()/2 - lbWin.getWidth()/2,
+                      bannerWin.getY() + bannerWin.getHeight()/2 - lbWin.getHeight()/2 - 5);
+    gBannerWin.addActor(lbWin);
+
   }
 
   public void eftLbTotalMoney(long money) {
     effect.raiseMoney(lbTotoalMoneyBet, money);
-  }
-
-  private void devideCard() {
-    divideCard.nextTurn();
   }
 
   @Override
@@ -201,16 +218,62 @@ public class GamePlayUI implements IClickCard {
     effect.flipCard(cardDown, cardUp);
   }
 
-  private void showAllCardUp() {
+  public void showAllWhenFindWinner(List<Bot> lsBot, Bot winner) {
 
-    for (int i=1; i<game.lsBotActive.size(); i++) {
-      Bot bot = game.lsBotActive.get(i);
-      for (int j=0; j<bot.lsCardDown.size(); j++) {
-        Card cardDown = bot.lsCardDown.get(j);
-        Card cardUp = bot.lsCardUp.get(j);
-        effect.showAllCard(cardDown, cardUp);
-      }
+    for (Bot bot : lsBot) {
+      if (bot.id != 0)
+        for (int j=0; j<bot.lsCardDown.size(); j++) {
+          Card cardDown = bot.lsCardDown.get(j);
+          Card cardUp = bot.lsCardUp.get(j);
+          effect.showAllCard(cardDown, cardUp, Config.SCL_SHOW_CARD, Config.SCL_SHOW_CARD);
+        }
     }
 
+    effect.winnerIsBot(winner);
+
+  }
+
+  public void showCardWinner(Bot winner) {
+    if (winner.id != 0)
+      effect.winnerIsBot(winner);
+  }
+
+  private void hideBtnBet() {
+
+    btnTo.setTouchable(Touchable.disabled);
+    btnTheo.setTouchable(Touchable.disabled);
+    btnUp.setTouchable(Touchable.disabled);
+
+    btnTo.setColor(Color.GRAY);
+    btnTheo.setColor(Color.GRAY);
+    btnUp.setColor(Color.GRAY);
+
+  }
+
+  public void showBtnBet() {
+
+    btnTo.setTouchable(Touchable.enabled);
+    btnTheo.setTouchable(Touchable.enabled);
+    btnUp.setTouchable(Touchable.enabled);
+
+    btnTo.setColor(Color.WHITE);
+    btnTheo.setColor(Color.WHITE);
+    btnUp.setColor(Color.WHITE);
+
+  }
+
+  public void showBannerWin(Bot bot) {
+    Image avatar = bot.avatar;
+      gBannerWin.setPosition(avatar.getX() + avatar.getWidth()/2 - bannerWin.getWidth()/2,
+              avatar.getY() + avatar.getHeight() - bannerWin.getHeight()/2);
+    game.gEffect.addActor(gBannerWin);
+  }
+
+  public void hideBannerWin() {
+    gBannerWin.remove();
+  }
+
+  public void reset() {
+    hideBannerWin();
   }
 }

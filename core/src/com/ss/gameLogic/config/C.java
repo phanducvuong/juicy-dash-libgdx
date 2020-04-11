@@ -24,6 +24,8 @@ public class C {
         public static String raise = "";
         public static String call = "";
         public static String fold = "";
+        public static String allIn = "";
+        public static String winner = "";
 
         static void initLocalize() {
             FileHandle specFilehandle = Gdx.files.internal("i18n/lang_" + "id");
@@ -42,6 +44,8 @@ public class C {
             raise = locale.get("raise");
             call = locale.get("call");
             fold = locale.get("fold");
+            allIn = locale.get("all_in");
+            winner = locale.get("win");
         }
     }
 

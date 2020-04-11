@@ -57,6 +57,16 @@ public class Effect {
 
   }
 
+  public void myTurn(Bot bot) {
+    if (bot.isAlive())
+      bot.avatar.addAction(
+              sequence(
+                      scaleTo(-1f, 1, .25f, fastSlow),
+                      scaleTo(1f, 1, .25f, fastSlow)
+              )
+      );
+  }
+
   private void rotateAndSpreadCard(Card cardDown, Card cardUp, int indexCard, int indexBot) {
 
     Runnable run = () -> {
@@ -88,12 +98,35 @@ public class Effect {
     else
       par = sequence(
               rotateTo(logic.getDegreeBuyIndex(indexCard), DUR_SCL_ROTATE_CARD, fastSlow),
-              moveBy(22*indexCard, 0, DUR_SPREAD_CARD, fastSlow),
+              moveBy(28*indexCard, 0, DUR_SPREAD_CARD, fastSlow),
               run(run)
       );
 
 
     cardDown.addAction(par);
+
+  }
+
+  public void winnerIsBot(Bot bot) {
+
+    float x = bot.avatar.getX() + bot.avatar.getWidth()/2;
+    float y = bot.avatar.getY() + bot.avatar.getHeight()/2 - 70;
+
+    for (Card cardDown : bot.lsCardDown) {
+      int index = bot.lsCardDown.size() - 1 - bot.lsCardDown.indexOf(cardDown);
+      Card cardUp = bot.lsCardUp.get(bot.lsCardDown.indexOf(cardDown));
+
+      cardDown.addAction(
+              sequence(
+                      parallel(
+                              scaleTo(1f, 1f, .5f, fastSlow),
+                              moveTo(x - cardDown.getWidth()/2 - index*28 + 30, y - 10, .5f, fastSlow)
+                      ),
+                      run(() -> cardUp.setPosition(cardDown.getX(), cardDown.getY())),
+                      run(() -> showAllCard(cardDown, cardUp, 1f, 1f))
+              )
+      );
+    }
 
   }
 
@@ -106,11 +139,11 @@ public class Effect {
 
   }
 
-  public void showAllCard(Card cardDown, Card cardUp) {
+  public void showAllCard(Card cardDown, Card cardUp, float sclX, float sclY) {
 
     cardDown.addAction(sequence(
-            scaleTo(0, SCL_CARD_INIT, DUR_SCL_CARD_PLAYER, linear),
-            run(() -> cardUp.addAction(scaleTo(SCL_CARD_INIT, SCL_CARD_INIT, DUR_SCL_CARD_PLAYER, linear)))
+            scaleTo(0, sclY, DUR_SCL_CARD_PLAYER, linear),
+            run(() -> cardUp.addAction(scaleTo(sclX, sclY, DUR_SCL_CARD_PLAYER, linear)))
     ));
 
   }
@@ -150,7 +183,7 @@ public class Effect {
     lbMoney.addAction(GTemporalAction.add(.5f, (dt,a) -> {
 
       long temp = (long) (tempMoney + money*dt);
-      lbMoney.setText(temp+"");
+      lbMoney.setText(logic.convertMoneyBet(temp));
 
     }));
 

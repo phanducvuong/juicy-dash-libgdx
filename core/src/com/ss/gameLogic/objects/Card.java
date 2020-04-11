@@ -1,9 +1,11 @@
 package com.ss.gameLogic.objects;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -21,7 +23,7 @@ public class Card {
   public Number number;
   private int idBot = -1; //save idBot to get bot winner when check all cards in bot
   private IClickCard iClickCard;
-  private boolean isActive = false;
+  private boolean isActive = false; //check card to move Card Residual
 
   private Image card;
 
@@ -60,6 +62,8 @@ public class Card {
     idBot = -1;
     isActive = false;
     iClickCard = null;
+    card.setColor(Color.WHITE);
+    card.setScale(Config.SCL_CARD_INIT);
     card.setRotation(0);
     card.clear();
     card.remove();
@@ -94,6 +98,10 @@ public class Card {
     card.setRotation(degree);
   }
 
+  public void setColor(Color color) {
+    card.setColor(color);
+  }
+
   public void addCardToScene(Group group) {
     group.addActor(card);
   }
@@ -113,6 +121,10 @@ public class Card {
   public Image getCard() {
     return card;
   }
+
+  public float getX() { return card.getX(); }
+
+  public float getY() { return card.getY(); }
 
   public boolean isActive() {
     return isActive;

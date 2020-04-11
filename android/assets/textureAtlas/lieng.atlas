@@ -6,9 +6,23 @@ filter: Nearest,Nearest
 repeat: none
 avatar
   rotate: false
-  xy: 1284, 724
+  xy: 347, 35
   size: 159, 145
   orig: 159, 145
+  offset: 0, 0
+  index: -1
+banner_win
+  rotate: false
+  xy: 1284, 807
+  size: 283, 62
+  orig: 283, 62
+  offset: 0, 0
+  index: -1
+bet_condition
+  rotate: false
+  xy: 1284, 731
+  size: 194, 74
+  orig: 194, 74
   offset: 0, 0
   index: -1
 bg_money_bet
@@ -27,7 +41,7 @@ bg_table
   index: -1
 btnSee
   rotate: false
-  xy: 347, 110
+  xy: 1876, 946
   size: 170, 70
   orig: 170, 70
   offset: 0, 0
@@ -55,14 +69,21 @@ btn_up
   index: -1
 button_start
   rotate: false
-  xy: 671, 225
+  xy: 508, 111
   size: 159, 69
   orig: 159, 69
   offset: 0, 0
   index: -1
+divide_card
+  rotate: false
+  xy: 1629, 926
+  size: 245, 90
+  orig: 245, 90
+  offset: 0, 0
+  index: -1
 info_user
   rotate: false
-  xy: 1629, 930
+  xy: 671, 208
   size: 183, 86
   orig: 183, 86
   offset: 0, 0

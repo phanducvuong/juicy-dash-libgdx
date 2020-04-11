@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
 import com.ss.GMain;
 import com.ss.core.util.GUI;
+import com.ss.gameLogic.config.C;
 import com.ss.gameLogic.config.Config;
 import com.ss.gameLogic.logic.Logic;
 import com.ss.gameLogic.logic.Rule;
@@ -25,24 +26,31 @@ public class Bot {
   public int idRule = -1; //-1 special else point of desk
   private long totalMoney = 0, totalMoneyBet = 0;
 
+  private Group gBot;
   private Label lbTotalMoney, lbNamePlayer;
-  public Image avatar;
+  public Image avatar, bgInfo;
+
+  private Image bgBetCondition;
+  private Label lbConditionBet, lbMoneyBet;
 
   public List<Card> lsCardDown, lsCardUp; //reset lsCardDown, lsCardUp
 
-  public Bot(int id) {
+  public Bot(Group gBot, int id) {
 
+    this.gBot = gBot;
     this.id = id;
     this.lsCardDown = new ArrayList<>();
     this.lsCardUp = new ArrayList<>();
 
+    initAvatar();
+
   }
 
-  public void initAvatar(Group group) {
+  private void initAvatar() {
 
     Vector2 pos = Logic.getInstance().getPosByIdBot(id);
 
-    Image bgInfo = GUI.createImage(GMain.liengAtlas, "info_user");
+    bgInfo = GUI.createImage(GMain.liengAtlas, "info_user");
     if (id == 0) {
       bgInfo.setScale(1.5f);
       bgInfo.setPosition(pos.x - 370, pos.y + 130);
@@ -51,16 +59,17 @@ public class Bot {
       bgInfo.setPosition(pos.x + 150, pos.y + 70);
     else
       bgInfo.setPosition(pos.x - 160, pos.y + 70);
-    group.addActor(bgInfo);
 
     avatar = GUI.createImage(GMain.liengAtlas, "avatar");
+    avatar.setOrigin(Align.center);
     if (id == 0) {
       avatar.setScale(1.5f);
-      avatar.setPosition(bgInfo.getX() + bgInfo.getWidth()*1.5f/2 - avatar.getWidth()*1.5f/2 - 5, bgInfo.getY() - avatar.getHeight()*1.5f);
+      avatar.setOrigin(avatar.getWidth()*1.5f/2, avatar.getHeight()*1.5f/2);
+      avatar.setPosition(bgInfo.getX() + bgInfo.getWidth()*1.5f/2 - avatar.getWidth()/2 + 10,
+                            bgInfo.getY() - avatar.getHeight()*1.5f + 50);
     }
     else
       avatar.setPosition(bgInfo.getX() + bgInfo.getWidth()/2 - avatar.getWidth()/2 - 5, bgInfo.getY() - avatar.getHeight());
-    group.addActor(avatar);
 
     //label: money
     lbTotalMoney = new Label("$2M", new Label.LabelStyle(Config.MONEY_FONT, null));
@@ -73,7 +82,6 @@ public class Bot {
       lbTotalMoney.setFontScale(.5f);
       lbTotalMoney.setPosition(bgInfo.getX()+bgInfo.getWidth()/2-lbTotalMoney.getWidth()/2 - 5, bgInfo.getY()+bgInfo.getHeight()-lbTotalMoney.getHeight());
     }
-    group.addActor(lbTotalMoney);
 
     //label: name
     lbNamePlayer = new Label("User", new Label.LabelStyle(Config.MONEY_FONT, Color.WHITE));
@@ -86,39 +94,150 @@ public class Bot {
       lbNamePlayer.setFontScale(.5f);
       lbNamePlayer.setPosition(bgInfo.getX()+bgInfo.getWidth()/2-lbNamePlayer.getWidth()/2 - 5, bgInfo.getY() - 2);
     }
-    group.addActor(lbNamePlayer);
+
+    //label: bg bet condition, lbConditionBet, lbMoneyBet
+    bgBetCondition = GUI.createImage(GMain.liengAtlas, "bet_condition");
+    lbConditionBet = new Label("THEO", new Label.LabelStyle(Config.BUTTON_FONT, null));
+    lbConditionBet.setAlignment(Align.center);
+    lbMoneyBet = new Label("999K", new Label.LabelStyle(Config.MONEY_FONT, null));
+    lbMoneyBet.setAlignment(Align.center);
+    if (id == 0) {
+      lbMoneyBet.setFontScale(.8f);
+      lbConditionBet.setPosition(pos.x - 30, pos.y - 170);
+      bgBetCondition.setScale(1.3f);
+      bgBetCondition.setPosition(lbConditionBet.getX() + lbConditionBet.getWidth() + 20,
+                                  lbConditionBet.getY() + lbConditionBet.getHeight()/2 - bgBetCondition.getHeight()*1.3f/2);
+      lbMoneyBet.setPosition(bgBetCondition.getX() + bgBetCondition.getWidth()*1.3f/2 - lbMoneyBet.getWidth()/2 + 30,
+                              bgBetCondition.getY() + bgBetCondition.getHeight()*1.3f/2 - lbMoneyBet.getHeight()/2 - 5);
+    }
+    else {
+      lbConditionBet.setFontScale(.8f);
+      lbMoneyBet.setFontScale(.6f);
+      if (id == 1 || id == 2) {
+        bgBetCondition.setScaleX(-1);
+        bgBetCondition.setPosition(bgInfo.getX() + bgInfo.getWidth()/2 - bgBetCondition.getWidth()/2,
+                bgInfo.getY() + bgInfo.getHeight() + bgBetCondition.getHeight()/2 - 40);
+        lbMoneyBet.setPosition(bgBetCondition.getX() - bgBetCondition.getWidth()/2 - lbMoneyBet.getWidth()/2 - 27,
+                bgBetCondition.getY() + bgBetCondition.getHeight()/2 - lbMoneyBet.getHeight()/2 - 5);
+      }
+      else {
+        bgBetCondition.setPosition(bgInfo.getX() + bgInfo.getWidth()/2 + bgBetCondition.getWidth()/2,
+                                bgInfo.getY() + bgInfo.getHeight() + bgBetCondition.getHeight()/2 - 40);
+        lbMoneyBet.setPosition(bgBetCondition.getX() + bgBetCondition.getWidth()/2 - lbMoneyBet.getWidth()/2 + 27,
+                bgBetCondition.getY() + bgBetCondition.getHeight()/2 - lbMoneyBet.getHeight()/2 - 5);
+      }
+      lbConditionBet.setPosition(bgInfo.getX() + bgInfo.getWidth()/2 - lbConditionBet.getWidth()/2,
+              bgBetCondition.getY() + bgBetCondition.getHeight()/2 - lbConditionBet.getHeight()/2);
+    }
+
+  }
+
+  public void addToScene() {
+
+    gBot.addActor(bgInfo);
+    gBot.addActor(avatar);
+    gBot.addActor(lbTotalMoney);
+    gBot.addActor(lbNamePlayer);
+
+    bgBetCondition.setVisible(false);
+    lbConditionBet.setVisible(false);
+    lbMoneyBet.setVisible(false);
+    gBot.addActor(bgBetCondition);
+    gBot.addActor(lbConditionBet);
+    gBot.addActor(lbMoneyBet);
+
+  }
+
+  public void removeActor() {
+
+    bgInfo.remove();
+    avatar.remove();
+    lbTotalMoney.remove();
+    lbNamePlayer.remove();
 
   }
 
   public void TO(long money) {
     totalMoneyBet += money;
     totalMoney -= money;
+
+    hideConditionBet();
+    showLbMoneyBet(money);
   }
 
   public void AllIn() {
     totalMoneyBet += totalMoney;
     totalMoney = 0;
+
+    hideConditionBet();
+    lbConditionBet.setText(C.lang.allIn);
+    lbConditionBet.setVisible(true);
   }
 
   public void THEO(long money) {
     totalMoneyBet += money;
     totalMoney -= money;
+
+    hideConditionBet();
+    lbConditionBet.setText(C.lang.call);
+    lbConditionBet.setVisible(true);
   }
 
   public void UP () {
     isAlive = false;
+    eftFold();
+  }
+
+  private void eftFold() {
+
+    hideConditionBet();
+    bgInfo.setColor(Color.GRAY);
+    avatar.setColor(Color.GRAY);
+    lbNamePlayer.setColor(Color.GRAY);
+    lbTotalMoney.setColor(Color.GRAY);
+
+    for (Card card : lsCardDown) {
+      card.setColor(Color.GRAY);
+      lsCardUp.get(lsCardDown.indexOf(card)).setColor(Color.GRAY);
+    }
+
   }
 
   public void reset() {
 
     isStartBet = false;
+    isAlive = true;
     idRule = -1;
     totalMoneyBet = 0;
+    lsCardDown.clear();
+    lsCardUp.clear();
+
+    hideConditionBet();
+    bgInfo.setColor(Color.WHITE);
+    avatar.setColor(Color.WHITE);
+    lbNamePlayer.setColor(Color.WHITE);
+    lbTotalMoney.setColor(Color.WHITE);
 
   }
 
-  public void convertMoneyToString() {
-    lbTotalMoney.setText(logic.convertMoney(totalMoney));
+  private void showLbMoneyBet(long moneyBet) {
+    bgBetCondition.setVisible(true);
+
+    lbConditionBet.setText(C.lang.raise);
+    lbConditionBet.setVisible(true);
+
+    lbMoneyBet.setText(logic.convertMoneyBot(moneyBet));
+    lbMoneyBet.setVisible(true);
+  }
+
+  public void hideConditionBet() {
+    bgBetCondition.setVisible(false);
+    lbMoneyBet.setVisible(false);
+    lbConditionBet.setVisible(false);
+  }
+
+  public void convertTotalMoneyToString() {
+    lbTotalMoney.setText(logic.convertMoneyBot(totalMoney));
   }
 
   public void findIdRule() {

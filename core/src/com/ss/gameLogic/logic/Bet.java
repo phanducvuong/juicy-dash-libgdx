@@ -3,22 +3,25 @@ package com.ss.gameLogic.logic;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.ss.core.action.exAction.GSimpleAction;
 import com.ss.gameLogic.Game;
+import com.ss.gameLogic.effects.Effect;
 import com.ss.gameLogic.objects.Bot;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
 public class Bet {
 
   private Logic logic = Logic.getInstance();
+  private Effect effect;
   private Game game;
 
   private long totalMoneyBet = 10000;
   public long totalMoney = 0; //money all player bet
   private int turn = -1, idBotKeepMaxMoneyTo = -1;
   private Bot botPresent;
-  private boolean isResetBotStartBet = true;
+  private boolean isResetBotStartBet = true, isMoneyBotZero = false;
 
   public Bet(Game game) {
     this.game = game;
+    this.effect = Effect.getInstance(game);
   }
 
   public void startBet(Bot bot) {
@@ -40,10 +43,14 @@ public class Bet {
     game.gBot.addAction(sequence(
             run(() -> {
               if (botPresent.isAlive() && botPresent.getTotalMoney() > 0) {
+                isMoneyBotZero = false;
+                effect.myTurn(botPresent);
                 rndBet(botPresent);
               }
+              else
+                isMoneyBotZero = true;
             }),
-            delay(turn != 0 ? logic.timeDelayToNextTurnBet() : 0),
+            delay(turn != 0 && !isMoneyBotZero ? logic.timeDelayToNextTurnBet() : 0),
             run(() -> nextTurn(turn))
     ));
 
@@ -51,32 +58,45 @@ public class Bet {
 
   }
 
-  private void nextTurn(int turn) {
+  public void nextTurn(int turn) {
 
     Bot botNext = game.lsBotActive.get(turn);
+
     if (logic.countBotAlive(game.lsBotActive) == 1) {
       //todo: finished bet
-      Bot winner = game.getWinner();
-      System.out.println("size lsBotActive == 1 " + winner.id);
+      game.getWinner();
+      System.out.println("CASE 1");
+//      System.out.println("size lsBotActive == 1 " + game.getWinner());
     }
-    else if (botNext.id == idBotKeepMaxMoneyTo || botNext.isStartBet) {
+    else if (idBotKeepMaxMoneyTo == -1 && botNext.isStartBet) {
+      game.findWinner();
+      System.out.println("CASE 2");
+    }
+    else if (botNext.id == idBotKeepMaxMoneyTo) {
       //todo: find winner
-      Bot winner = game.findWinner();
-      System.out.println("Winner  " + winner.id);
+      game.findWinner();
+      System.out.println("CASE 3");
+//      System.out.println("Winner  " + game.findWinner().id);
     }
-    else if (turn > 0)
+    else if (turn > 0) {
       startBet(botNext);
-    else if (!botNext.isAlive()) {
+      System.out.println("CASE 4");
+    }
+    else if (!botNext.isAlive() || botNext.getTotalMoney() <= 0) {
       //if player is "UP" => next turn (botNext is player)
       Bot tempBotNext = game.lsBotActive.get(1);
       if (tempBotNext.id == idBotKeepMaxMoneyTo || tempBotNext.isStartBet) {
-        Bot winner = game.findWinner();
-        System.out.println("FIND WINNER  " + winner.id);
+        game.findWinner();
+        System.out.println("CASE 5");
+//        System.out.println("FIND WINNER  " + game.findWinner().id);
       }
-      else
+      else {
         startBet(tempBotNext);
+        System.out.println("CASE 6");
+      }
     }
     else {
+      game.gamePlayUI.showBtnBet();
       // todo: turn player, show btn bet
       System.out.println("TURN PLAYER ----------------------------");
     }
@@ -93,7 +113,7 @@ public class Bet {
       totalMoney += bot.getTotalMoney();
 
       game.gamePlayUI.eftLbTotalMoney(bot.getTotalMoney());
-      System.out.println(bot.id + "  TO    MONEY  " + bot.getTotalMoney());
+      System.out.println(bot.id + "  TO ALL-IN    MONEY  " + bot.getTotalMoney());
     }
     else {
       long tempMoneyBet = logic.rndMoneyTo(bot.getTotalMoney() - moneyOwe);
@@ -110,6 +130,7 @@ public class Bet {
         isResetBotStartBet = false;
       }
     }// to them
+    bot.convertTotalMoneyToString();
 
   }
 
@@ -128,6 +149,7 @@ public class Bet {
 
       game.gamePlayUI.eftLbTotalMoney(moneyOwe);
     }
+    bot.convertTotalMoneyToString();
 
     System.out.println(bot.id + "  THEO    MONEY    " + bot.getTotalMoney());
 
@@ -141,49 +163,53 @@ public class Bet {
   private void rndBet(Bot bot) {
 
     int rnd = (int) Math.round(Math.random() * 10);
-    switch (bot.idRule) {
-
-      case -1:
+    if (bot.isStartBet) {
+      if (rnd <= 5)
+        THEO(bot);
+      else
         TO(bot);
-        break;
-      case 0: case 1: case 2:
+    }
+    else {
+      switch (bot.idRule) {
 
-        if (rnd <= 5)
-          UP(bot);
-        else
-          THEO(bot);
-
-        break;
-      case 3: case 4: case 5: case 6:
-
-        if (rnd <= 2)
-          UP(bot);
-        else if (rnd <= 7)
-          THEO(bot);
-        else
+        case -1:
           TO(bot);
+          break;
+        case 0: case 1: case 2:
 
-        break;
-      case 7: case 8: case 9:
+          if (rnd <= 5)
+            UP(bot);
+          else
+            THEO(bot);
 
-        if (rnd <= 1)
-          UP(bot);
-        else if (rnd <= 7)
-          THEO(bot);
-        else
-          TO(bot);
-        break;
+          break;
+        case 3: case 4: case 5: case 6:
+
+          if (rnd <= 2)
+            UP(bot);
+          else if (rnd <= 7)
+            THEO(bot);
+          else
+            TO(bot);
+
+          break;
+        case 7: case 8: case 9:
+
+          if (rnd <= 1)
+            UP(bot);
+          else if (rnd <= 7)
+            THEO(bot);
+          else
+            TO(bot);
+          break;
+      }
     }
 
   }
 
-
-
-
-
-
   public void reset() {
 
+    isMoneyBotZero = false;
     isResetBotStartBet = true;
     botPresent = null;
     totalMoney = 0;

@@ -1,7 +1,6 @@
 package com.ss.core.util;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Group;
 
 public class GClipGroup extends Group {
@@ -11,29 +10,24 @@ public class GClipGroup extends Group {
    float clipY;
    boolean isClipping;
 
-   public void draw(Batch var1, float var2) {
-      if(!this.isClipping || this.clipW >= 1.0F && this.clipH >= 1.0F) {
-         var1.end();
-         var1.begin();
-         boolean var3;
-         if(this.isClipping() && this.clipBegin(this.clipX + this.getX(), this.clipY + this.getY(), this.clipW, this.clipH)) {
-            var3 = true;
-         } else {
-            var3 = false;
-         }
+   public void draw(Batch batch, float dt) {
 
-         super.draw(var1, var2);
-         if(var3) {
-            var1.end();
-            this.clipEnd();
-            var1.begin();
-            return;
-         }
-      }
+    if(this.clipW >= 1.0F && this.clipH >= 1.0F) {
+      batch.end();
+      batch.begin();
+//      boolean var3;
+//      var3 = this.isClipping() && this.clipBegin(this.clipX + this.getX(), this.clipY + this.getY(), this.clipW, this.clipH);
+      this.clipBegin(this.getX(), this.getY(), this.clipW, this.clipH);
+
+      super.draw(batch, dt);
+      batch.end();
+      this.clipEnd();
+      batch.begin();
+    }
 
    }
 
-   public boolean isClipping() {
+   private boolean isClipping() {
       return this.isClipping;
    }
 

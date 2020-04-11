@@ -1,5 +1,6 @@
 package com.ss.gameLogic.objects;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -48,6 +49,11 @@ public class Button {
 
   public void setScale(float x, float y) {
     group.setScale(x, y);
+  }
+
+  public void setColor(Color color) {
+    btn.setColor(color);
+    lbTxt.setColor(color);
   }
 
   public void setOriginCenter() {

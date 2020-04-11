@@ -226,8 +226,8 @@ public class Logic {
 
   }
 
-  public int getIdBotToStartBet(Bot bot) {
-    return bot != null ? bot.id : 0;
+  public int getIdBotToStartBet(List<Bot> lsBotActive, Bot bot) {
+    return bot != null ? lsBotActive.indexOf(bot) : 0;
   }
 
   public void findIdRuleOfLsBot(List<Bot> lsBot) {
@@ -235,6 +235,11 @@ public class Logic {
     for (Bot bot : lsBot)
       bot.findIdRule();
 
+  }
+
+  public void chkMoneyBot(Bot bot, long moneyBet, long moneyRnd) {
+    if (bot.getTotalMoney() < moneyBet)
+      bot.setTotalMoney(initMoneyBot(moneyRnd));
   }
 
   public int countBotAlive(List<Bot> lsBot) {
@@ -249,7 +254,8 @@ public class Logic {
 
   public long initMoneyBot(long moneyPlayer) {
     float rnd = (float) Math.round(Math.random() * 10000)/10000;
-    return (long) (moneyPlayer * 10 * rnd);
+    long tempMoney = (long) (moneyPlayer * 10 * rnd);
+    return tempMoney <= moneyPlayer ? moneyPlayer*2 : tempMoney;
   }
 
   public long rndMoneyTo(long moneyBot) {
@@ -260,7 +266,7 @@ public class Logic {
   }
 
   public float timeDelayToNextTurnBet() {
-    float rnd = (float) (Math.random() * 2)*100;
+    float rnd = (float) (Math.random() * 3)*100;
     return rnd/100 < 1.0 ? (float) 1.0 : rnd/100;
   }
 
@@ -279,11 +285,51 @@ public class Logic {
       bot.isStartBet = false;
   }
 
-  public String convertMoney(long money) {
+  public String convertMoneyBot(long money) {
 
-//    if (money/1000 <= 999)
+    String m;
+    if (String.valueOf(money).length() < 4)
+      m = "$" + money;
+    else if (money/1000 <= 999)
+      m = "$" + money/1000 + "K";
+    else if (money/1000000 <= 999)
+      m = "$" + money/1000000 + "M";
+    else if (money/1000000000 <= 999)
+      m = "$" + money/1000000000 + "B";
+    else if (money/1000000000000L <= 999)
+      m = "$" + money/1000000000000L + "BB";
+    else
+      m = "$" + money;
+    return m;
+  }
 
-    return "";
+  public String convertMoneyBet(long money) {
+
+    long i, length = String.valueOf(money).length();
+    StringBuffer m = new StringBuffer();
+    m.append("$");
+
+    if (length <= 6)
+      i = money/1000;
+    else if (length <= 9)
+      i = money/1000000;
+    else if (length <= 12)
+      i = money/1000000000;
+    else if (length <= 15)
+      i = money/1000000000000L;
+    else if (length <= 18)
+      i = money/1000000000000000L;
+    else if (length <= 21)
+      i = money/1000000000000000000L;
+    else
+      i = money;
+
+    m.append(i);
+    String temp = String.valueOf(money).substring(String.valueOf(i).length());
+    for (int ii=0; ii<temp.length(); ii+=3)
+      m.append(",").append(temp, ii, ii+3);
+    return String.valueOf(m);
+
   }
 
 }
