@@ -1,6 +1,7 @@
 package com.ss.gameLogic.objects;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -9,23 +10,26 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.ss.GMain;
 import com.ss.core.util.GUI;
+import com.ss.gameLogic.Game;
 import com.ss.gameLogic.config.Config;
+import com.ss.gameLogic.effects.Effect;
 
 import java.util.ArrayList;
-import java.util.EventListener;
 import java.util.List;
 
 public class Button {
 
   private Image btn;
   private Label lbTxt;
-  public List<Image> pointBlur;
+  private List<Vector2> posLight;
+  private List<Image> lsLight;
   private Group group;
 
   public Button(String region, String txt) {
 
     this.group = new Group();
-    pointBlur = new ArrayList<>();
+    posLight = new ArrayList<>();
+    lsLight = new ArrayList<>();
     btn = GUI.createImage(GMain.liengAtlas, region);
 
     lbTxt = new Label(txt, new Label.LabelStyle(Config.BUTTON_FONT, null));
@@ -36,6 +40,85 @@ public class Button {
     group.setOrigin(btn.getWidth()/2, btn.getHeight()/2);
     group.addActor(btn);
     group.addActor(lbTxt);
+
+    initPosBlur();
+
+  }
+
+  public void startEftLight(Game game) {
+    for (Image light : lsLight)
+      Effect.getInstance(game).lightBtn(light);
+  }
+
+  public void stopEftLight() {
+    for (Image light : lsLight) {
+      light.getColor().a = 0;
+      light.clearActions();
+    }
+  }
+
+  private void initPosBlur() {
+
+    posLight.add(new Vector2(btn.getX() + btn.getWidth()/2 - 142, btn.getY() + btn.getHeight()/2 - 76));
+    posLight.add(new Vector2(btn.getX() + btn.getWidth()/2 - 65, posLight.get(0).y));
+    posLight.add(new Vector2(btn.getX() + btn.getWidth()/2 + 12, posLight.get(0).y));
+    posLight.add(new Vector2(btn.getX() + btn.getWidth()/2 + 88, posLight.get(0).y));
+    posLight.add(new Vector2(btn.getX() + btn.getWidth()/2 + 124, btn.getY() + btn.getHeight()/2 - 60));
+    posLight.add(new Vector2(posLight.get(4).x, btn.getY() + btn.getHeight()/2 + 5));
+    posLight.add(new Vector2(posLight.get(3).x, btn.getY() + btn.getHeight()/2 + 24));
+    posLight.add(new Vector2(posLight.get(2).x, posLight.get(6).y));
+    posLight.add(new Vector2(posLight.get(1).x, posLight.get(6).y));
+    posLight.add(new Vector2(posLight.get(0).x, posLight.get(6).y));
+    posLight.add(new Vector2(btn.getX() + btn.getWidth()/2 - 177, posLight.get(5).y));
+    posLight.add(new Vector2(posLight.get(10).x, posLight.get(4).y));
+
+    lsLight.add(GUI.createImage(GMain.liengAtlas, "white_blur"));
+    lsLight.get(0).setPosition(posLight.get(0).x, posLight.get(0).y);
+    group.addActor(lsLight.get(0));
+
+    lsLight.add(GUI.createImage(GMain.liengAtlas, "white_blur"));
+    lsLight.get(1).setPosition(posLight.get(1).x, posLight.get(1).y);
+    group.addActor(lsLight.get(1));
+
+    lsLight.add(GUI.createImage(GMain.liengAtlas, "white_blur"));
+    lsLight.get(2).setPosition(posLight.get(2).x, posLight.get(2).y);
+    group.addActor(lsLight.get(2));
+
+    lsLight.add(GUI.createImage(GMain.liengAtlas, "white_blur"));
+    lsLight.get(3).setPosition(posLight.get(3).x, posLight.get(3).y);
+    group.addActor(lsLight.get(3));
+
+    lsLight.add(GUI.createImage(GMain.liengAtlas, "white_blur"));
+    lsLight.get(4).setPosition(posLight.get(4).x, posLight.get(4).y);
+    group.addActor(lsLight.get(4));
+
+    lsLight.add(GUI.createImage(GMain.liengAtlas, "white_blur"));
+    lsLight.get(5).setPosition(posLight.get(5).x, posLight.get(5).y);
+    group.addActor(lsLight.get(5));
+
+    lsLight.add(GUI.createImage(GMain.liengAtlas, "white_blur"));
+    lsLight.get(6).setPosition(posLight.get(6).x, posLight.get(6).y);
+    group.addActor(lsLight.get(6));
+
+    lsLight.add(GUI.createImage(GMain.liengAtlas, "white_blur"));
+    lsLight.get(7).setPosition(posLight.get(7).x, posLight.get(7).y);
+    group.addActor(lsLight.get(7));
+
+    lsLight.add(GUI.createImage(GMain.liengAtlas, "white_blur"));
+    lsLight.get(8).setPosition(posLight.get(8).x, posLight.get(8).y);
+    group.addActor(lsLight.get(8));
+
+    lsLight.add(GUI.createImage(GMain.liengAtlas, "white_blur"));
+    lsLight.get(9).setPosition(posLight.get(9).x, posLight.get(9).y);
+    group.addActor(lsLight.get(9));
+
+    lsLight.add(GUI.createImage(GMain.liengAtlas, "white_blur"));
+    lsLight.get(10).setPosition(posLight.get(10).x, posLight.get(10).y);
+    group.addActor(lsLight.get(10));
+
+    lsLight.add(GUI.createImage(GMain.liengAtlas, "white_blur"));
+    lsLight.get(11).setPosition(posLight.get(11).x, posLight.get(11).y);
+    group.addActor(lsLight.get(11));
 
   }
 

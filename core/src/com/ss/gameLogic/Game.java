@@ -58,7 +58,7 @@ public class Game {
 
     lsBot = new ArrayList<>();
     for (int i=0; i<6; i++)
-      lsBot.add(new Bot(gBot, i));
+      lsBot.add(new Bot(gBot, gEffect, i));
 
     lsCardDown = new ArrayList<>();
     for (int i=0; i<52; i++)
@@ -131,7 +131,7 @@ public class Game {
     for (Bot bot : lsBotActive) {
       //todo: get money player in share preference
       if (lsBotActive.indexOf(bot) == 0)
-        bot.setTotalMoney(20000);
+        bot.setTotalMoney(10000000);
       else
         bot.setTotalMoney(logic.initMoneyBot(10000));
       bot.setAlive(true);
@@ -153,7 +153,7 @@ public class Game {
     else
       divideCard.setTurn(lsBotActive.indexOf(winner));
 
-    lsBotActive.get(0).setTotalMoney(20000);
+    lsBotActive.get(0).setTotalMoney(10000000);
     for (Bot bot : lsBotActive) {
       if (lsBotActive.indexOf(bot) != 0)
         logic.chkMoneyBot(bot, moneyBet, tempMoneyPlayer);
@@ -186,6 +186,8 @@ public class Game {
   public void startBet() {
 
     if (winner != null && winner.id == 0)
+      gamePlayUI.showBtnBet();
+    else if (winner == null)
       gamePlayUI.showBtnBet();
 
     int indexBet = logic.getIdBotToStartBet(lsBotActive, winner);

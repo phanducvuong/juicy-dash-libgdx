@@ -6,85 +6,113 @@ filter: Nearest,Nearest
 repeat: none
 avatar
   rotate: false
-  xy: 347, 35
+  xy: 1284, 299
   size: 159, 145
   orig: 159, 145
   offset: 0, 0
   index: -1
 banner_win
   rotate: false
-  xy: 1284, 807
+  xy: 2, 2
   size: 283, 62
   orig: 283, 62
   offset: 0, 0
   index: -1
 bet_condition
   rotate: false
-  xy: 1284, 731
+  xy: 470, 187
   size: 194, 74
   orig: 194, 74
   offset: 0, 0
   index: -1
 bg_money_bet
   rotate: false
-  xy: 347, 182
+  xy: 1284, 538
   size: 322, 112
   orig: 322, 112
   offset: 0, 0
   index: -1
+bg_rate_money
+  rotate: false
+  xy: 1284, 946
+  size: 469, 37
+  orig: 469, 37
+  offset: 0, 0
+  index: -1
 bg_table
   rotate: false
-  xy: 2, 296
+  xy: 2, 263
   size: 1280, 720
   orig: 1280, 720
   offset: 0, 0
   index: -1
 btnSee
   rotate: false
-  xy: 1876, 946
+  xy: 851, 191
   size: 170, 70
   orig: 170, 70
   offset: 0, 0
   index: -1
 btn_theo
   rotate: false
-  xy: 1284, 871
+  xy: 1284, 799
   size: 343, 145
   orig: 343, 145
   offset: 0, 0
   index: -1
 btn_to
   rotate: false
-  xy: 2, 2
+  xy: 1284, 652
   size: 343, 145
   orig: 343, 145
   offset: 0, 0
   index: -1
 btn_up
   rotate: false
-  xy: 2, 149
+  xy: 2, 66
   size: 343, 145
   orig: 343, 145
   offset: 0, 0
   index: -1
 button_start
   rotate: false
-  xy: 508, 111
+  xy: 1023, 192
   size: 159, 69
   orig: 159, 69
   offset: 0, 0
   index: -1
+control_rate_money
+  rotate: false
+  xy: 1629, 899
+  size: 81, 45
+  orig: 81, 45
+  offset: 0, 0
+  index: -1
 divide_card
   rotate: false
-  xy: 1629, 926
+  xy: 1284, 446
   size: 245, 90
   orig: 245, 90
   offset: 0, 0
   index: -1
 info_user
   rotate: false
-  xy: 671, 208
+  xy: 666, 175
   size: 183, 86
   orig: 183, 86
+  offset: 0, 0
+  index: -1
+rate_money
+  rotate: false
+  xy: 2, 213
+  size: 466, 48
+  orig: 466, 48
+  offset: 0, 0
+  index: -1
+white_blur
+  rotate: false
+  xy: 287, 20
+  size: 53, 44
+  orig: 53, 44
   offset: 0, 0
   index: -1

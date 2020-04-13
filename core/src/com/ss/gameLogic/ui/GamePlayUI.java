@@ -7,8 +7,10 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.utils.Align;
 import com.ss.GMain;
+import com.ss.core.util.GClipGroup;
 import com.ss.core.util.GStage;
 import com.ss.core.util.GUI;
 import com.ss.gameLogic.Game;
@@ -38,6 +40,9 @@ public class GamePlayUI implements IClickCard {
   private Group gBannerWin;
   private Image bannerWin;
 
+  private GClipGroup gRateMoney;
+  private Image controlRateMoney;
+
   private DivideCard divideCard;
 
   public GamePlayUI(Game game) {
@@ -47,7 +52,9 @@ public class GamePlayUI implements IClickCard {
 
     initUIGame();
     initButtonBet();
+    initRateMoney();
     handleClickBtnBet();
+    hideBtnBet();
 
     testClick();
 
@@ -57,16 +64,104 @@ public class GamePlayUI implements IClickCard {
 
     btnTo = new Button("btn_to", C.lang.raise);
     btnTo.setPosition(GStage.getWorldWidth()/2 + 50, GStage.getWorldHeight() - btnTo.getHeight() - 10);
+    btnTo.startEftLight(game);
     btnTo.addToGroup(game.gBtn);
 
     btnTheo = new Button("btn_theo", C.lang.call);
     btnTheo.setPosition(btnTo.getX() + btnTheo.getWidth() + 20, btnTo.getY());
+    btnTheo.startEftLight(game);
     btnTheo.addToGroup(game.gBtn);
 
     btnUp = new Button("btn_up", C.lang.fold);
     btnUp.setPosition(btnTheo.getX() + btnUp.getWidth() + 20, btnTheo.getY());
+    btnUp.startEftLight(game);
     btnUp.addToGroup(game.gBtn);
 
+  }
+
+  private void initRateMoney() {
+
+    gRateMoney = new GClipGroup();
+    Image bgRateMoney = GUI.createImage(GMain.liengAtlas, "bg_rate_money");
+    gRateMoney.setClipArea(0, 0, bgRateMoney.getWidth(), bgRateMoney.getHeight());
+    gRateMoney.setPosition(btnTo.getX() + 15, btnTo.getY() - btnTo.getHeight() + 60);
+
+    controlRateMoney = GUI.createImage(GMain.liengAtlas, "control_rate_money");
+    controlRateMoney.setPosition(bgRateMoney.getX() - 2,
+                                  bgRateMoney.getY() + bgRateMoney.getHeight()/2 - controlRateMoney.getHeight()/2);
+
+    Image rateMoney = GUI.createImage(GMain.liengAtlas, "rate_money");
+    rateMoney.setPosition(controlRateMoney.getX() - rateMoney.getWidth() + controlRateMoney.getWidth(),
+            bgRateMoney.getY() + bgRateMoney.getHeight()/2 - rateMoney.getHeight()/2 + 2);
+    gRateMoney.addActor(rateMoney);
+    gRateMoney.addActor(bgRateMoney);
+    gRateMoney.addActor(controlRateMoney);
+    game.gBackground.addActor(gRateMoney);
+
+    Label lbMoneyRate = new Label("+$12,000", new Label.LabelStyle(Config.PLUS_MONEY_FONT, null));
+    lbMoneyRate.setFontScale(.8f);
+    lbMoneyRate.setPosition(gRateMoney.getX() + bgRateMoney.getWidth() + 20,
+                                gRateMoney.getY() + bgRateMoney.getHeight()/2 - lbMoneyRate.getHeight()/2 - 10);
+    game.gBot.addActor(lbMoneyRate);
+
+    //label: drag and drop
+    float rateXMin = bgRateMoney.getX() - 2;
+    float rateXMax = bgRateMoney.getX() + bgRateMoney.getWidth() - controlRateMoney.getWidth();
+    controlRateMoney.addListener(new DragListener() {
+      @Override
+      public void dragStart(InputEvent event, float x, float y, int pointer) {
+        super.dragStart(event, x, y, pointer);
+
+        System.out.println("RATEXMIN: " + rateXMin + "  RATEXMAX: " + rateXMax);
+
+      }
+
+      @Override
+      public void drag(InputEvent event, float x, float y, int pointer) {
+        super.drag(event, x, y, pointer);
+
+        float moveBuyX = controlRateMoney.getX() + (x - controlRateMoney.getWidth()/2);
+
+        if (moveBuyX >= rateXMin && moveBuyX <= rateXMax) {
+          controlRateMoney.moveBy(x - controlRateMoney.getWidth()/2, 0);
+          rateMoney.setPosition(controlRateMoney.getX() - rateMoney.getWidth() + controlRateMoney.getWidth(),
+                  bgRateMoney.getY() + bgRateMoney.getHeight()/2 - rateMoney.getHeight()/2 + 2);
+
+          float tempRate = Math.round(((moveBuyX+controlRateMoney.getWidth()/2)/bgRateMoney.getWidth())*100);
+          float rate = tempRate/100;
+          String moneyString = logic.convertMoneyBet((long) (game.lsBotActive.get(0).getTotalMoney()*rate));
+          lbMoneyRate.setText("+" + moneyString);
+
+        }
+        else if (moveBuyX > rateXMax) {
+          controlRateMoney.setPosition(rateXMax - 2, bgRateMoney.getY() + bgRateMoney.getHeight()/2 - controlRateMoney.getHeight()/2);
+          rateMoney.setPosition(controlRateMoney.getX() - rateMoney.getWidth() + controlRateMoney.getWidth(),
+                  bgRateMoney.getY() + bgRateMoney.getHeight()/2 - rateMoney.getHeight()/2 + 2);
+
+          lbMoneyRate.setText("+" + logic.convertMoneyBet(game.lsBotActive.get(0).getTotalMoney()));
+        }
+        else if (moveBuyX < rateXMin) {
+          controlRateMoney.setPosition(bgRateMoney.getX() - 2, bgRateMoney.getY() + bgRateMoney.getHeight()/2 - controlRateMoney.getHeight()/2);
+          rateMoney.setPosition(controlRateMoney.getX() - rateMoney.getWidth() + controlRateMoney.getWidth(),
+                  bgRateMoney.getY() + bgRateMoney.getHeight()/2 - rateMoney.getHeight()/2 + 2);
+
+          lbMoneyRate.setText("$0");
+        }
+
+      }
+
+      @Override
+      public void dragStop(InputEvent event, float x, float y, int pointer) {
+        super.dragStop(event, x, y, pointer);
+      }
+    });
+
+  }
+
+  private void clrActionBtnBet() {
+    btnTo.stopEftLight();
+    btnTheo.stopEftLight();
+    btnUp.stopEftLight();
   }
 
   private void handleClickBtnBet() {
@@ -221,24 +316,38 @@ public class GamePlayUI implements IClickCard {
   public void showAllWhenFindWinner(List<Bot> lsBot, Bot winner) {
 
     for (Bot bot : lsBot) {
-      if (bot.id != 0)
+      if (bot.id != 0) {
         for (int j=0; j<bot.lsCardDown.size(); j++) {
           Card cardDown = bot.lsCardDown.get(j);
           Card cardUp = bot.lsCardUp.get(j);
           effect.showAllCard(cardDown, cardUp, Config.SCL_SHOW_CARD, Config.SCL_SHOW_CARD);
         }
+      }
+
+      long tempMoneyChange = bot.getTotalMoneyBet() - winner.getTotalMoneyBet();
+      if (tempMoneyChange > 0) {
+        game.bet.totalMoney -= tempMoneyChange;
+        bot.eftLbMoneyChange(game, tempMoneyChange);
+      }
     }
 
-    effect.winnerIsBot(winner);
+    if (winner.id != 0)
+      effect.winnerIsBot(winner);
+    else
+      winner.eftMoneyWinner(game, game.bet.totalMoney);
 
   }
 
   public void showCardWinner(Bot winner) {
     if (winner.id != 0)
       effect.winnerIsBot(winner);
+    else
+      winner.eftMoneyWinner(game, game.bet.totalMoney);
   }
 
   private void hideBtnBet() {
+
+    clrActionBtnBet();
 
     btnTo.setTouchable(Touchable.disabled);
     btnTheo.setTouchable(Touchable.disabled);
@@ -252,6 +361,10 @@ public class GamePlayUI implements IClickCard {
 
   public void showBtnBet() {
 
+    btnTo.startEftLight(game);
+    btnTheo.startEftLight(game);
+    btnUp.startEftLight(game);
+
     btnTo.setTouchable(Touchable.enabled);
     btnTheo.setTouchable(Touchable.enabled);
     btnUp.setTouchable(Touchable.enabled);
@@ -263,10 +376,12 @@ public class GamePlayUI implements IClickCard {
   }
 
   public void showBannerWin(Bot bot) {
-    Image avatar = bot.avatar;
+    if (bot.id != 0) {
+      Image avatar = bot.avatar;
       gBannerWin.setPosition(avatar.getX() + avatar.getWidth()/2 - bannerWin.getWidth()/2,
               avatar.getY() + avatar.getHeight() - bannerWin.getHeight()/2);
-    game.gEffect.addActor(gBannerWin);
+      game.gEffect.addActor(gBannerWin);
+    }
   }
 
   public void hideBannerWin() {

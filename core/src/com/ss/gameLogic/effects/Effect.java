@@ -3,8 +3,11 @@ package com.ss.gameLogic.effects;
 import static com.badlogic.gdx.math.Interpolation.*;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.ss.core.action.exAction.GTemporalAction;
@@ -123,7 +126,8 @@ public class Effect {
                               moveTo(x - cardDown.getWidth()/2 - index*28 + 30, y - 10, .5f, fastSlow)
                       ),
                       run(() -> cardUp.setPosition(cardDown.getX(), cardDown.getY())),
-                      run(() -> showAllCard(cardDown, cardUp, 1f, 1f))
+                      run(() -> showAllCard(cardDown, cardUp, 1f, 1f)),
+                      run(() -> bot.eftMoneyWinner(game, game.bet.totalMoney))
               )
       );
     }
@@ -145,6 +149,25 @@ public class Effect {
             scaleTo(0, sclY, DUR_SCL_CARD_PLAYER, linear),
             run(() -> cardUp.addAction(scaleTo(sclX, sclY, DUR_SCL_CARD_PLAYER, linear)))
     ));
+
+  }
+
+  public void moneyChange(Label lb) {
+
+    SequenceAction seq = sequence(
+            parallel(
+                    moveBy(0, -100f, 5f, linear),
+                    alpha(0f, 10f, linear)
+            ),
+            run(() -> {
+              lb.setVisible(false);
+              lb.getColor().a = 1f;
+              lb.moveBy(0, 100f);
+            })
+    );
+
+    lb.clearActions();
+    lb.addAction(seq);
 
   }
 
@@ -186,6 +209,22 @@ public class Effect {
       lbMoney.setText(logic.convertMoneyBet(temp));
 
     }));
+
+  }
+
+  public void lightBtn(Image light) {
+
+    SequenceAction seq = sequence(
+            alpha(1f, .75f, linear),
+            alpha(0f, .75f, linear),
+//            alpha(1f, .1f, linear),
+//            alpha(0f, .1f, linear),
+            delay(.25f),
+            run(() -> lightBtn(light))
+    );
+
+    light.getColor().a = 0;
+    light.addAction(seq);
 
   }
 

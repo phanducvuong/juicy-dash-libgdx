@@ -326,8 +326,9 @@ public class Logic {
 
     m.append(i);
     String temp = String.valueOf(money).substring(String.valueOf(i).length());
-    for (int ii=0; ii<temp.length(); ii+=3)
-      m.append(",").append(temp, ii, ii+3);
+    if (temp.length() >= 3)
+      for (int ii=0; ii<temp.length(); ii+=3)
+        m.append(",").append(temp, ii, ii+3);
     return String.valueOf(m);
 
   }

@@ -119,7 +119,7 @@ public class Bet {
       long tempMoneyBet = logic.rndMoneyTo(bot.getTotalMoney() - moneyOwe);
       totalMoneyBet += tempMoneyBet;
       totalMoney = totalMoney + tempMoneyBet + moneyOwe;
-      bot.TO(tempMoneyBet + moneyOwe);
+      bot.TO(tempMoneyBet, moneyOwe);
 
       game.gamePlayUI.eftLbTotalMoney(tempMoneyBet + moneyOwe);
       System.out.println(bot.id + "  TO    MONEY  " + bot.getTotalMoney() + "   TO:  " + tempMoneyBet);
