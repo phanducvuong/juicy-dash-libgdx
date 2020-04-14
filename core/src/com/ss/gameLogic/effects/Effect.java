@@ -127,7 +127,11 @@ public class Effect {
                       ),
                       run(() -> cardUp.setPosition(cardDown.getX(), cardDown.getY())),
                       run(() -> showAllCard(cardDown, cardUp, 1f, 1f)),
-                      run(() -> bot.eftMoneyWinner(game, game.bet.totalMoney))
+                      run(() -> {
+                        int i = bot.lsCardDown.indexOf(cardDown);
+                        if (i == bot.lsCardDown.size() - 1)
+                          bot.eftMoneyWinner(game, game.bet.totalMoney);
+                      })
               )
       );
     }
@@ -167,6 +171,21 @@ public class Effect {
     );
 
     lb.clearActions();
+    lb.addAction(seq);
+
+  }
+
+  public void alphaLabel(Label lb) {
+
+    SequenceAction seq = sequence(
+            parallel(
+                    alpha(0f, 1.5f, linear),
+                    moveBy(0, -100, 1.5f, linear)
+            )
+    );
+
+    lb.clearActions();
+    lb.getColor().a = 1f;
     lb.addAction(seq);
 
   }

@@ -109,28 +109,54 @@ public class Bet {
 
     long moneyOwe = totalMoneyBet - bot.getTotalMoneyBet();
     if (bot.getTotalMoney() <= moneyOwe) { // all-in
-      bot.AllIn();
       totalMoney += bot.getTotalMoney();
-
       game.gamePlayUI.eftLbTotalMoney(bot.getTotalMoney());
+      bot.AllIn();
+
       System.out.println(bot.id + "  TO ALL-IN    MONEY  " + bot.getTotalMoney());
     }
     else {
-      long tempMoneyBet = logic.rndMoneyTo(bot.getTotalMoney() - moneyOwe);
-      totalMoneyBet += tempMoneyBet;
-      totalMoney = totalMoney + tempMoneyBet + moneyOwe;
-      bot.TO(tempMoneyBet, moneyOwe);
+      long tempMoneyBet = logic.rndMoneyTo(bot.getTotalMoney() - moneyOwe)/1000;
+      tempMoneyBet = tempMoneyBet * 1000;
 
-      game.gamePlayUI.eftLbTotalMoney(tempMoneyBet + moneyOwe);
-      System.out.println(bot.id + "  TO    MONEY  " + bot.getTotalMoney() + "   TO:  " + tempMoneyBet);
+      System.out.println("CONVERT: " + tempMoneyBet);
 
-      idBotKeepMaxMoneyTo = bot.id;
-      if (isResetBotStartBet) {
-        logic.resetIsStartBetInBot(game.lsBotActive);
-        isResetBotStartBet = false;
+      if (tempMoneyBet >= game.moneyBet) {
+        totalMoneyBet += tempMoneyBet;
+        totalMoney = totalMoney + tempMoneyBet + moneyOwe;
+        bot.TO(tempMoneyBet, moneyOwe);
+
+        game.gamePlayUI.eftLbTotalMoney(tempMoneyBet + moneyOwe);
+        System.out.println(bot.id + "  MONEY  " + bot.getTotalMoney() + "   TO:  " + tempMoneyBet);
+
+        idBotKeepMaxMoneyTo = bot.id;
+        if (isResetBotStartBet) {
+          logic.resetIsStartBetInBot(game.lsBotActive);
+          isResetBotStartBet = false;
+        }
       }
+      else
+        THEO(bot);
     }// to them
     bot.convertTotalMoneyToString();
+
+  }
+
+  public void TO(Bot player, long moneyBet) {
+
+    long moneyOwe = totalMoneyBet - player.getTotalMoneyBet();
+    System.out.println("MONEY OWE: " + moneyOwe);
+    totalMoneyBet += moneyBet;
+    totalMoney = totalMoney + moneyBet + moneyOwe;
+    player.TO(moneyBet, moneyOwe);
+    player.convertTotalMoneyToString();
+
+    game.gamePlayUI.eftLbTotalMoney(moneyBet + moneyOwe);
+    idBotKeepMaxMoneyTo = player.id;
+    if (isResetBotStartBet) {
+      logic.resetIsStartBetInBot(game.lsBotActive);
+      isResetBotStartBet = false;
+    }
 
   }
 
@@ -138,14 +164,13 @@ public class Bet {
 
     long moneyOwe = totalMoneyBet - bot.getTotalMoneyBet();
     if (bot.getTotalMoney() <= moneyOwe) { // all-in
-      bot.AllIn();
       totalMoney += bot.getTotalMoney();
-
       game.gamePlayUI.eftLbTotalMoney(bot.getTotalMoney());
+      bot.AllIn();
     }
     else {
-      bot.THEO(moneyOwe);
       totalMoney += moneyOwe;
+      bot.THEO(moneyOwe);
 
       game.gamePlayUI.eftLbTotalMoney(moneyOwe);
     }
@@ -219,6 +244,10 @@ public class Bet {
 
   public void setTotalMoneyBet(long money) {
     totalMoneyBet = money;
+  }
+
+  public long getTotalMoneyBet() {
+    return totalMoneyBet;
   }
 
 }

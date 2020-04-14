@@ -6,7 +6,7 @@ filter: Nearest,Nearest
 repeat: none
 avatar
   rotate: false
-  xy: 1284, 299
+  xy: 1688, 395
   size: 159, 145
   orig: 159, 145
   offset: 0, 0
@@ -81,16 +81,58 @@ button_start
   orig: 159, 69
   offset: 0, 0
   index: -1
+chip_10
+  rotate: false
+  xy: 1629, 542
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+chip_100
+  rotate: false
+  xy: 1629, 744
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+chip_20
+  rotate: false
+  xy: 1831, 783
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+chip_200
+  rotate: false
+  xy: 1831, 581
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+chip_50
+  rotate: false
+  xy: 1486, 336
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+chip_500
+  rotate: false
+  xy: 1284, 336
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
 control_rate_money
   rotate: false
-  xy: 1629, 899
+  xy: 1531, 289
   size: 81, 45
   orig: 81, 45
   offset: 0, 0
   index: -1
 divide_card
   rotate: false
-  xy: 1284, 446
+  xy: 1284, 244
   size: 245, 90
   orig: 245, 90
   offset: 0, 0

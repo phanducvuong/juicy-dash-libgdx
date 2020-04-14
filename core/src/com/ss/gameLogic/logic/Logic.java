@@ -238,7 +238,7 @@ public class Logic {
   }
 
   public void chkMoneyBot(Bot bot, long moneyBet, long moneyRnd) {
-    if (bot.getTotalMoney() < moneyBet)
+    if (bot.getTotalMoney() <= moneyBet*2)
       bot.setTotalMoney(initMoneyBot(moneyRnd));
   }
 
@@ -254,14 +254,15 @@ public class Logic {
 
   public long initMoneyBot(long moneyPlayer) {
     float rnd = (float) Math.round(Math.random() * 10000)/10000;
-    long tempMoney = (long) (moneyPlayer * 10 * rnd);
+    long tempMoney = (long) (moneyPlayer * 10 * rnd)/1000;
+    tempMoney = tempMoney*1000;
     return tempMoney <= moneyPlayer ? moneyPlayer*2 : tempMoney;
   }
 
   public long rndMoneyTo(long moneyBot) {
 
     float rnd = Math.round(Math.random() * 1000);
-    return (long) ((rnd/1000 == 0) ? (rnd/1000 + 0.121) * moneyBot : (rnd/1000) * moneyBot);
+    return (long) ((rnd/1000 == 0) ? (rnd/1000 + 0.1) * moneyBot : (rnd/1000) * moneyBot);
 
   }
 
@@ -309,17 +310,17 @@ public class Logic {
     StringBuffer m = new StringBuffer();
     m.append("$");
 
-    if (length <= 6)
+    if (length > 3 && length <= 6)
       i = money/1000;
-    else if (length <= 9)
+    else if (length > 6 && length <= 9)
       i = money/1000000;
-    else if (length <= 12)
+    else if (length > 9 && length <= 12)
       i = money/1000000000;
-    else if (length <= 15)
+    else if (length > 12 && length <= 15)
       i = money/1000000000000L;
-    else if (length <= 18)
+    else if (length > 15 && length <= 18)
       i = money/1000000000000000L;
-    else if (length <= 21)
+    else if (length > 18 && length <= 21)
       i = money/1000000000000000000L;
     else
       i = money;
@@ -330,6 +331,17 @@ public class Logic {
       for (int ii=0; ii<temp.length(); ii+=3)
         m.append(",").append(temp, ii, ii+3);
     return String.valueOf(m);
+
+  }
+
+  public boolean chkMoneyOweOfPlayer(Bot player, Bet bet) {
+    long moneyOwe = bet.getTotalMoneyBet() - player.getTotalMoneyBet();
+    return player.getTotalMoney() > moneyOwe;
+  }
+
+  public void calculateChip(long moneyBet) {
+
+
 
   }
 

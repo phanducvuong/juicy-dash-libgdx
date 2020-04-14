@@ -41,7 +41,10 @@ public class GamePlayUI implements IClickCard {
   private Image bannerWin;
 
   private GClipGroup gRateMoney;
-  private Image controlRateMoney;
+  private Image controlRateMoney, rateMoney, bgRateMoney;
+  private Label lbMoneyRate, lbMinBet;
+  private long moneyBet;
+  private float rateXMin, rateXMax;
 
   private DivideCard divideCard;
 
@@ -82,7 +85,7 @@ public class GamePlayUI implements IClickCard {
   private void initRateMoney() {
 
     gRateMoney = new GClipGroup();
-    Image bgRateMoney = GUI.createImage(GMain.liengAtlas, "bg_rate_money");
+    bgRateMoney = GUI.createImage(GMain.liengAtlas, "bg_rate_money");
     gRateMoney.setClipArea(0, 0, bgRateMoney.getWidth(), bgRateMoney.getHeight());
     gRateMoney.setPosition(btnTo.getX() + 15, btnTo.getY() - btnTo.getHeight() + 60);
 
@@ -90,7 +93,7 @@ public class GamePlayUI implements IClickCard {
     controlRateMoney.setPosition(bgRateMoney.getX() - 2,
                                   bgRateMoney.getY() + bgRateMoney.getHeight()/2 - controlRateMoney.getHeight()/2);
 
-    Image rateMoney = GUI.createImage(GMain.liengAtlas, "rate_money");
+    rateMoney = GUI.createImage(GMain.liengAtlas, "rate_money");
     rateMoney.setPosition(controlRateMoney.getX() - rateMoney.getWidth() + controlRateMoney.getWidth(),
             bgRateMoney.getY() + bgRateMoney.getHeight()/2 - rateMoney.getHeight()/2 + 2);
     gRateMoney.addActor(rateMoney);
@@ -98,23 +101,17 @@ public class GamePlayUI implements IClickCard {
     gRateMoney.addActor(controlRateMoney);
     game.gBackground.addActor(gRateMoney);
 
-    Label lbMoneyRate = new Label("+$12,000", new Label.LabelStyle(Config.PLUS_MONEY_FONT, null));
+    lbMoneyRate = new Label("$0", new Label.LabelStyle(Config.PLUS_MONEY_FONT, null));
     lbMoneyRate.setFontScale(.8f);
     lbMoneyRate.setPosition(gRateMoney.getX() + bgRateMoney.getWidth() + 20,
                                 gRateMoney.getY() + bgRateMoney.getHeight()/2 - lbMoneyRate.getHeight()/2 - 10);
     game.gBot.addActor(lbMoneyRate);
 
     //label: drag and drop
-    float rateXMin = bgRateMoney.getX() - 2;
-    float rateXMax = bgRateMoney.getX() + bgRateMoney.getWidth() - controlRateMoney.getWidth();
+    rateXMin = bgRateMoney.getX() - 2;
+    rateXMax = bgRateMoney.getX() + bgRateMoney.getWidth() - controlRateMoney.getWidth();
+
     controlRateMoney.addListener(new DragListener() {
-      @Override
-      public void dragStart(InputEvent event, float x, float y, int pointer) {
-        super.dragStart(event, x, y, pointer);
-
-        System.out.println("RATEXMIN: " + rateXMin + "  RATEXMAX: " + rateXMax);
-
-      }
 
       @Override
       public void drag(InputEvent event, float x, float y, int pointer) {
@@ -129,24 +126,35 @@ public class GamePlayUI implements IClickCard {
 
           float tempRate = Math.round(((moveBuyX+controlRateMoney.getWidth()/2)/bgRateMoney.getWidth())*100);
           float rate = tempRate/100;
-          String moneyString = logic.convertMoneyBet((long) (game.lsBotActive.get(0).getTotalMoney()*rate));
+
+          long moneyOwe = game.bet.getTotalMoneyBet() - game.lsBotActive.get(0).getTotalMoneyBet();
+          moneyBet = (long) ((game.lsBotActive.get(0).getTotalMoney() - moneyOwe)*rate);
+
+          String moneyString = logic.convertMoneyBet(moneyBet);
           lbMoneyRate.setText("+" + moneyString);
 
-        }
+          //todo: if moneyBet == totalMoneyBot - moneyOwe => show effect all-in
+
+          showBtnTo();
+
+        } //rate > 0
         else if (moveBuyX > rateXMax) {
           controlRateMoney.setPosition(rateXMax - 2, bgRateMoney.getY() + bgRateMoney.getHeight()/2 - controlRateMoney.getHeight()/2);
           rateMoney.setPosition(controlRateMoney.getX() - rateMoney.getWidth() + controlRateMoney.getWidth(),
                   bgRateMoney.getY() + bgRateMoney.getHeight()/2 - rateMoney.getHeight()/2 + 2);
 
-          lbMoneyRate.setText("+" + logic.convertMoneyBet(game.lsBotActive.get(0).getTotalMoney()));
-        }
+          long moneyOwe = game.bet.getTotalMoneyBet() - game.lsBotActive.get(0).getTotalMoneyBet();
+          moneyBet = game.lsBotActive.get(0).getTotalMoney() - moneyOwe;
+          lbMoneyRate.setText("+" + logic.convertMoneyBet(moneyBet));
+        } //rate is max
         else if (moveBuyX < rateXMin) {
           controlRateMoney.setPosition(bgRateMoney.getX() - 2, bgRateMoney.getY() + bgRateMoney.getHeight()/2 - controlRateMoney.getHeight()/2);
           rateMoney.setPosition(controlRateMoney.getX() - rateMoney.getWidth() + controlRateMoney.getWidth(),
                   bgRateMoney.getY() + bgRateMoney.getHeight()/2 - rateMoney.getHeight()/2 + 2);
 
           lbMoneyRate.setText("$0");
-        }
+          hideBtnTo();
+        } //rate = 0
 
       }
 
@@ -155,6 +163,20 @@ public class GamePlayUI implements IClickCard {
         super.dragStop(event, x, y, pointer);
       }
     });
+
+  }
+
+  private void setPosControllRateMoneyBet() {
+
+    float tempPos = (float) (0.2*rateXMax);
+    long moneyOwe = game.bet.getTotalMoneyBet() - game.lsBotActive.get(0).getTotalMoneyBet();
+    moneyBet = (long) (0.2*(game.lsBotActive.get(0).getTotalMoney() - moneyOwe));
+//    System.out.println("MONEY BET: " + moneyBet);
+
+    lbMoneyRate.setText("+" + logic.convertMoneyBet(moneyBet));
+    controlRateMoney.moveBy(tempPos, 0);
+    rateMoney.setPosition(controlRateMoney.getX() - rateMoney.getWidth() + controlRateMoney.getWidth(),
+            bgRateMoney.getY() + bgRateMoney.getHeight()/2 - rateMoney.getHeight()/2 + 2);
 
   }
 
@@ -173,17 +195,27 @@ public class GamePlayUI implements IClickCard {
 
         Runnable run = () -> {
 
-          game.bet.TO(game.lsBotActive.get(0));
-          game.gBackground.addAction(
-                  sequence(
-                          delay(logic.timeDelayToNextTurnBet()),
-                          run(() -> game.bet.nextTurn(1))
-                  )
-          );
+          if (moneyBet < game.moneyBet) {
+            //todo: show label min bet is game.moneyBet
+            lbMinBet.setPosition(Config.CENTER_X - lbMinBet.getWidth()/2,
+                                    Config.CENTER_Y - lbMinBet.getHeight()/2);
+            lbMinBet.setText(C.lang.minBet + " " + logic.convertMoneyBet(game.moneyBet));
+            effect.alphaLabel(lbMinBet);
+          }
+          else {
+            hideBtnBet();
+            game.bet.TO(game.lsBotActive.get(0), moneyBet);
+            moneyBet = 0;
+            game.gBackground.addAction(
+                    sequence(
+                            delay(logic.timeDelayToNextTurnBet()),
+                            run(() -> game.bet.nextTurn(1))
+                    )
+            );
+          }
 
         };
 
-        hideBtnBet();
         effect.click(btnTo, run);
 
       }
@@ -302,6 +334,12 @@ public class GamePlayUI implements IClickCard {
                       bannerWin.getY() + bannerWin.getHeight()/2 - lbWin.getHeight()/2 - 5);
     gBannerWin.addActor(lbWin);
 
+    lbMinBet = new Label(C.lang.minBet + " $10,000", new Label.LabelStyle(Config.BUTTON_FONT, null));
+    lbMinBet.setAlignment(Align.center);
+    lbMinBet.setPosition(Config.CENTER_X - lbMinBet.getWidth()/2, Config.CENTER_Y - lbMinBet.getHeight()/2);
+    lbMinBet.getColor().a = 0;
+    game.gEffect.addActor(lbMinBet);
+
   }
 
   public void eftLbTotalMoney(long money) {
@@ -314,6 +352,8 @@ public class GamePlayUI implements IClickCard {
   }
 
   public void showAllWhenFindWinner(List<Bot> lsBot, Bot winner) {
+
+    System.out.println("TOTAL MONEY: " + game.bet.totalMoney);
 
     for (Bot bot : lsBot) {
       if (bot.id != 0) {
@@ -347,7 +387,15 @@ public class GamePlayUI implements IClickCard {
 
   private void hideBtnBet() {
 
-    clrActionBtnBet();
+//    clrActionBtnBet();
+
+    resetControlRateMoney();
+
+    controlRateMoney.setTouchable(Touchable.disabled);
+    controlRateMoney.setColor(Color.GRAY);
+    rateMoney.setColor(Color.GRAY);
+    bgRateMoney.setColor(Color.GRAY);
+    lbMoneyRate.setColor(Color.GRAY);
 
     btnTo.setTouchable(Touchable.disabled);
     btnTheo.setTouchable(Touchable.disabled);
@@ -361,18 +409,38 @@ public class GamePlayUI implements IClickCard {
 
   public void showBtnBet() {
 
-    btnTo.startEftLight(game);
-    btnTheo.startEftLight(game);
-    btnUp.startEftLight(game);
+//    btnTheo.startEftLight(game);
+//    btnUp.startEftLight(game);
 
-    btnTo.setTouchable(Touchable.enabled);
     btnTheo.setTouchable(Touchable.enabled);
     btnUp.setTouchable(Touchable.enabled);
 
-    btnTo.setColor(Color.WHITE);
     btnTheo.setColor(Color.WHITE);
     btnUp.setColor(Color.WHITE);
 
+    if (logic.chkMoneyOweOfPlayer(game.lsBotActive.get(0), game.bet)) {
+
+      controlRateMoney.setTouchable(Touchable.enabled);
+      controlRateMoney.setColor(Color.WHITE);
+      rateMoney.setColor(Color.WHITE);
+      bgRateMoney.setColor(Color.WHITE);
+      lbMoneyRate.setColor(Color.WHITE);
+
+      setPosControllRateMoneyBet();
+      showBtnTo();
+
+    }
+
+  }
+
+  private void hideBtnTo() {
+    btnTo.setTouchable(Touchable.disabled);
+    btnTo.setColor(Color.GRAY);
+  }
+
+  private void showBtnTo() {
+    btnTo.setTouchable(Touchable.enabled);
+    btnTo.setColor(Color.WHITE);
   }
 
   public void showBannerWin(Bot bot) {
@@ -390,5 +458,15 @@ public class GamePlayUI implements IClickCard {
 
   public void reset() {
     hideBannerWin();
+  }
+
+  private void resetControlRateMoney() {
+
+    lbMoneyRate.setText("$0");
+
+    controlRateMoney.setPosition(bgRateMoney.getX() - 2,
+            bgRateMoney.getY() + bgRateMoney.getHeight()/2 - controlRateMoney.getHeight()/2);
+    rateMoney.setPosition(controlRateMoney.getX() - rateMoney.getWidth() + controlRateMoney.getWidth(),
+            bgRateMoney.getY() + bgRateMoney.getHeight()/2 - rateMoney.getHeight()/2 + 2);
   }
 }

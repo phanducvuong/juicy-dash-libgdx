@@ -153,7 +153,7 @@ public class Game {
     else
       divideCard.setTurn(lsBotActive.indexOf(winner));
 
-    lsBotActive.get(0).setTotalMoney(10000000);
+    lsBotActive.get(0).setTotalMoney(500000); //remove this line when release app
     for (Bot bot : lsBotActive) {
       if (lsBotActive.indexOf(bot) != 0)
         logic.chkMoneyBot(bot, moneyBet, tempMoneyPlayer);

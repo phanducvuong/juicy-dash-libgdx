@@ -24,6 +24,7 @@ public class Button {
   private List<Vector2> posLight;
   private List<Image> lsLight;
   private Group group;
+  public boolean isLightStart = false;
 
   public Button(String region, String txt) {
 
@@ -41,13 +42,16 @@ public class Button {
     group.addActor(btn);
     group.addActor(lbTxt);
 
-    initPosBlur();
+//    initPosBlur();
 
   }
 
   public void startEftLight(Game game) {
-    for (Image light : lsLight)
-      Effect.getInstance(game).lightBtn(light);
+    if (isLightStart)
+      for (Image light : lsLight)
+        Effect.getInstance(game).lightBtn(light);
+
+    isLightStart = false;
   }
 
   public void stopEftLight() {
@@ -186,4 +190,5 @@ public class Button {
   public void debug() {
     group.debug();
   }
+
 }

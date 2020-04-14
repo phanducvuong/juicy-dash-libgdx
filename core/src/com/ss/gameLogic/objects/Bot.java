@@ -175,6 +175,7 @@ public class Bot {
   public void eftMoneyWinner(Game game, long moneyWin) {
 
     totalMoney += moneyWin;
+    System.out.println("MONEY WIN: " + moneyWin);
     lbTotalMoney.setText(logic.convertMoneyBot(totalMoney));
     lbMoneyChange.setText("+" + logic.convertMoneyBet(moneyWin));
     lbMoneyChange.setVisible(true);
@@ -210,7 +211,7 @@ public class Bot {
   }
 
   public void TO(long moneyBet, long moneyOwe) {
-    totalMoneyBet += moneyBet;
+    totalMoneyBet += (moneyBet + moneyOwe);
     totalMoney -= (moneyBet + moneyOwe);
 
     hideConditionBet();

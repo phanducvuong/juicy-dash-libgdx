@@ -27,6 +27,7 @@ public class C {
         public static String allIn = "";
         public static String winner = "";
         public static String receive = "";
+        public static String minBet = "";
 
         static void initLocalize() {
             FileHandle specFilehandle = Gdx.files.internal("i18n/lang_" + "id");
@@ -48,6 +49,7 @@ public class C {
             allIn = locale.get("all_in");
             winner = locale.get("win");
             receive = locale.get("receive");
+            minBet = locale.get("min_bet");
         }
     }
 
