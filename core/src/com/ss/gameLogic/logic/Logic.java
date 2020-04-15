@@ -1,11 +1,14 @@
 package com.ss.gameLogic.logic;
 
 import com.badlogic.gdx.math.Vector2;
+import com.ss.gameLogic.Game;
 import com.ss.gameLogic.card.Number;
 import com.ss.gameLogic.card.Type;
 import com.ss.gameLogic.config.Config;
 import com.ss.gameLogic.objects.Bot;
 import com.ss.gameLogic.objects.Card;
+import com.ss.gameLogic.objects.Chip;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,12 +16,17 @@ import java.util.List;
 public class Logic {
 
   private static Logic instance;
+  private Game game;
 
   public static Logic getInstance() {
       return instance == null ? instance = new Logic() : instance;
   }
 
   private Logic(){}
+
+  public void setGame(Game game) {
+    this.game = game;
+  }
 
   public Card getCardBuyTypeAndNumber(Type type, Number number, List<Card> lsCard) {
 
@@ -238,7 +246,7 @@ public class Logic {
   }
 
   public void chkMoneyBot(Bot bot, long moneyBet, long moneyRnd) {
-    if (bot.getTotalMoney() <= moneyBet*2)
+    if (bot.getTotalMoney() < moneyBet)
       bot.setTotalMoney(initMoneyBot(moneyRnd));
   }
 
@@ -306,6 +314,8 @@ public class Logic {
 
   public String convertMoneyBet(long money) {
 
+    money = (money/1000) * 1000;
+
     long i, length = String.valueOf(money).length();
     StringBuffer m = new StringBuffer();
     m.append("$");
@@ -339,9 +349,92 @@ public class Logic {
     return player.getTotalMoney() > moneyOwe;
   }
 
-  public void calculateChip(long moneyBet) {
+  public void calculateChip(List<Chip> lsChip, long moneyBet, Vector2 pos) {
 
+    long countChip = 0;
+    if ((moneyBet/500000) > 0) {
+      countChip = moneyBet / 500000;
+      lsChip.addAll(creatImgChip(countChip, 500, pos));
 
+      moneyBet = moneyBet - (countChip*500000);
+      calculateChip(lsChip, moneyBet, pos);
+    }
+    else if ((moneyBet/200000) > 0) {
+      countChip = moneyBet / 200000;
+      lsChip.addAll(creatImgChip(countChip, 200, pos));
+
+      moneyBet = moneyBet - (countChip*200000);
+      calculateChip(lsChip, moneyBet, pos);
+    }
+    else if ((moneyBet/100000) > 0) {
+      countChip = moneyBet / 100000;
+      lsChip.addAll(creatImgChip(countChip, 100, pos));
+
+      moneyBet = moneyBet - (countChip*100000);
+      calculateChip(lsChip, moneyBet, pos);
+    }
+    else if ((moneyBet/50000) > 0) {
+      countChip = moneyBet / 50000;
+      lsChip.addAll(creatImgChip(countChip, 50, pos));
+
+      moneyBet = moneyBet - (countChip*50000);
+      calculateChip(lsChip, moneyBet, pos);
+    }
+    else if ((moneyBet/20000) > 0) {
+      countChip = moneyBet / 20000;
+      lsChip.addAll(creatImgChip(countChip, 20, pos));
+
+      moneyBet = moneyBet - (countChip*20000);
+      calculateChip(lsChip, moneyBet, pos);
+    }
+    else if ((moneyBet/10000) > 0) {
+      countChip = moneyBet / 10000;
+      lsChip.addAll(creatImgChip(countChip, 10, pos));
+
+      moneyBet = moneyBet - (countChip*10000);
+      calculateChip(lsChip, moneyBet, pos);
+    }
+
+  }
+
+  private List<Chip> creatImgChip(long countChip, int type, Vector2 pos) {
+
+    countChip = countChip >= 10 ? 9 : countChip;
+    List<Chip> tempLsChip = new ArrayList<>();
+
+    for (int i=0; i<countChip; i++) {
+
+      Chip chip = new Chip("chip_" + type, type);
+      chip.setPosition(pos.x, pos.y);
+      tempLsChip.add(chip);
+
+    }
+
+    return tempLsChip;
+
+  }
+
+  public void getPosChipBuyBot(Bot bot) {
+
+    if (bot.id == 0) {
+      bot.posChipOut.x = bot.avatar.getX() + bot.avatar.getWidth() + 30;
+      bot.posChipOut.y = bot.avatar.getY() - 50;
+
+      bot.posChipReceive.x = bot.posChipOut.x;
+      bot.posChipReceive.y = bot.posChipOut.y;
+    }else if (bot.id == 1 || bot.id == 2) {
+      bot.posChipOut.x = bot.bgInfo.getX() - 130;
+      bot.posChipOut.y = bot.bgInfo.getY() + bot.bgInfo.getHeight() - 60;
+
+      bot.posChipReceive.x = bot.bgInfo.getX() - 130;
+      bot.posChipReceive.y = bot.bgInfo.getY() + bot.bgInfo.getHeight() - 60;
+    }else {
+      bot.posChipOut.x = bot.bgInfo.getX() + bot.bgInfo.getWidth() + 150;
+      bot.posChipOut.y = bot.bgInfo.getY() + bot.bgInfo.getHeight() - 60;
+
+      bot.posChipReceive.x = bot.bgInfo.getX() + bot.bgInfo.getWidth() + 50;
+      bot.posChipReceive.y = bot.bgInfo.getY() + bot.bgInfo.getHeight() - 60;
+    }
 
   }
 

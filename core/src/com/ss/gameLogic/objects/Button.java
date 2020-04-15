@@ -157,6 +157,7 @@ public class Button {
 
   public void setFontScale(float x, float y) {
     lbTxt.setFontScale(x, y);
+    lbTxt.setPosition(btn.getX() + btn.getWidth()/2 - lbTxt.getWidth()/2, btn.getY() + btn.getHeight()/2 - lbTxt.getHeight()/2);
   }
 
   public void remove() {

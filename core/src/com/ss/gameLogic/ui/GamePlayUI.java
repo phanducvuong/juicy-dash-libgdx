@@ -1,6 +1,7 @@
 package com.ss.gameLogic.ui;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -23,7 +24,9 @@ import com.ss.gameLogic.logic.Logic;
 import com.ss.gameLogic.objects.Bot;
 import com.ss.gameLogic.objects.Button;
 import com.ss.gameLogic.objects.Card;
+import com.ss.gameLogic.objects.Chip;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
@@ -33,6 +36,9 @@ public class GamePlayUI implements IClickCard {
   private Logic logic = Logic.getInstance();
   private Effect effect;
   private Game game;
+  public List<Chip> lsAllChip;
+
+  private Image btnNewRound;
 
   private Button btnUp, btnTo, btnTheo;
   private Label lbTotoalMoneyBet, lbWin;
@@ -46,17 +52,20 @@ public class GamePlayUI implements IClickCard {
   private long moneyBet;
   private float rateXMin, rateXMax;
 
-  private DivideCard divideCard;
+  private Group gAlerrAds;
+  private Image bgBlackAlertAds, btnAlertAds, btnXAlertAds;
 
   public GamePlayUI(Game game) {
 
     this.game = game;
     this.effect = Effect.getInstance(game);
+    this.lsAllChip = new ArrayList<>();
 
     initUIGame();
     initButtonBet();
     initRateMoney();
     handleClickBtnBet();
+    handleClickBtnAlert();
     hideBtnBet();
 
     testClick();
@@ -200,6 +209,7 @@ public class GamePlayUI implements IClickCard {
             lbMinBet.setPosition(Config.CENTER_X - lbMinBet.getWidth()/2,
                                     Config.CENTER_Y - lbMinBet.getHeight()/2);
             lbMinBet.setText(C.lang.minBet + " " + logic.convertMoneyBet(game.moneyBet));
+            game.gEffect.addActor(lbMinBet);
             effect.alphaLabel(lbMinBet);
           }
           else {
@@ -216,6 +226,7 @@ public class GamePlayUI implements IClickCard {
 
         };
 
+        btnTo.setTouchable(Touchable.disabled);
         effect.click(btnTo, run);
 
       }
@@ -269,33 +280,70 @@ public class GamePlayUI implements IClickCard {
 
   }
 
-  private void testClick() {
+  private void handleClickBtnAlert() {
 
-    Image click = GUI.createImage(GMain.liengAtlas, "button_start");
-    game.gBackground.addActor(click);
-
-    Image divideCard = GUI.createImage(GMain.liengAtlas, "divide_card");
-    divideCard.setPosition(click.getX() + divideCard.getWidth(), 0);
-    game.gBackground.addActor(divideCard);
-
-    divideCard.addListener(new ClickListener() {
+    btnAlertAds.addListener(new ClickListener() {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         super.clicked(event, x, y);
 
-        game.newRound();
+        Runnable run = () -> {
+
+          btnAlertAds.setTouchable(Touchable.enabled);
+
+          //todo: show ads
+          game.lsBotActive.get(0).setTotalMoney(20000);
+          game.lsBotActive.get(0).convertTotalMoneyToString();
+
+        };
+
+        btnAlertAds.setTouchable(Touchable.disabled);
+        effect.click(btnAlertAds, run);
 
       }
     });
 
-    click.addListener(new ClickListener() {
+    btnXAlertAds.addListener(new ClickListener() {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         super.clicked(event, x, y);
 
+        game.gBtn.addActor(btnNewRound);
+        effect.sclMaxToMin(gAlerrAds, () -> {
+          bgBlackAlertAds.remove();
+          gAlerrAds.remove();
+        });
+
+      }
+    });
+
+  }
+
+  private void testClick() {
+
+//    Image click = GUI.createImage(GMain.liengAtlas, "button_start");
+//    game.gBtn.addActor(click);
+//
+//    click.addListener(new ClickListener() {
+//      @Override
+//      public void clicked(InputEvent event, float x, float y) {
+//        super.clicked(event, x, y);
+//
 //        showAllWhenFindWinner();
 //        System.out.println(logic.timeDelayToNextTurnBet());
-        System.out.println(logic.convertMoneyBet(3254870002500005300L));
+//        System.out.println(Math.round(Math.random() * 1));
+//        showAlertAds();
+//
+//      }
+//    });
+
+    btnNewRound.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        super.clicked(event, x, y);
+
+       btnNewRound.remove();
+       game.newRound();
 
       }
     });
@@ -303,6 +351,8 @@ public class GamePlayUI implements IClickCard {
   }
 
   private void initUIGame() {
+
+//    btnNewRound = new Button()
 
     Image bgTable = GUI.createImage(GMain.liengAtlas, "bg_table");
     bgTable.setSize(GStage.getWorldWidth(), GStage.getWorldHeight());
@@ -338,8 +388,55 @@ public class GamePlayUI implements IClickCard {
     lbMinBet.setAlignment(Align.center);
     lbMinBet.setPosition(Config.CENTER_X - lbMinBet.getWidth()/2, Config.CENTER_Y - lbMinBet.getHeight()/2);
     lbMinBet.getColor().a = 0;
-    game.gEffect.addActor(lbMinBet);
 
+    //label: alert ads
+    bgBlackAlertAds = GUI.createImage(GMain.liengAtlas, "bg_black");
+    bgBlackAlertAds.setSize(GStage.getWorldWidth(), GStage.getWorldHeight());
+
+    gAlerrAds = new Group();
+    Image bgAlert = GUI.createImage(GMain.liengAtlas, "panel_ads");
+    gAlerrAds.setSize(bgAlert.getWidth(), bgAlert.getHeight());
+
+    gAlerrAds.setOrigin(bgAlert.getWidth()/2, bgAlert.getHeight()/2);
+    gAlerrAds.setPosition(Config.CENTER_X - bgAlert.getWidth()/2, Config.CENTER_Y - bgAlert.getHeight()/2);
+    gAlerrAds.addActor(bgAlert);
+
+    Label lbAertAds = new Label(C.lang.adsOutOfMoney, new Label.LabelStyle(Config.ALERT_FONT, null));
+    lbAertAds.setAlignment(Align.center);
+    lbAertAds.setFontScale(.7f);
+    lbAertAds.setPosition(bgAlert.getX() + bgAlert.getWidth()/2 - lbAertAds.getWidth()/2,
+                              bgAlert.getY() + bgAlert.getHeight()/2 - lbAertAds.getHeight()/2 - 180);
+    gAlerrAds.addActor(lbAertAds);
+
+    btnAlertAds = GUI.createImage(GMain.liengAtlas, "btn_ads");
+    btnAlertAds.setPosition(bgAlert.getX() + bgAlert.getWidth()/2 - btnAlertAds.getWidth()/2,
+                            bgAlert.getY() + bgAlert.getHeight() - btnAlertAds.getHeight() - 20);
+    btnAlertAds.setOrigin(Align.center);
+    gAlerrAds.addActor(btnAlertAds);
+
+    btnXAlertAds = GUI.createImage(GMain.liengAtlas, "btn_x");
+    btnXAlertAds.setPosition(bgAlert.getX() + bgAlert.getWidth() - btnXAlertAds.getWidth()/2,-btnXAlertAds.getHeight()/2);
+    btnXAlertAds.setOrigin(Align.center);
+    gAlerrAds.addActor(btnXAlertAds);
+
+    gAlerrAds.setScale(0);
+
+    //label: button new round
+    btnNewRound = GUI.createImage(GMain.liengAtlas, "divide_card");
+    btnNewRound.setPosition(Config.CENTER_X - btnNewRound.getWidth()/2,
+                            Config.CENTER_Y - btnNewRound.getHeight()/2);
+    game.gBtn.addActor(btnNewRound);
+
+  }
+
+  public void showAlertAds() {
+    game.gAlert.addActor(bgBlackAlertAds);
+    game.gAlert.addActor(gAlerrAds);
+    effect.sclMinToMax(gAlerrAds);
+  }
+
+  public void showBtnNewRound() {
+    game.gBtn.addActor(btnNewRound);
   }
 
   public void eftLbTotalMoney(long money) {
@@ -371,6 +468,8 @@ public class GamePlayUI implements IClickCard {
       }
     }
 
+    eftArrangeLsChip(winner);
+
     if (winner.id != 0)
       effect.winnerIsBot(winner);
     else
@@ -378,7 +477,12 @@ public class GamePlayUI implements IClickCard {
 
   }
 
+  public void eftArrangeLsChip(Bot winner) {
+    effect.arrangeLsChip(lsAllChip, winner);
+  }
+
   public void showCardWinner(Bot winner) {
+    effect.arrangeLsChip(lsAllChip, winner);
     if (winner.id != 0)
       effect.winnerIsBot(winner);
     else
@@ -457,7 +561,14 @@ public class GamePlayUI implements IClickCard {
   }
 
   public void reset() {
+    removeChip();
     hideBannerWin();
+  }
+
+  private void removeChip() {
+    for (Chip chip : lsAllChip)
+      chip.remove();
+    lsAllChip.clear();
   }
 
   private void resetControlRateMoney() {

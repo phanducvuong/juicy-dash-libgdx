@@ -28,6 +28,9 @@ public class Bot {
   public int idRule = -1; //-1 special else point of desk
   private long totalMoney = 0, totalMoneyBet = 0;
 
+  public List<Chip> lsChip, lsChipReceive;
+  public Vector2 posChipOut, posChipReceive;
+
   private Group gBot, gEffect;
   private Label lbTotalMoney, lbNamePlayer;
   public Image avatar, bgInfo;
@@ -44,6 +47,10 @@ public class Bot {
     this.id = id;
     this.lsCardDown = new ArrayList<>();
     this.lsCardUp = new ArrayList<>();
+    this.lsChip = new ArrayList<>();
+    this.lsChipReceive = new ArrayList<>();
+    this.posChipOut = new Vector2();
+    this.posChipReceive = new Vector2();
 
     initAvatar();
 
@@ -216,9 +223,16 @@ public class Bot {
 
     hideConditionBet();
     showLbMoneyBet(moneyBet);
+
+    logic.getPosChipBuyBot(this);
+    logic.calculateChip(lsChip, (moneyBet+moneyOwe), posChipOut);
   }
 
   public void AllIn() {
+
+    logic.getPosChipBuyBot(this);
+    logic.calculateChip(lsChip, totalMoney, posChipOut);
+
     totalMoneyBet += totalMoney;
     totalMoney = 0;
 
@@ -234,11 +248,24 @@ public class Bot {
     hideConditionBet();
     lbConditionBet.setText(C.lang.call);
     lbConditionBet.setVisible(true);
+
+    logic.getPosChipBuyBot(this);
+    logic.calculateChip(lsChip, money, posChipOut);
   }
 
   public void UP () {
     isAlive = false;
     eftFold();
+  }
+
+  public void eftChipOut(Game game) {
+    Effect.getInstance(game).chipOut(lsChip);
+  }
+
+  public void chipOutNewRound(Game game, long moneyBet) {
+    logic.getPosChipBuyBot(this);
+    logic.calculateChip(lsChip, moneyBet, posChipOut);
+    eftChipOut(game);
   }
 
   private void eftFold() {

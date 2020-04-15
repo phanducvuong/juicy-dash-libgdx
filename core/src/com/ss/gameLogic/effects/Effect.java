@@ -17,7 +17,11 @@ import com.ss.gameLogic.logic.Logic;
 import com.ss.gameLogic.objects.Bot;
 import com.ss.gameLogic.objects.Button;
 import com.ss.gameLogic.objects.Card;
+import com.ss.gameLogic.objects.Chip;
+
 import static com.ss.gameLogic.config.Config.*;
+
+import java.util.Collections;
 import java.util.List;
 
 public class Effect {
@@ -181,7 +185,8 @@ public class Effect {
             parallel(
                     alpha(0f, 1.5f, linear),
                     moveBy(0, -100, 1.5f, linear)
-            )
+            ),
+            run(lb::remove)
     );
 
     lb.clearActions();
@@ -193,6 +198,16 @@ public class Effect {
   public void click(Button btn, Runnable onComplete) {
 
     btn.getGroup().addAction(sequence(
+            scaleTo(.9f, .9f, .05f, fastSlow),
+            scaleTo(1f, 1f, .05f, fastSlow),
+            run(onComplete)
+    ));
+
+  }
+
+  public void click(Image btn, Runnable onComplete) {
+
+    btn.addAction(sequence(
             scaleTo(.9f, .9f, .05f, fastSlow),
             scaleTo(1f, 1f, .05f, fastSlow),
             run(onComplete)
@@ -245,6 +260,91 @@ public class Effect {
     light.getColor().a = 0;
     light.addAction(seq);
 
+  }
+
+  public void chipOut(List<Chip> lsChip) {
+
+    for (Chip chip : lsChip) {
+
+      float rndX = Math.round(Math.random() * 100);
+      float rndY = Math.round(Math.random() * 100);
+      float rndPlusOrMinus = Math.round(Math.random() * 1);
+
+      if (rndPlusOrMinus == 0) {
+        rndX *= -1;
+        rndY *= -1;
+      }
+
+      chip.addToScene(game.gChip);
+      chip.addAction(
+              moveTo(CENTER_X + rndX, CENTER_Y + rndY, .5f, smooth)
+      );
+    }
+
+    game.gamePlayUI.lsAllChip.addAll(lsChip);
+    lsChip.clear();
+
+  }
+
+  public void arrangeLsChip(List<Chip> lsChip, Bot winner) {
+
+    Collections.sort(lsChip, (c1, c2) -> c1.idChip - c2.idChip);
+    for (Chip chip : lsChip) {
+      int index = lsChip.indexOf(chip);
+      chip.setZindex(1000);
+      chip.addAction(
+              sequence(
+                      moveTo(CENTER_X, CENTER_Y - index*5, .75f, fastSlow),
+                      run(() -> {
+                        if (index == lsChip.size()-1)
+                          moveChipToWinner(lsChip, winner, 0);
+                      })
+              )
+      );
+    }
+
+  }
+
+  private void moveChipToWinner(List<Chip> lsChip, Bot winner, int turn) {
+
+    if (turn < lsChip.size()) {
+      Chip chip = lsChip.get(turn);
+      chip.addAction(
+              parallel(
+                      moveTo(winner.posChipReceive.x, winner.posChipReceive.y - turn*5, .35f, fastSlow),
+                      sequence(
+                              delay(.025f),
+                              run(() -> moveChipToWinner(lsChip, winner, turn+1)),
+                              run(() -> {
+                                if (turn == lsChip.size()-1)
+                                  game.gamePlayUI.showBtnNewRound();
+                              })
+                      )
+              )
+      );
+    }
+
+  }
+
+  public void sclMinToMax(Group group) {
+    group.addAction(
+            parallel(
+                    scaleTo(1f, 1f, .5f, linear),
+                    rotateTo(360, .5f, linear)
+            )
+    );
+  }
+
+  public void sclMaxToMin(Group group, Runnable onComplete) {
+    group.addAction(
+            sequence(
+                    parallel(
+                            scaleTo(0f, 0f, .25f, linear),
+                            rotateTo(-360, .25f, linear)
+                    ),
+                    run(onComplete)
+            )
+    );
   }
 
 }

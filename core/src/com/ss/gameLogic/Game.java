@@ -20,10 +20,10 @@ import java.util.List;
 
 public class Game {
 
-  private Logic logic = Logic.getInstance();
+  private Logic logic;
   private Effect effect;
 
-  public Group gBackground, gCard, gBtn, gBot, gEffect;
+  public Group gBackground, gCard, gBtn, gAlert, gBot, gEffect, gChip;
 
   public List<Bot> lsBot, lsBotActive; //reset lsBotActive when change numOfPlayer
   public List<Card> lsCardDown, lsCardUp;
@@ -39,6 +39,8 @@ public class Game {
   public Game() {
 
     this.lsBotActive = new ArrayList<>();
+    this.logic = Logic.getInstance();
+    this.logic.setGame(this);
     effect = Effect.getInstance(this);
 
     initLayer();
@@ -50,7 +52,7 @@ public class Game {
     gamePlayUI = new GamePlayUI(this);
     bet = new Bet(this);
 
-    newRound();
+//    newRound();
 
   }
 
@@ -75,15 +77,19 @@ public class Game {
 
     gBackground = new Group();
     gBot = new Group();
-    gCard = new Group();
     gBtn = new Group();
+    gChip = new Group();
+    gCard = new Group();
     gEffect = new Group();
+    gAlert = new Group();
 
     GStage.addToLayer(GLayer.ui, gBackground);
     GStage.addToLayer(GLayer.ui, gBot);
+    GStage.addToLayer(GLayer.ui, gChip);
     GStage.addToLayer(GLayer.ui, gCard);
     GStage.addToLayer(GLayer.ui, gBtn);
     GStage.addToLayer(GLayer.ui, gEffect);
+    GStage.addToLayer(GLayer.ui, gAlert);
 
   }
 
@@ -131,7 +137,7 @@ public class Game {
     for (Bot bot : lsBotActive) {
       //todo: get money player in share preference
       if (lsBotActive.indexOf(bot) == 0)
-        bot.setTotalMoney(10000000);
+        bot.setTotalMoney(20000);
       else
         bot.setTotalMoney(logic.initMoneyBot(10000));
       bot.setAlive(true);
@@ -153,7 +159,6 @@ public class Game {
     else
       divideCard.setTurn(lsBotActive.indexOf(winner));
 
-    lsBotActive.get(0).setTotalMoney(500000); //remove this line when release app
     for (Bot bot : lsBotActive) {
       if (lsBotActive.indexOf(bot) != 0)
         logic.chkMoneyBot(bot, moneyBet, tempMoneyPlayer);
@@ -167,19 +172,24 @@ public class Game {
 
   public void newRound() {
 
-    resetGame();
+    if (lsBotActive.get(0).getTotalMoney() < moneyBet)
+      gamePlayUI.showAlertAds();
+    else {
+      resetGame();
 
-    bet.totalMoney = moneyBet * lsBotActive.size();
-    gamePlayUI.eftLbTotalMoney(0);
+      bet.totalMoney = moneyBet * lsBotActive.size();
+      gamePlayUI.eftLbTotalMoney(0);
 
-    for (Bot bot : lsBotActive) {
-      //todo: effect through money bet
-      bot.setTotalMoney(bot.getTotalMoney() - moneyBet);
-      bot.convertTotalMoneyToString();
+      for (Bot bot : lsBotActive) {
+        //todo: effect through money bet
+        bot.setTotalMoney(bot.getTotalMoney() - moneyBet);
+        bot.convertTotalMoneyToString();
+        bot.chipOutNewRound(this, moneyBet);
+      }
+
+      logMoneyBot();
+      divideCard.nextTurn();
     }
-
-    logMoneyBot();
-    divideCard.nextTurn();
 
   }
 

@@ -11,6 +11,7 @@ public class C {
 
     public static class remote {
         public static int adsTime = 50;
+        public static long moneyAds = 500000;
         static void initRemoteConfig() {
 
         }
@@ -28,6 +29,7 @@ public class C {
         public static String winner = "";
         public static String receive = "";
         public static String minBet = "";
+        public static String adsOutOfMoney = "";
 
         static void initLocalize() {
             FileHandle specFilehandle = Gdx.files.internal("i18n/lang_" + "id");
@@ -50,6 +52,7 @@ public class C {
             winner = locale.get("win");
             receive = locale.get("receive");
             minBet = locale.get("min_bet");
+            adsOutOfMoney = locale.format("out_of_money", remote.moneyAds);
         }
     }
 

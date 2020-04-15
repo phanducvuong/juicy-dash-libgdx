@@ -139,6 +139,8 @@ public class Bet {
         THEO(bot);
     }// to them
     bot.convertTotalMoneyToString();
+    bot.eftChipOut(game);
+
 
   }
 
@@ -158,6 +160,8 @@ public class Bet {
       isResetBotStartBet = false;
     }
 
+    player.eftChipOut(game);
+
   }
 
   public void THEO(Bot bot) {
@@ -175,6 +179,7 @@ public class Bet {
       game.gamePlayUI.eftLbTotalMoney(moneyOwe);
     }
     bot.convertTotalMoneyToString();
+    bot.eftChipOut(game);
 
     System.out.println(bot.id + "  THEO    MONEY    " + bot.getTotalMoney());
 

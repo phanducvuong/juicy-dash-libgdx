@@ -1,160 +1,194 @@
 
 lieng.png
-size: 2048,1024
+size: 2048,2048
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 avatar
   rotate: false
-  xy: 1688, 395
+  xy: 1284, 1585
   size: 159, 145
   orig: 159, 145
   offset: 0, 0
   index: -1
 banner_win
   rotate: false
-  xy: 2, 2
+  xy: 1284, 1732
   size: 283, 62
   orig: 283, 62
   offset: 0, 0
   index: -1
 bet_condition
   rotate: false
-  xy: 470, 187
+  xy: 1284, 1509
   size: 194, 74
   orig: 194, 74
   offset: 0, 0
   index: -1
+bg_black
+  rotate: false
+  xy: 2, 1316
+  size: 1280, 720
+  orig: 1280, 720
+  offset: 0, 0
+  index: -1
 bg_money_bet
   rotate: false
-  xy: 1284, 538
+  xy: 2, 136
   size: 322, 112
   orig: 322, 112
   offset: 0, 0
   index: -1
 bg_rate_money
   rotate: false
-  xy: 1284, 946
+  xy: 470, 555
   size: 469, 37
   orig: 469, 37
   offset: 0, 0
   index: -1
 bg_table
   rotate: false
-  xy: 2, 263
+  xy: 2, 594
   size: 1280, 720
   orig: 1280, 720
   offset: 0, 0
   index: -1
 btnSee
   rotate: false
-  xy: 851, 191
+  xy: 1284, 1437
   size: 170, 70
   orig: 170, 70
   offset: 0, 0
   index: -1
+btn_ads
+  rotate: false
+  xy: 1284, 1796
+  size: 292, 240
+  orig: 292, 240
+  offset: 0, 0
+  index: -1
 btn_theo
   rotate: false
-  xy: 1284, 799
+  xy: 2, 397
   size: 343, 145
   orig: 343, 145
   offset: 0, 0
   index: -1
 btn_to
   rotate: false
-  xy: 1284, 652
+  xy: 2, 250
   size: 343, 145
   orig: 343, 145
   offset: 0, 0
   index: -1
 btn_up
   rotate: false
-  xy: 2, 66
+  xy: 1578, 1891
   size: 343, 145
   orig: 343, 145
   offset: 0, 0
   index: -1
+btn_x
+  rotate: false
+  xy: 1923, 1921
+  size: 120, 115
+  orig: 120, 115
+  offset: 0, 0
+  index: -1
 button_start
   rotate: false
-  xy: 1023, 192
+  xy: 1284, 1366
   size: 159, 69
   orig: 159, 69
   offset: 0, 0
   index: -1
 chip_10
   rotate: false
-  xy: 1629, 542
-  size: 200, 200
-  orig: 200, 200
+  xy: 347, 439
+  size: 56, 56
+  orig: 56, 56
   offset: 0, 0
   index: -1
 chip_100
   rotate: false
-  xy: 1629, 744
-  size: 200, 200
-  orig: 200, 200
+  xy: 187, 78
+  size: 56, 56
+  orig: 56, 56
   offset: 0, 0
   index: -1
 chip_20
   rotate: false
-  xy: 1831, 783
-  size: 200, 200
-  orig: 200, 200
+  xy: 1445, 1674
+  size: 56, 56
+  orig: 56, 56
   offset: 0, 0
   index: -1
 chip_200
   rotate: false
-  xy: 1831, 581
-  size: 200, 200
-  orig: 200, 200
+  xy: 245, 78
+  size: 56, 56
+  orig: 56, 56
   offset: 0, 0
   index: -1
 chip_50
   rotate: false
-  xy: 1486, 336
-  size: 200, 200
-  orig: 200, 200
+  xy: 1284, 1308
+  size: 56, 56
+  orig: 56, 56
   offset: 0, 0
   index: -1
 chip_500
   rotate: false
-  xy: 1284, 336
-  size: 200, 200
-  orig: 200, 200
+  xy: 1825, 1833
+  size: 56, 56
+  orig: 56, 56
   offset: 0, 0
   index: -1
 control_rate_money
   rotate: false
-  xy: 1531, 289
+  xy: 347, 497
   size: 81, 45
   orig: 81, 45
   offset: 0, 0
   index: -1
 divide_card
   rotate: false
-  xy: 1284, 244
+  xy: 1578, 1799
   size: 245, 90
   orig: 245, 90
   offset: 0, 0
   index: -1
 info_user
   rotate: false
-  xy: 666, 175
+  xy: 2, 48
   size: 183, 86
   orig: 183, 86
   offset: 0, 0
   index: -1
 rate_money
   rotate: false
-  xy: 2, 213
+  xy: 2, 544
   size: 466, 48
   orig: 466, 48
   offset: 0, 0
   index: -1
 white_blur
   rotate: false
-  xy: 287, 20
+  xy: 2, 2
   size: 53, 44
   orig: 53, 44
+  offset: 0, 0
+  index: -1
+
+lieng2.png
+size: 2048,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+panel_ads
+  rotate: false
+  xy: 2, 2
+  size: 1204, 640
+  orig: 1204, 640
   offset: 0, 0
   index: -1

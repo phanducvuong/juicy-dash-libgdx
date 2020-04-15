@@ -126,6 +126,10 @@ public class Card {
 
   public float getY() { return card.getY(); }
 
+  public float getScaleY() {
+    return card.getScaleY();
+  }
+
   public boolean isActive() {
     return isActive;
   }
