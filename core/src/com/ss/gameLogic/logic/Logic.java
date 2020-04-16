@@ -438,4 +438,13 @@ public class Logic {
 
   }
 
+  public String getRegionChip(int i) {
+    if (i==0) return "chip_10";
+    else if (i==1) return  "chip_20";
+    else if (i==2) return "chip_50";
+    else if (i==3) return "chip_100";
+    else if (i==4) return "chip_200";
+    else return  "chip_500";
+  }
+
 }

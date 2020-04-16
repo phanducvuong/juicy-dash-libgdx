@@ -1,6 +1,7 @@
 package com.ss.gameLogic.objects;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -26,14 +27,14 @@ public class Button {
   private Group group;
   public boolean isLightStart = false;
 
-  public Button(String region, String txt) {
+  public Button(String region, String txt, BitmapFont fontStyle) {
 
     this.group = new Group();
     posLight = new ArrayList<>();
     lsLight = new ArrayList<>();
     btn = GUI.createImage(GMain.liengAtlas, region);
 
-    lbTxt = new Label(txt, new Label.LabelStyle(Config.BUTTON_FONT, null));
+    lbTxt = new Label(txt, new Label.LabelStyle(fontStyle, null));
     lbTxt.setAlignment(Align.center);
     lbTxt.setPosition(btn.getX() + btn.getWidth()/2 - lbTxt.getWidth()/2, btn.getY() + btn.getHeight()/2 - lbTxt.getHeight()/2);
 
@@ -141,6 +142,10 @@ public class Button {
   public void setColor(Color color) {
     btn.setColor(color);
     lbTxt.setColor(color);
+  }
+
+  public void moveByLb(float x, float y) {
+    lbTxt.moveBy(x, y);
   }
 
   public void setOriginCenter() {

@@ -207,6 +207,19 @@ public class Effect {
 
   public void click(Image btn, Runnable onComplete) {
 
+    float sclX = btn.getScaleX();
+    float sclY = btn.getScaleY();
+
+    btn.addAction(sequence(
+            scaleBy(.1f, .1f, .05f, fastSlow),
+            scaleTo(sclX, sclY, .05f, fastSlow),
+            run(onComplete)
+    ));
+
+  }
+
+  public void click(Group btn, Runnable onComplete) {
+
     btn.addAction(sequence(
             scaleTo(.9f, .9f, .05f, fastSlow),
             scaleTo(1f, 1f, .05f, fastSlow),
@@ -329,8 +342,8 @@ public class Effect {
   public void sclMinToMax(Group group) {
     group.addAction(
             parallel(
-                    scaleTo(1f, 1f, .5f, linear),
-                    rotateTo(360, .5f, linear)
+                    scaleTo(1f, 1f, .35f, linear),
+                    rotateTo(360, .35f, linear)
             )
     );
   }
@@ -345,6 +358,37 @@ public class Effect {
                     run(onComplete)
             )
     );
+  }
+
+  public void moveLight(Image light, float moveToX) {
+
+    float xOrigin = light.getX();
+
+    SequenceAction seq = sequence(
+            moveTo(moveToX, 0, 1f, smooth),
+            delay(1f),
+            run(() -> {
+              light.setPosition(xOrigin, 0);
+              moveLight(light, moveToX);
+            })
+    );
+
+    light.addAction(seq);
+
+  }
+
+  public void zoomOut(Group group, Runnable onComplete) {
+
+    SequenceAction seq = sequence(
+            parallel(
+                    scaleTo(2f, 2f, .75f, fastSlow),
+                    alpha(0f, .75f, fastSlow)
+            ),
+            run(onComplete)
+    );
+
+    group.addAction(seq);
+
   }
 
 }

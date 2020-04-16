@@ -38,9 +38,7 @@ public class GamePlayUI implements IClickCard {
   private Game game;
   public List<Chip> lsAllChip;
 
-  private Image btnNewRound;
-
-  private Button btnUp, btnTo, btnTheo;
+  private Button btnUp, btnTo, btnTheo, btnNewRound;
   private Label lbTotoalMoneyBet, lbWin;
 
   private Group gBannerWin;
@@ -74,17 +72,17 @@ public class GamePlayUI implements IClickCard {
 
   private void initButtonBet() {
 
-    btnTo = new Button("btn_to", C.lang.raise);
+    btnTo = new Button("btn_to", C.lang.raise, Config.BUTTON_FONT);
     btnTo.setPosition(GStage.getWorldWidth()/2 + 50, GStage.getWorldHeight() - btnTo.getHeight() - 10);
     btnTo.startEftLight(game);
     btnTo.addToGroup(game.gBtn);
 
-    btnTheo = new Button("btn_theo", C.lang.call);
+    btnTheo = new Button("btn_theo", C.lang.call, Config.BUTTON_FONT);
     btnTheo.setPosition(btnTo.getX() + btnTheo.getWidth() + 20, btnTo.getY());
     btnTheo.startEftLight(game);
     btnTheo.addToGroup(game.gBtn);
 
-    btnUp = new Button("btn_up", C.lang.fold);
+    btnUp = new Button("btn_up", C.lang.fold, Config.BUTTON_FONT);
     btnUp.setPosition(btnTheo.getX() + btnUp.getWidth() + 20, btnTheo.getY());
     btnUp.startEftLight(game);
     btnUp.addToGroup(game.gBtn);
@@ -205,7 +203,7 @@ public class GamePlayUI implements IClickCard {
         Runnable run = () -> {
 
           if (moneyBet < game.moneyBet) {
-            //todo: show label min bet is game.moneyBet
+            btnTo.setTouchable(Touchable.enabled);
             lbMinBet.setPosition(Config.CENTER_X - lbMinBet.getWidth()/2,
                                     Config.CENTER_Y - lbMinBet.getHeight()/2);
             lbMinBet.setText(C.lang.minBet + " " + logic.convertMoneyBet(game.moneyBet));
@@ -278,6 +276,17 @@ public class GamePlayUI implements IClickCard {
       }
     });
 
+    btnNewRound.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        super.clicked(event, x, y);
+
+        btnNewRound.remove();
+        game.newRound();
+
+      }
+    });
+
   }
 
   private void handleClickBtnAlert() {
@@ -308,7 +317,7 @@ public class GamePlayUI implements IClickCard {
       public void clicked(InputEvent event, float x, float y) {
         super.clicked(event, x, y);
 
-        game.gBtn.addActor(btnNewRound);
+        btnNewRound.addToGroup(game.gBtn);
         effect.sclMaxToMin(gAlerrAds, () -> {
           bgBlackAlertAds.remove();
           gAlerrAds.remove();
@@ -336,17 +345,6 @@ public class GamePlayUI implements IClickCard {
 //
 //      }
 //    });
-
-    btnNewRound.addListener(new ClickListener() {
-      @Override
-      public void clicked(InputEvent event, float x, float y) {
-        super.clicked(event, x, y);
-
-       btnNewRound.remove();
-       game.newRound();
-
-      }
-    });
 
   }
 
@@ -422,10 +420,12 @@ public class GamePlayUI implements IClickCard {
     gAlerrAds.setScale(0);
 
     //label: button new round
-    btnNewRound = GUI.createImage(GMain.liengAtlas, "divide_card");
+    btnNewRound = new Button("btn_divide", C.lang.divideCard, Config.ALERT_FONT);
     btnNewRound.setPosition(Config.CENTER_X - btnNewRound.getWidth()/2,
                             Config.CENTER_Y - btnNewRound.getHeight()/2);
-    game.gBtn.addActor(btnNewRound);
+    btnNewRound.setFontScale(.8f, .8f);
+    btnNewRound.moveByLb(0, -10);
+    btnNewRound.addToGroup(game.gBtn);
 
   }
 
@@ -436,7 +436,7 @@ public class GamePlayUI implements IClickCard {
   }
 
   public void showBtnNewRound() {
-    game.gBtn.addActor(btnNewRound);
+    btnNewRound.addToGroup(game.gBtn);
   }
 
   public void eftLbTotalMoney(long money) {

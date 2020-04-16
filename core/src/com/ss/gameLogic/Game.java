@@ -14,6 +14,7 @@ import com.ss.gameLogic.logic.Rule;
 import com.ss.gameLogic.objects.Bot;
 import com.ss.gameLogic.objects.Card;
 import com.ss.gameLogic.ui.GamePlayUI;
+import com.ss.gameLogic.ui.StartScene;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,17 +24,18 @@ public class Game {
   private Logic logic;
   private Effect effect;
 
-  public Group gBackground, gCard, gBtn, gAlert, gBot, gEffect, gChip;
+  public Group gBackground, gCard, gBtn, gAlert, gBot, gEffect, gChip, gStartScene;
 
   public List<Bot> lsBot, lsBotActive; //reset lsBotActive when change numOfPlayer
   public List<Card> lsCardDown, lsCardUp;
-  public Bot winner; //set null when player go out start screen
+  public Bot winner; //set null when player go out startScene screen
   public int numOfPlayer = 6;
   public long moneyBet = 10000;
   private long tempMoneyPlayer = 20000;
 
   public DivideCard divideCard;
   public GamePlayUI gamePlayUI;
+  public StartScene startScene;
   public Bet bet;
 
   public Game() {
@@ -46,8 +48,8 @@ public class Game {
     initLayer();
     initBotAndCard();
 
-    getLsBotActive();
-
+    startScene = new StartScene(this, gStartScene);
+    startScene.addToScene();
     divideCard = new DivideCard(this);
     gamePlayUI = new GamePlayUI(this);
     bet = new Bet(this);
@@ -82,6 +84,7 @@ public class Game {
     gCard = new Group();
     gEffect = new Group();
     gAlert = new Group();
+    gStartScene = new Group();
 
     GStage.addToLayer(GLayer.ui, gBackground);
     GStage.addToLayer(GLayer.ui, gBot);
@@ -90,11 +93,14 @@ public class Game {
     GStage.addToLayer(GLayer.ui, gBtn);
     GStage.addToLayer(GLayer.ui, gEffect);
     GStage.addToLayer(GLayer.ui, gAlert);
+    GStage.addToLayer(GLayer.ui, gStartScene);
 
   }
 
-  public void setNumOfPlayer(int num) {
-    this.numOfPlayer = num;
+  public void setData(int numOfPlayer, long moneyBet) {
+    this.numOfPlayer = numOfPlayer;
+    this.moneyBet = moneyBet;
+    getLsBotActive();
   }
 
   public void getLsBotActive() {
@@ -135,11 +141,10 @@ public class Game {
     }
 
     for (Bot bot : lsBotActive) {
-      //todo: get money player in share preference
       if (lsBotActive.indexOf(bot) == 0)
-        bot.setTotalMoney(20000);
+        bot.setTotalMoney(1000000);
       else
-        bot.setTotalMoney(logic.initMoneyBot(10000));
+        bot.setTotalMoney(logic.initMoneyBot(lsBotActive.get(0).getTotalMoney()));
       bot.setAlive(true);
       bot.setActive(true);
       bot.addToScene();
@@ -258,6 +263,15 @@ public class Game {
 
     //todo: show bot win
 
+  }
+
+  public void resetData() {
+    lsBotActive.clear();
+    gamePlayUI.reset();
+    bet.reset();
+    divideCard.reset();
+
+    winner = null;
   }
 
 }

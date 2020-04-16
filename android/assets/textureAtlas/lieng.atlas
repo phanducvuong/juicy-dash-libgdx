@@ -6,175 +6,175 @@ filter: Nearest,Nearest
 repeat: none
 avatar
   rotate: false
-  xy: 1284, 1585
+  xy: 1284, 1659
   size: 159, 145
   orig: 159, 145
   offset: 0, 0
   index: -1
 banner_win
   rotate: false
-  xy: 1284, 1732
+  xy: 2, 49
   size: 283, 62
   orig: 283, 62
   offset: 0, 0
   index: -1
 bet_condition
   rotate: false
-  xy: 1284, 1509
+  xy: 1284, 1495
   size: 194, 74
   orig: 194, 74
   offset: 0, 0
   index: -1
 bg_black
   rotate: false
-  xy: 2, 1316
+  xy: 2, 1326
   size: 1280, 720
   orig: 1280, 720
   offset: 0, 0
   index: -1
 bg_money_bet
   rotate: false
-  xy: 2, 136
+  xy: 1578, 1801
   size: 322, 112
   orig: 322, 112
   offset: 0, 0
   index: -1
 bg_rate_money
   rotate: false
-  xy: 470, 555
+  xy: 470, 565
   size: 469, 37
   orig: 469, 37
   offset: 0, 0
   index: -1
 bg_table
   rotate: false
-  xy: 2, 594
+  xy: 2, 604
   size: 1280, 720
   orig: 1280, 720
   offset: 0, 0
   index: -1
 btnSee
   rotate: false
-  xy: 1284, 1437
+  xy: 1284, 1423
   size: 170, 70
   orig: 170, 70
   offset: 0, 0
   index: -1
 btn_ads
   rotate: false
-  xy: 1284, 1796
+  xy: 1284, 1806
   size: 292, 240
   orig: 292, 240
   offset: 0, 0
   index: -1
+btn_divide
+  rotate: false
+  xy: 1578, 1915
+  size: 367, 131
+  orig: 367, 131
+  offset: 0, 0
+  index: -1
 btn_theo
   rotate: false
-  xy: 2, 397
+  xy: 2, 260
   size: 343, 145
   orig: 343, 145
   offset: 0, 0
   index: -1
 btn_to
   rotate: false
-  xy: 2, 250
+  xy: 2, 113
   size: 343, 145
   orig: 343, 145
   offset: 0, 0
   index: -1
 btn_up
   rotate: false
-  xy: 1578, 1891
+  xy: 2, 407
   size: 343, 145
   orig: 343, 145
   offset: 0, 0
   index: -1
 btn_x
   rotate: false
-  xy: 1923, 1921
+  xy: 347, 437
   size: 120, 115
   orig: 120, 115
   offset: 0, 0
   index: -1
 button_start
   rotate: false
-  xy: 1284, 1366
+  xy: 1284, 1352
   size: 159, 69
   orig: 159, 69
   offset: 0, 0
   index: -1
 chip_10
   rotate: false
-  xy: 347, 439
+  xy: 1284, 1294
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: -1
 chip_100
   rotate: false
-  xy: 187, 78
+  xy: 287, 55
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: -1
 chip_20
   rotate: false
-  xy: 1445, 1674
+  xy: 1445, 1748
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: -1
 chip_200
   rotate: false
-  xy: 245, 78
+  xy: 1947, 1932
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: -1
 chip_50
   rotate: false
-  xy: 1284, 1308
+  xy: 347, 379
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: -1
 chip_500
   rotate: false
-  xy: 1825, 1833
+  xy: 1947, 1990
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: -1
 control_rate_money
   rotate: false
-  xy: 347, 497
+  xy: 2, 2
   size: 81, 45
   orig: 81, 45
   offset: 0, 0
   index: -1
-divide_card
-  rotate: false
-  xy: 1578, 1799
-  size: 245, 90
-  orig: 245, 90
-  offset: 0, 0
-  index: -1
 info_user
   rotate: false
-  xy: 2, 48
+  xy: 1284, 1571
   size: 183, 86
   orig: 183, 86
   offset: 0, 0
   index: -1
 rate_money
   rotate: false
-  xy: 2, 544
+  xy: 2, 554
   size: 466, 48
   orig: 466, 48
   offset: 0, 0
   index: -1
 white_blur
   rotate: false
-  xy: 2, 2
+  xy: 85, 3
   size: 53, 44
   orig: 53, 44
   offset: 0, 0

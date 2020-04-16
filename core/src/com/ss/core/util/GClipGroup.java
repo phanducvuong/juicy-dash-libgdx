@@ -10,20 +10,26 @@ public class GClipGroup extends Group {
    float clipY;
    boolean isClipping;
 
-   public void draw(Batch batch, float dt) {
+   public void draw(Batch var1, float var2) {
 
-    if(this.clipW >= 1.0F && this.clipH >= 1.0F) {
-      batch.end();
-      batch.begin();
-//      boolean var3;
-//      var3 = this.isClipping() && this.clipBegin(this.clipX + this.getX(), this.clipY + this.getY(), this.clipW, this.clipH);
-      this.clipBegin(this.getX(), this.getY(), this.clipW, this.clipH);
+     if(!this.isClipping || this.clipW >= 1.0F && this.clipH >= 1.0F) {
+       var1.end();
+       var1.begin();
+       boolean var3;
+       if(this.isClipping() && this.clipBegin(this.clipX + this.getX(), this.clipY + this.getY(), this.clipW, this.clipH)) {
+         var3 = true;
+       } else {
+         var3 = false;
+       }
 
-      super.draw(batch, dt);
-      batch.end();
-      this.clipEnd();
-      batch.begin();
-    }
+       super.draw(var1, var2);
+       if(var3) {
+         var1.end();
+         this.clipEnd();
+         var1.begin();
+         return;
+       }
+     }
 
    }
 

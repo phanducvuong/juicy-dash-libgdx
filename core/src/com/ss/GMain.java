@@ -20,7 +20,7 @@ public class GMain extends GDirectedGame {
   public static int screenHeight = 0;
   public static int screenWidth = 0;
   public static final int testType = 2;
-  public static TextureAtlas liengAtlas, cardAtlas;
+  public static TextureAtlas liengAtlas, cardAtlas, startSceneAtlas;
   public static float ratioX, ratioY;
 
   public static IPlatform platform;
@@ -28,8 +28,7 @@ public class GMain extends GDirectedGame {
     platform = plat;
   }
 
-  private void init()
-  {
+  private void init() {
     float n = 480.0f;
     final boolean b = false;// 0.0f > 1.0f;
     final float n2 = Gdx.graphics.getWidth();
@@ -77,24 +76,21 @@ public class GMain extends GDirectedGame {
     });
   }
 
-
-  
   private static GScreen menuScreen()
   {
     return new GameScene();
   }
 
-  public void create()
-  {
+  public void create() {
       liengAtlas = GAssetsManager.getTextureAtlas("lieng.atlas");
       cardAtlas = GAssetsManager.getTextureAtlas("card.atlas");
+      startSceneAtlas = GAssetsManager.getTextureAtlas("start_scene.atlas");
       this.init();
       C.init();
       this.setScreen(menuScreen());
   }
   
-  public void dispose()
-  {
+  public void dispose() {
     GMain.platform.log("############## gmain dispose");
     GParticleSystem.saveAllFreeMin();
     super.dispose();

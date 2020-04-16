@@ -150,7 +150,11 @@ public class Bet {
     System.out.println("MONEY OWE: " + moneyOwe);
     totalMoneyBet += moneyBet;
     totalMoney = totalMoney + moneyBet + moneyOwe;
-    player.TO(moneyBet, moneyOwe);
+
+    if (moneyBet == (player.getTotalMoney() - moneyOwe))
+      player.AllIn();
+    else
+      player.TO(moneyBet, moneyOwe);
     player.convertTotalMoneyToString();
 
     game.gamePlayUI.eftLbTotalMoney(moneyBet + moneyOwe);
@@ -170,7 +174,11 @@ public class Bet {
     if (bot.getTotalMoney() <= moneyOwe) { // all-in
       totalMoney += bot.getTotalMoney();
       game.gamePlayUI.eftLbTotalMoney(bot.getTotalMoney());
-      bot.AllIn();
+
+      if (bot.getTotalMoney() == 0)
+        bot.THEO(0);
+      else
+        bot.AllIn();
     }
     else {
       totalMoney += moneyOwe;

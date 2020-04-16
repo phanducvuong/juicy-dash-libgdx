@@ -18,6 +18,7 @@ public class Config {
   public static final BitmapFont WIN_FONT = GAssetsManager.getBitmapFont("win_font.fnt");
   public static final BitmapFont PLUS_MONEY_FONT = GAssetsManager.getBitmapFont("plus_money_font.fnt");
   public static final BitmapFont ALERT_FONT = GAssetsManager.getBitmapFont("alert_font.fnt");
+  public static final BitmapFont TUTORIAL = GAssetsManager.getBitmapFont("tutorial_font.fnt");
 
   public static final Vector2 POS_DESK_RESIDUAL = new Vector2(100, 1070);
   public static final Vector2 POS_BOT_0 = new Vector2(GStage.getWorldWidth()/2 - 250, GStage.getWorldHeight() - 270);
