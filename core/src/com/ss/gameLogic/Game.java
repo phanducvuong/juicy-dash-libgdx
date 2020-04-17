@@ -2,6 +2,8 @@ package com.ss.gameLogic;
 
 import com.badlogic.gdx.scenes.scene2d.Group;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
+
+import com.ss.GMain;
 import com.ss.core.util.GLayer;
 import com.ss.core.util.GStage;
 import com.ss.gameLogic.card.Number;
@@ -32,6 +34,7 @@ public class Game {
   public int numOfPlayer = 6;
   public long moneyBet = 10000;
   private long tempMoneyPlayer = 20000;
+  public boolean isInGame = false;
 
   public DivideCard divideCard;
   public GamePlayUI gamePlayUI;
@@ -100,10 +103,12 @@ public class Game {
   public void setData(int numOfPlayer, long moneyBet) {
     this.numOfPlayer = numOfPlayer;
     this.moneyBet = moneyBet;
+
+    gamePlayUI.showBtnNewRound();
     getLsBotActive();
   }
 
-  public void getLsBotActive() {
+  private void getLsBotActive() {
 
     lsBotActive.clear();
     switch (numOfPlayer) {
@@ -142,14 +147,13 @@ public class Game {
 
     for (Bot bot : lsBotActive) {
       if (lsBotActive.indexOf(bot) == 0)
-        bot.setTotalMoney(1000000);
+        bot.setTotalMoney(GMain.pref.getLong("money"));
       else
         bot.setTotalMoney(logic.initMoneyBot(lsBotActive.get(0).getTotalMoney()));
       bot.setAlive(true);
       bot.setActive(true);
       bot.addToScene();
       bot.convertTotalMoneyToString();
-      bot.setTotalMoneyBet(10000);
     }
 
   }
@@ -182,6 +186,8 @@ public class Game {
     else {
       resetGame();
 
+      System.out.println(moneyBet);
+
       bet.totalMoney = moneyBet * lsBotActive.size();
       gamePlayUI.eftLbTotalMoney(0);
 
@@ -192,22 +198,27 @@ public class Game {
         bot.chipOutNewRound(this, moneyBet);
       }
 
+      logic.saveMoney(lsBotActive.get(0).getTotalMoney());
+
       logMoneyBot();
       divideCard.nextTurn();
+      isInGame = true;
     }
 
   }
 
   public void startBet() {
 
-    if (winner != null && winner.id == 0)
-      gamePlayUI.showBtnBet();
-    else if (winner == null)
-      gamePlayUI.showBtnBet();
+    if (lsBotActive.size() > 0) {
+      if (winner != null && winner.id == 0)
+        gamePlayUI.showBtnBet();
+      else if (winner == null)
+        gamePlayUI.showBtnBet();
 
-    int indexBet = logic.getIdBotToStartBet(lsBotActive, winner);
-    lsBotActive.get(indexBet).isStartBet = true;
-    bet.startBet(lsBotActive.get(indexBet));
+      int indexBet = logic.getIdBotToStartBet(lsBotActive, winner);
+      lsBotActive.get(indexBet).isStartBet = true;
+      bet.startBet(lsBotActive.get(indexBet));
+    }
 
   }
 
@@ -266,12 +277,14 @@ public class Game {
   }
 
   public void resetData() {
+
     lsBotActive.clear();
     gamePlayUI.reset();
     bet.reset();
     divideCard.reset();
-
     winner = null;
+    isInGame = false;
+
   }
 
 }

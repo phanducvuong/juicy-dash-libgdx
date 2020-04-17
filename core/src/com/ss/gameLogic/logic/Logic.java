@@ -1,9 +1,12 @@
 package com.ss.gameLogic.logic;
 
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.math.Vector2;
+import com.ss.GMain;
 import com.ss.gameLogic.Game;
 import com.ss.gameLogic.card.Number;
 import com.ss.gameLogic.card.Type;
+import com.ss.gameLogic.config.C;
 import com.ss.gameLogic.config.Config;
 import com.ss.gameLogic.objects.Bot;
 import com.ss.gameLogic.objects.Card;
@@ -445,6 +448,39 @@ public class Logic {
     else if (i==3) return "chip_100";
     else if (i==4) return "chip_200";
     else return  "chip_500";
+  }
+
+  public void minusMoneyBot(Bot bot, long moneyBet) {
+    long tempMoney = bot.getTotalMoney() - moneyBet* C.remote.minusMoney;
+    System.out.println("MONEY: " + tempMoney);
+    if (tempMoney > 0)
+      bot.setTotalMoney(tempMoney);
+    else
+      bot.setTotalMoney(0);
+
+    saveMoney(bot.getTotalMoney());
+  }
+
+  public void saveMoney(long money) {
+    GMain.pref.putLong("money", money);
+    GMain.pref.flush();
+  }
+
+  public long getMoneyBuyId(String id) {
+
+    if (id.equals("chip_10"))
+      return 10000;
+    else if (id.equals("chip_20"))
+      return 20000;
+    else if (id.equals("chip_50"))
+      return 50000;
+    else if (id.equals("chip_100"))
+      return 100000;
+    else if (id.equals("chip_200"))
+      return 200000;
+    else
+      return 500000;
+
   }
 
 }

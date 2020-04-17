@@ -2,6 +2,7 @@ package com.ss.gameLogic.objects;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -27,12 +28,12 @@ public class Button {
   private Group group;
   public boolean isLightStart = false;
 
-  public Button(String region, String txt, BitmapFont fontStyle) {
+  public Button(TextureAtlas atlas,String region, String txt, BitmapFont fontStyle) {
 
     this.group = new Group();
     posLight = new ArrayList<>();
     lsLight = new ArrayList<>();
-    btn = GUI.createImage(GMain.liengAtlas, region);
+    btn = GUI.createImage(atlas, region);
 
     lbTxt = new Label(txt, new Label.LabelStyle(fontStyle, null));
     lbTxt.setAlignment(Align.center);
@@ -191,6 +192,14 @@ public class Button {
 
   public float getHeight() {
     return group.getHeight();
+  }
+
+  public float getScaleX() {
+    return group.getScaleX();
+  }
+
+  public float getScaleY() {
+    return group.getScaleY();
   }
 
   public void debug() {

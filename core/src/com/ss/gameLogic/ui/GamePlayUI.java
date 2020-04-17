@@ -1,7 +1,6 @@
 package com.ss.gameLogic.ui;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -19,7 +18,6 @@ import com.ss.gameLogic.config.C;
 import com.ss.gameLogic.config.Config;
 import com.ss.gameLogic.effects.Effect;
 import com.ss.gameLogic.interfaces.IClickCard;
-import com.ss.gameLogic.logic.DivideCard;
 import com.ss.gameLogic.logic.Logic;
 import com.ss.gameLogic.objects.Bot;
 import com.ss.gameLogic.objects.Button;
@@ -47,11 +45,14 @@ public class GamePlayUI implements IClickCard {
   private GClipGroup gRateMoney;
   private Image controlRateMoney, rateMoney, bgRateMoney;
   private Label lbMoneyRate, lbMinBet;
-  private long moneyBet;
+  private long moneyBet; //rate money to bet of player
   private float rateXMin, rateXMax;
 
   private Group gAlerrAds;
   private Image bgBlackAlertAds, btnAlertAds, btnXAlertAds;
+
+  private Group gPanelInGame;
+  private Image blackPanelInGame;
 
   public GamePlayUI(Game game) {
 
@@ -62,6 +63,8 @@ public class GamePlayUI implements IClickCard {
     initUIGame();
     initButtonBet();
     initRateMoney();
+    initIcon();
+    initPanelInGame();
     handleClickBtnBet();
     handleClickBtnAlert();
     hideBtnBet();
@@ -70,19 +73,155 @@ public class GamePlayUI implements IClickCard {
 
   }
 
+  private void initPanelInGame() {
+
+    blackPanelInGame = GUI.createImage(GMain.liengAtlas, "bg_black");
+    blackPanelInGame.setSize(GStage.getWorldWidth(), GStage.getWorldHeight());
+
+    gPanelInGame = new Group();
+    Image panelInGame = GUI.createImage(GMain.liengAtlas, "panel_ads");
+    gPanelInGame.setSize(panelInGame.getWidth(), panelInGame.getHeight());
+    gPanelInGame.setOrigin(Align.center);
+    gPanelInGame.setPosition(Config.CENTER_X - gPanelInGame.getWidth()/2, Config.CENTER_Y - gPanelInGame.getHeight()/2);
+    gPanelInGame.addActor(panelInGame);
+
+    Label lbTxt = new Label(C.lang.notifyExitGame, new Label.LabelStyle(Config.ALERT_FONT, null));
+    lbTxt.setAlignment(Align.center);
+    lbTxt.setPosition(gPanelInGame.getWidth()/2 - lbTxt.getWidth()/2, 170);
+    gPanelInGame.addActor(lbTxt);
+
+    Button btnOK = new Button(GMain.liengAtlas, "btn_divide", C.lang.yes, Config.ALERT_FONT);
+    btnOK.setPosition(120, gPanelInGame.getHeight() - btnOK.getHeight() - 20);
+    btnOK.moveByLb(0, -10);
+    btnOK.addToGroup(gPanelInGame);
+
+    Button btnNo = new Button(GMain.liengAtlas, "btn_divide", C.lang.no, Config.ALERT_FONT);
+    btnNo.setPosition(gPanelInGame.getWidth() - btnNo.getWidth() - 120, btnOK.getY());
+    btnNo.moveByLb(0, -10);
+    btnNo.addToGroup(gPanelInGame);
+
+    gPanelInGame.setScale(0);
+
+    btnOK.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        super.clicked(event, x, y);
+
+        Runnable run = () -> {
+
+          logic.minusMoneyBot(game.lsBot.get(0), game.moneyBet);
+
+          btnOK.setTouchable(Touchable.enabled);
+          game.resetData();
+          game.startScene.showStartScene();
+          blackPanelInGame.remove();
+          gPanelInGame.remove();
+
+        };
+
+        btnOK.setTouchable(Touchable.disabled);
+        effect.click(btnOK, run);
+
+      }
+    });
+
+    btnNo.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        super.clicked(event, x, y);
+
+        Runnable run = () -> {
+
+          btnNo.setTouchable(Touchable.enabled);
+          effect.sclMaxToMin(gPanelInGame, () -> {
+            blackPanelInGame.remove();
+            gPanelInGame.remove();
+          });
+
+
+        };
+
+        btnNo.setTouchable(Touchable.disabled);
+        effect.click(btnNo, run);
+
+      }
+    });
+
+  }
+
+  private void initIcon() {
+
+    Image iconSetting = GUI.createImage(GMain.startSceneAtlas, "icon_setting");
+    iconSetting.setScale(.8f);
+    iconSetting.setPosition(GStage.getWorldWidth() - iconSetting.getWidth() - 30, 20);
+    iconSetting.setOrigin(Align.center);
+    game.gBtn.addActor(iconSetting);
+
+    Image iconExit = GUI.createImage(GMain.startSceneAtlas, "icon_exit");
+    iconExit.setScale(.8f);
+    iconExit.setPosition(iconSetting.getX() - iconExit.getWidth() - 20, iconSetting.getY());
+    iconExit.setOrigin(Align.center);
+    game.gBtn.addActor(iconExit);
+
+    iconSetting.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        super.clicked(event, x, y);
+
+        Runnable run = () -> {
+          iconSetting.setTouchable(Touchable.enabled);
+          game.gStartScene.addActor(game.startScene.blackSetting);
+          game.gStartScene.addActor(game.startScene.gPanelSetting);
+          effect.sclMinToMax(game.startScene.gPanelSetting);
+        };
+
+        iconSetting.setTouchable(Touchable.disabled);
+        effect.click(iconSetting, run);
+
+      }
+    });
+
+    iconExit.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        super.clicked(event, x, y);
+
+        Runnable run = () -> {
+
+          iconExit.setTouchable(Touchable.enabled);
+          if (game.isInGame) {
+            game.gAlert.addActor(blackPanelInGame);
+            game.gAlert.addActor(gPanelInGame);
+            effect.sclMinToMax(gPanelInGame);
+          }
+          else {
+            game.resetData();
+            game.startScene.showStartScene();
+          }
+
+        };
+
+        iconExit.setTouchable(Touchable.disabled);
+        effect.click(iconExit, run);
+
+      }
+    });
+
+  }
+
   private void initButtonBet() {
 
-    btnTo = new Button("btn_to", C.lang.raise, Config.BUTTON_FONT);
+    btnTo = new Button(GMain.liengAtlas, "btn_to", C.lang.raise, Config.BUTTON_FONT);
     btnTo.setPosition(GStage.getWorldWidth()/2 + 50, GStage.getWorldHeight() - btnTo.getHeight() - 10);
     btnTo.startEftLight(game);
     btnTo.addToGroup(game.gBtn);
 
-    btnTheo = new Button("btn_theo", C.lang.call, Config.BUTTON_FONT);
+    btnTheo = new Button(GMain.liengAtlas, "btn_theo", C.lang.call, Config.BUTTON_FONT);
     btnTheo.setPosition(btnTo.getX() + btnTheo.getWidth() + 20, btnTo.getY());
     btnTheo.startEftLight(game);
     btnTheo.addToGroup(game.gBtn);
 
-    btnUp = new Button("btn_up", C.lang.fold, Config.BUTTON_FONT);
+    btnUp = new Button(GMain.liengAtlas, "btn_up", C.lang.fold, Config.BUTTON_FONT);
     btnUp.setPosition(btnTheo.getX() + btnUp.getWidth() + 20, btnTheo.getY());
     btnUp.startEftLight(game);
     btnUp.addToGroup(game.gBtn);
@@ -318,7 +457,7 @@ public class GamePlayUI implements IClickCard {
         super.clicked(event, x, y);
 
         btnNewRound.addToGroup(game.gBtn);
-        effect.sclMaxToMin(gAlerrAds, () -> {
+        effect.sclMaxToMinAndRotate(gAlerrAds, () -> {
           bgBlackAlertAds.remove();
           gAlerrAds.remove();
         });
@@ -420,7 +559,7 @@ public class GamePlayUI implements IClickCard {
     gAlerrAds.setScale(0);
 
     //label: button new round
-    btnNewRound = new Button("btn_divide", C.lang.divideCard, Config.ALERT_FONT);
+    btnNewRound = new Button(GMain.liengAtlas, "btn_divide", C.lang.divideCard, Config.ALERT_FONT);
     btnNewRound.setPosition(Config.CENTER_X - btnNewRound.getWidth()/2,
                             Config.CENTER_Y - btnNewRound.getHeight()/2);
     btnNewRound.setFontScale(.8f, .8f);
@@ -432,7 +571,7 @@ public class GamePlayUI implements IClickCard {
   public void showAlertAds() {
     game.gAlert.addActor(bgBlackAlertAds);
     game.gAlert.addActor(gAlerrAds);
-    effect.sclMinToMax(gAlerrAds);
+    effect.sclMinToMaxAndRotate(gAlerrAds);
   }
 
   public void showBtnNewRound() {
@@ -522,18 +661,19 @@ public class GamePlayUI implements IClickCard {
     btnTheo.setColor(Color.WHITE);
     btnUp.setColor(Color.WHITE);
 
-    if (logic.chkMoneyOweOfPlayer(game.lsBotActive.get(0), game.bet)) {
+    if (game.lsBotActive.size() > 0)
+      if (logic.chkMoneyOweOfPlayer(game.lsBotActive.get(0), game.bet)) {
 
-      controlRateMoney.setTouchable(Touchable.enabled);
-      controlRateMoney.setColor(Color.WHITE);
-      rateMoney.setColor(Color.WHITE);
-      bgRateMoney.setColor(Color.WHITE);
-      lbMoneyRate.setColor(Color.WHITE);
+        controlRateMoney.setTouchable(Touchable.enabled);
+        controlRateMoney.setColor(Color.WHITE);
+        rateMoney.setColor(Color.WHITE);
+        bgRateMoney.setColor(Color.WHITE);
+        lbMoneyRate.setColor(Color.WHITE);
 
-      setPosControllRateMoneyBet();
-      showBtnTo();
+        setPosControllRateMoneyBet();
+        showBtnTo();
 
-    }
+      }
 
   }
 
@@ -548,6 +688,9 @@ public class GamePlayUI implements IClickCard {
   }
 
   public void showBannerWin(Bot bot) {
+    game.isInGame = false;
+    logic.saveMoney(game.lsBot.get(0).getTotalMoney());
+    System.out.println(game.lsBot.get(0).getTotalMoney() + "    " + GMain.pref.getLong("money"));
     if (bot.id != 0) {
       Image avatar = bot.avatar;
       gBannerWin.setPosition(avatar.getX() + avatar.getWidth()/2 - bannerWin.getWidth()/2,
@@ -563,6 +706,7 @@ public class GamePlayUI implements IClickCard {
   public void reset() {
     removeChip();
     hideBannerWin();
+    lbTotoalMoneyBet.setText("$0");
   }
 
   private void removeChip() {

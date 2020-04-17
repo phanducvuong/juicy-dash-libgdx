@@ -221,6 +221,9 @@ public class Bot {
     totalMoneyBet += (moneyBet + moneyOwe);
     totalMoney -= (moneyBet + moneyOwe);
 
+    if (id == 0)
+      Logic.getInstance().saveMoney(totalMoney);
+
     hideConditionBet();
     showLbMoneyBet(moneyBet);
 
@@ -236,6 +239,9 @@ public class Bot {
     totalMoneyBet += totalMoney;
     totalMoney = 0;
 
+    if (id == 0)
+      Logic.getInstance().saveMoney(totalMoney);
+
     hideConditionBet();
     lbConditionBet.setText(C.lang.allIn);
     lbConditionBet.setVisible(true);
@@ -244,6 +250,9 @@ public class Bot {
   public void THEO(long money) {
     totalMoneyBet += money;
     totalMoney -= money;
+
+    if (id == 0)
+      Logic.getInstance().saveMoney(totalMoney);
 
     hideConditionBet();
     lbConditionBet.setText(C.lang.call);

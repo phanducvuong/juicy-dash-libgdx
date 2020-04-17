@@ -12,6 +12,7 @@ public class C {
     public static class remote {
         public static int adsTime = 50;
         public static long moneyAds = 500000;
+        public static long minusMoney = 2;
         static void initRemoteConfig() {
 
         }
@@ -37,6 +38,16 @@ public class C {
       public static String divideCard = "";
       public static String newRound = "";
       public static String tutorial = "";
+      public static String players = "";
+      public static String moneyPlayer = "";
+      public static String bet = "";
+      public static String titleSetting = "";
+      public static String music = "";
+      public static String sound = "";
+      public static String startPanelBet = "";
+      public static String notifyExitGame = "";
+      public static String yes = "";
+      public static String no = "";
 
       static void initLocalize() {
         FileHandle specFilehandle = Gdx.files.internal("i18n/lang_" + "id");
@@ -66,6 +77,15 @@ public class C {
         otherGame = locale.get("other_game");
         divideCard = locale.get("divide_card");
         newRound = locale.get("new_round");
+        players = locale.get("players");
+        moneyPlayer = locale.get("money_player");
+        bet = locale.get("bet");
+        music = locale.get("music");
+        sound = locale.get("sound");
+        titleSetting = locale.get("title_setting");
+        startPanelBet = locale.get("start_panel_bet");
+        yes = locale.get("yes");
+        no = locale.get("no");
 
         if (idCountry.equals("VN"))
           tutorial = Strings.tutorialVN;
@@ -73,6 +93,7 @@ public class C {
           tutorial = Strings.tutorialEN;
 
         adsOutOfMoney = locale.format("out_of_money", remote.moneyAds);
+        notifyExitGame = locale.format("notify_exit_game", remote.minusMoney);
       }
     }
 

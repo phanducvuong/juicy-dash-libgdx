@@ -30,7 +30,8 @@ public class SoundEffects {
 //    private static FileHandle eat_card = Gdx.files.internal("sound/eat_card.mp3");
 //    private static FileHandle ohh = Gdx.files.internal("sound/ohh.mp3");
 
-    public static boolean isMute = false;
+    public static boolean isMuteSound = false;
+    public static boolean isMuteMusic = false;
 
     public static void initSound() {
         s = new HashMap<>();

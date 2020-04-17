@@ -111,42 +111,42 @@ button_start
   index: -1
 chip_10
   rotate: false
-  xy: 1284, 1294
+  xy: 1445, 1690
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: -1
 chip_100
   rotate: false
-  xy: 287, 55
+  xy: 1445, 1748
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: -1
 chip_20
   rotate: false
-  xy: 1445, 1748
+  xy: 347, 379
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: -1
 chip_200
   rotate: false
-  xy: 1947, 1932
+  xy: 1503, 1748
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: -1
 chip_50
   rotate: false
-  xy: 347, 379
+  xy: 1284, 1294
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: -1
 chip_500
   rotate: false
-  xy: 1947, 1990
+  xy: 287, 55
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
@@ -156,6 +156,13 @@ control_rate_money
   xy: 2, 2
   size: 81, 45
   orig: 81, 45
+  offset: 0, 0
+  index: -1
+flare_chip
+  rotate: false
+  xy: 1947, 1968
+  size: 78, 78
+  orig: 78, 78
   offset: 0, 0
   index: -1
 info_user

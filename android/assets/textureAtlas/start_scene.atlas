@@ -6,142 +6,198 @@ filter: Nearest,Nearest
 repeat: none
 arrow_left
   rotate: false
-  xy: 1284, 624
+  xy: 1434, 331
   size: 50, 65
   orig: 50, 65
   offset: 0, 0
   index: -1
 arrow_right
   rotate: false
-  xy: 2, 2
+  xy: 1175, 209
   size: 50, 65
   orig: 50, 65
   offset: 0, 0
   index: -1
 bg_panel_bet_chip
   rotate: false
-  xy: 576, 322
+  xy: 1284, 819
   size: 361, 293
   orig: 361, 293
   offset: 0, 0
   index: -1
 bg_panel_bet_number
   rotate: false
-  xy: 1533, 1036
+  xy: 1178, 398
   size: 311, 91
   orig: 311, 91
   offset: 0, 0
   index: -1
 bg_start_game
   rotate: false
-  xy: 2, 1298
+  xy: 2, 1288
   size: 1280, 720
   orig: 1280, 720
   offset: 0, 0
   index: -1
 btn_other_game
   rotate: false
-  xy: 2, 448
+  xy: 1284, 1114
   size: 572, 167
   orig: 572, 167
   offset: 0, 0
   index: -1
 btn_rank
   rotate: false
-  xy: 1284, 1129
+  xy: 2, 2
   size: 572, 167
   orig: 572, 167
   offset: 0, 0
   index: -1
 btn_start
   rotate: false
-  xy: 2, 279
+  xy: 604, 438
   size: 572, 167
   orig: 572, 167
   offset: 0, 0
   index: -1
+btn_start_panel_bet
+  rotate: false
+  xy: 604, 106
+  size: 240, 93
+  orig: 240, 93
+  offset: 0, 0
+  index: -1
 chip_bet
   rotate: false
-  xy: 1858, 1237
+  xy: 1647, 827
   size: 59, 59
   orig: 59, 59
   offset: 0, 0
   index: -1
+flare
+  rotate: false
+  xy: 604, 201
+  size: 227, 235
+  orig: 227, 235
+  offset: 0, 0
+  index: -1
 icon_btn_other_game
   rotate: false
-  xy: 2, 69
+  xy: 833, 228
   size: 218, 208
   orig: 218, 208
   offset: 0, 0
   index: -1
 icon_btn_rank
   rotate: false
-  xy: 1284, 691
+  xy: 1647, 888
   size: 180, 224
   orig: 180, 224
   offset: 0, 0
   index: -1
 icon_btn_start
   rotate: false
-  xy: 1284, 917
+  xy: 1284, 607
   size: 247, 210
   orig: 247, 210
   offset: 0, 0
   index: -1
+icon_exit
+  rotate: false
+  xy: 1312, 276
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: -1
 icon_gift
   rotate: false
-  xy: 222, 157
+  xy: 1175, 276
   size: 135, 120
   orig: 135, 120
   offset: 0, 0
   index: -1
 icon_mini_game
   rotate: false
-  xy: 939, 379
+  xy: 1053, 316
   size: 120, 120
   orig: 120, 120
   offset: 0, 0
   index: -1
 icon_setting
   rotate: false
-  xy: 1061, 379
+  xy: 1020, 72
   size: 120, 120
   orig: 120, 120
   offset: 0, 0
   index: -1
 icon_tutorial
   rotate: false
-  xy: 359, 157
+  xy: 1053, 194
   size: 120, 120
   orig: 120, 120
   offset: 0, 0
   index: -1
 light_button
   rotate: false
-  xy: 939, 501
+  xy: 1178, 491
   size: 302, 114
   orig: 302, 114
   offset: 0, 0
   index: -1
 light_chip_bet
   rotate: false
-  xy: 1933, 1932
+  xy: 1933, 1922
   size: 86, 86
   orig: 86, 86
   offset: 0, 0
   index: -1
+music_off
+  rotate: false
+  xy: 1858, 1109
+  size: 172, 172
+  orig: 172, 172
+  offset: 0, 0
+  index: -1
+music_on
+  rotate: false
+  xy: 1829, 935
+  size: 172, 172
+  orig: 172, 172
+  offset: 0, 0
+  index: -1
 panel_bet
   rotate: false
-  xy: 1284, 1298
-  size: 647, 720
-  orig: 647, 720
+  xy: 1284, 1283
+  size: 647, 725
+  orig: 647, 725
+  offset: 0, 0
+  index: -1
+panel_setting
+  rotate: false
+  xy: 2, 171
+  size: 600, 434
+  orig: 600, 434
   offset: 0, 0
   index: -1
 panel_tutorial
   rotate: false
-  xy: 2, 617
+  xy: 2, 607
   size: 1280, 679
   orig: 1280, 679
+  offset: 0, 0
+  index: -1
+sound_off
+  rotate: false
+  xy: 846, 54
+  size: 172, 172
+  orig: 172, 172
+  offset: 0, 0
+  index: -1
+sound_on
+  rotate: false
+  xy: 1533, 644
+  size: 172, 173
+  orig: 172, 173
   offset: 0, 0
   index: -1
 

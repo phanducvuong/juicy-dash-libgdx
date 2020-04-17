@@ -8,8 +8,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.ss.GMain;
+import com.ss.core.effect.SoundEffects;
 import com.ss.core.util.GClipGroup;
 import com.ss.core.util.GStage;
 import com.ss.core.util.GUI;
@@ -19,6 +21,7 @@ import com.ss.gameLogic.config.Config;
 import com.ss.gameLogic.config.Strings;
 import com.ss.gameLogic.effects.Effect;
 import com.ss.gameLogic.logic.Logic;
+import com.ss.gameLogic.objects.Button;
 
 public class StartScene {
 
@@ -33,11 +36,15 @@ public class StartScene {
   private Image btnXPanelTutorial, blackTutorial;
 
   private Group gPanelBet;
-  private Image blackPanelBet, arrLeft, arrRight;
-  private Label lbNumPlayer;
+  private Image blackPanelBet, arrLeft, arrRight, btnXPanelBet, flareChip;
+  private Button btnStartPanelBet;
+  private Label lbNumPlayer, lbMoneyPresent;
+
+  public Group gPanelSetting;
+  public Image blackSetting, iconSound, iconMusic;
 
   private int numOfPlayer = 6;
-  private long moneyBet = 10000;
+  private long moneyBet = 20000;
 
   public StartScene(Game game, Group gParent) {
 
@@ -52,8 +59,111 @@ public class StartScene {
     initIcon();
     initPanelTutorial();
     initPanelBet();
+    initPanelSetting();
     handleClick();
     handleClickIcon();
+
+    setMoneyForLb();
+
+  }
+
+  private void initPanelSetting() {
+
+    blackSetting = GUI.createImage(GMain.liengAtlas, "bg_black");
+    blackSetting.setSize(GStage.getWorldWidth(), GStage.getWorldHeight());
+
+    gPanelSetting = new Group();
+    Image bgPanelSetting = GUI.createImage(GMain.startSceneAtlas, "panel_setting");
+    bgPanelSetting.setScale(1.5f, 1.5f);
+    gPanelSetting.setSize(bgPanelSetting.getWidth()*1.5f, bgPanelSetting.getHeight()*1.5f);
+    gPanelSetting.setOrigin(Align.center);
+    gPanelSetting.setPosition(Config.CENTER_X - gPanelSetting.getWidth()/2, Config.CENTER_Y - gPanelSetting.getHeight()/2);
+    gPanelSetting.addActor(bgPanelSetting);
+    gPanelSetting.setScale(0f);
+
+    Label lbTitle = new Label(C.lang.titleSetting, new Label.LabelStyle(Config.ALERT_FONT, null));
+    lbTitle.setAlignment(Align.center);
+    lbTitle.setFontScale(1.2f);
+    lbTitle.setPosition(gPanelSetting.getWidth()/2 - lbTitle.getWidth()/2, 50);
+    gPanelSetting.addActor(lbTitle);
+
+    iconMusic = GUI.createImage(GMain.startSceneAtlas, "music_on");
+    iconMusic.setPosition(gPanelSetting.getWidth()/2 - iconMusic.getWidth() - 130,
+            gPanelSetting.getHeight()/2 - iconMusic.getHeight()/2);
+    gPanelSetting.addActor(iconMusic);
+
+    Label lbMusic = new Label(C.lang.music, new Label.LabelStyle(Config.ALERT_FONT, null));
+    lbMusic.setAlignment(Align.center);
+    lbMusic.setFontScale(.7f);
+    lbMusic.setPosition(iconMusic.getX() + iconMusic.getWidth()/2 - lbMusic.getWidth()/2,
+                        iconMusic.getY() + iconMusic.getHeight() + lbMusic.getHeight()/2);
+    gPanelSetting.addActor(lbMusic);
+
+    iconSound = GUI.createImage(GMain.startSceneAtlas, "sound_on");
+    iconSound.setPosition(gPanelSetting.getWidth()/2 + iconMusic.getWidth()/2 + 50,
+            gPanelSetting.getHeight()/2 - iconSound.getHeight()/2);
+    gPanelSetting.addActor(iconSound);
+
+    Label lbSound = new Label(C.lang.sound, new Label.LabelStyle(Config.ALERT_FONT, null));
+    lbSound.setAlignment(Align.center);
+    lbSound.setFontScale(.7f);
+    lbSound.setPosition(iconSound.getX() + iconSound.getWidth()/2 - lbMusic.getWidth()/2,
+            iconSound.getY() + iconSound.getHeight() + lbSound.getHeight()/2);
+    gPanelSetting.addActor(lbSound);
+
+    Image btnX = GUI.createImage(GMain.liengAtlas, "btn_x");
+    btnX.setPosition(gPanelSetting.getWidth() - btnX.getWidth()/2, -btnX.getHeight()/2);
+    gPanelSetting.addActor(btnX);
+
+    //label: event click
+    iconMusic.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        super.clicked(event, x, y);
+
+        if (!SoundEffects.isMuteMusic) {
+          SoundEffects.isMuteMusic = true;
+          iconMusic.setDrawable(new TextureRegionDrawable(GMain.startSceneAtlas.findRegion("music_off")));
+        }
+        else {
+          SoundEffects.isMuteMusic = false;
+          iconMusic.setDrawable(new TextureRegionDrawable(GMain.startSceneAtlas.findRegion("music_on")));
+        }
+
+      }
+    });
+
+    iconSound.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        super.clicked(event, x, y);
+
+        if (!SoundEffects.isMuteSound) {
+          SoundEffects.isMuteSound = true;
+          iconSound.setDrawable(new TextureRegionDrawable(GMain.startSceneAtlas.findRegion("sound_off")));
+        }
+        else {
+          SoundEffects.isMuteSound = false;
+          iconSound.setDrawable(new TextureRegionDrawable(GMain.startSceneAtlas.findRegion("sound_on")));
+        }
+
+      }
+    });
+
+    btnX.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        super.clicked(event, x, y);
+
+        btnX.setTouchable(Touchable.disabled);
+        effect.sclMaxToMin(gPanelSetting, () -> {
+          btnX.setTouchable(Touchable.enabled);
+          gPanelSetting.remove();
+          blackSetting.remove();
+        });
+
+      }
+    });
 
   }
 
@@ -66,15 +176,25 @@ public class StartScene {
     Image bgPanel = GUI.createImage(GMain.startSceneAtlas, "panel_bet");
     bgPanel.setScale(1.5f);
     gPanelBet.setSize(bgPanel.getWidth(), bgPanel.getHeight());
+    gPanelBet.setOrigin(bgPanel.getWidth()*1.5f/2, bgPanel.getHeight()*1.5f/2);
     gPanelBet.setPosition(Config.CENTER_X - bgPanel.getWidth()*1.5f/2, Config.CENTER_Y - bgPanel.getHeight()*1.5f/2);
     gPanelBet.addActor(bgPanel);
 
+    //label: button start
+    btnStartPanelBet = new Button(GMain.startSceneAtlas,"btn_start_panel_bet", C.lang.startPanelBet, Config.ALERT_FONT);
+    btnStartPanelBet.setScale(1.5f, 1.5f);
+    btnStartPanelBet.setFontScale(.5f, .5f);
+    btnStartPanelBet.setPosition(80, gPanelBet.getHeight()*1.5f - btnStartPanelBet.getHeight()*1.5f - 40);
+    btnStartPanelBet.moveByLb(-5, 0);
+    btnStartPanelBet.addToGroup(gPanelBet);
+
+    //label: choose number of player
     Image bgChooseNumPlayer = GUI.createImage(GMain.startSceneAtlas, "bg_panel_bet_number");
     bgChooseNumPlayer.setScale(1.5f);
-    bgChooseNumPlayer.setPosition(bgPanel.getWidth()*bgPanel.getScaleX() - bgChooseNumPlayer.getWidth()*bgChooseNumPlayer.getScaleX() - 60, 350);
+    bgChooseNumPlayer.setPosition(bgPanel.getWidth()*bgPanel.getScaleX() - bgChooseNumPlayer.getWidth()*bgChooseNumPlayer.getScaleX() - 60, 450);
     gPanelBet.addActor(bgChooseNumPlayer);
 
-    Label lbTxtNumPlayer = new Label("NGƯỜI CHƠI:", new Label.LabelStyle(Config.ALERT_FONT, null));
+    Label lbTxtNumPlayer = new Label(C.lang.players, new Label.LabelStyle(Config.ALERT_FONT, null));
     lbTxtNumPlayer.setAlignment(Align.center);
     lbTxtNumPlayer.setFontScale(.7f, .8f);
     lbTxtNumPlayer.setPosition(-40, bgChooseNumPlayer.getY() + bgChooseNumPlayer.getHeight()*bgChooseNumPlayer.getScaleY()/2 - lbTxtNumPlayer.getHeight()/2 - 10);
@@ -101,44 +221,89 @@ public class StartScene {
             bgChooseNumPlayer.getY() + bgChooseNumPlayer.getHeight()*bgChooseNumPlayer.getScaleY()/2 - lbNumPlayer.getHeight()/2 - 20);
     gPanelBet.addActor(lbNumPlayer);
 
+    //label: button x
+    btnXPanelBet = GUI.createImage(GMain.liengAtlas, "btn_x");
+    btnXPanelBet.setScale(1.5f);
+    btnXPanelBet.setPosition(bgPanel.getWidth()*bgPanel.getScaleX() - btnXPanelBet.getWidth()*btnXPanelBet.getScaleX()/2 + 100,
+            -(btnXPanelBet.getHeight()*btnXPanelBet.getScaleY()/2 - 40));
+    gPanelBet.addActor(btnXPanelBet);
+
+    //label: money player
+    Image bgMoneyPlayer = GUI.createImage(GMain.startSceneAtlas, "bg_panel_bet_number");
+    bgMoneyPlayer.setScale(1.5f);
+    bgMoneyPlayer.setPosition(bgChooseNumPlayer.getX(), bgChooseNumPlayer.getY() - bgMoneyPlayer.getHeight()*bgMoneyPlayer.getScaleY() - 20);
+    gPanelBet.addActor(bgMoneyPlayer);
+
+    Label lbMoneyPlayer = new Label(C.lang.moneyPlayer, new Label.LabelStyle(Config.ALERT_FONT, null));
+    lbMoneyPlayer.setAlignment(Align.center);
+    lbMoneyPlayer.setFontScale(.7f);
+    lbMoneyPlayer.setPosition(bgMoneyPlayer.getX() - lbMoneyPlayer.getWidth() + 90, bgMoneyPlayer.getY() + bgMoneyPlayer.getHeight()*bgMoneyPlayer.getScaleY()/2 - lbMoneyPlayer.getHeight()/2 - 10);
+    gPanelBet.addActor(lbMoneyPlayer);
+
+    lbMoneyPresent = new Label("$32,000", new Label.LabelStyle(Config.ALERT_FONT, null));
+    lbMoneyPresent.setAlignment(Align.center);
+    lbMoneyPresent.setFontScale(1.3f);
+    lbMoneyPresent.setPosition(bgMoneyPlayer.getX() + bgMoneyPlayer.getWidth()*bgMoneyPlayer.getScaleX()/2 - lbMoneyPresent.getWidth()/2,
+                                bgMoneyPlayer.getY() + bgMoneyPlayer.getHeight()*bgMoneyPlayer.getScaleY()/2 - lbMoneyPresent.getHeight()/2 - 20);
+    gPanelBet.addActor(lbMoneyPresent);
+
+    //label: bet
     Image bgChooseBet = GUI.createImage(GMain.startSceneAtlas, "bg_panel_bet_chip");
     bgChooseBet.setScale(1.5f);
     bgChooseBet.setPosition(bgChooseNumPlayer.getX() + bgChooseNumPlayer.getWidth()*bgChooseNumPlayer.getScaleX() - bgChooseBet.getWidth()*bgChooseBet.getScaleX(),
-                              bgChooseNumPlayer.getY() + bgChooseNumPlayer.getHeight()*bgChooseNumPlayer.getScaleY() + 50);
+                              bgChooseNumPlayer.getY() + bgChooseNumPlayer.getHeight()*bgChooseNumPlayer.getScaleY() + 20);
     gPanelBet.addActor(bgChooseBet);
 
-    Label lbTxtBet = new Label("MỨC CƯỢC:", new Label.LabelStyle(Config.ALERT_FONT, null));
+    Label lbTxtBet = new Label(C.lang.bet, new Label.LabelStyle(Config.ALERT_FONT, null));
     lbTxtBet.setAlignment(Align.center);
     lbTxtBet.setFontScale(.7f, .8f);
     lbTxtBet.setPosition(-40, bgChooseBet.getY() - lbTxtBet.getHeight()/2 + 20);
     gPanelBet.addActor(lbTxtBet);
+
+    flareChip = GUI.createImage(GMain.liengAtlas, "flare_chip");
+    flareChip.setScale(2.2f);
+    gPanelBet.addActor(flareChip);
 
     int t = -1;
     for (int i=0; i<3; i++) {
       for (int j=0; j<2; j++) {
         t++;
         String region = Logic.getInstance().getRegionChip(t);
+        Image chip = GUI.createImage(GMain.liengAtlas, region);
+        chip.setScale(2.2f);
 
-        if (j % 2 == 0) {
-          Image chip = GUI.createImage(GMain.liengAtlas, region);
-          chip.setScale(2.2f);
+        if (j % 2 == 0)
           chip.setPosition(bgChooseBet.getX() + bgChooseBet.getWidth()*bgChooseBet.getScaleX()/2 - chip.getWidth()*chip.getScaleX() - 70,
                   bgChooseBet.getY() + 30 + i*140);
-          gPanelBet.addActor(chip);
-        }
-        else {
-          Image chip = GUI.createImage(GMain.liengAtlas, region);
-          chip.setScale(2.2f);
+        else
           chip.setPosition(bgChooseBet.getX() + bgChooseBet.getWidth()*bgChooseBet.getScaleX()/2 + chip.getWidth()*chip.getScaleX() - 40,
                   bgChooseBet.getY() + 30 + i*140);
-          gPanelBet.addActor(chip);
-        }
+
+        clickChipBet(chip, region);
+        gPanelBet.addActor(chip);
+
+        if (i == 0)
+          flareChip.setPosition(chip.getX() + chip.getWidth()*2.2f/2 - flareChip.getWidth()*2.2f/2,
+                  chip.getY() + chip.getHeight()*2.2f/2 - flareChip.getHeight()*2.2f/2);
       }
 
     }
 
-    gStartScene.addActor(gPanelBet);
+  }
 
+  private void clickChipBet(Image chip, String id) {
+    chip.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        super.clicked(event, x, y);
+
+        moneyBet = Logic.getInstance().getMoneyBuyId(id);
+        flareChip.setPosition(chip.getX() + chip.getWidth()*2.2f/2 - flareChip.getWidth()*2.2f/2,
+                chip.getY() + chip.getHeight()*2.2f/2 - flareChip.getHeight()*2.2f/2);
+
+
+      }
+    });
   }
 
   private void initPanelTutorial() {
@@ -384,7 +549,7 @@ public class StartScene {
         Runnable run = () -> {
 
           iconTutorial.setTouchable(Touchable.enabled);
-          effect.sclMinToMax(gPanelTutorial);
+          effect.sclMinToMaxAndRotate(gPanelTutorial);
 
         };
 
@@ -402,7 +567,7 @@ public class StartScene {
         super.clicked(event, x, y);
 
         btnXPanelTutorial.setTouchable(Touchable.disabled);
-        effect.sclMaxToMin(gPanelTutorial, () -> {
+        effect.sclMaxToMinAndRotate(gPanelTutorial, () -> {
           btnXPanelTutorial.setTouchable(Touchable.enabled);
           blackTutorial.remove();
           gPanelTutorial.remove();
@@ -455,6 +620,42 @@ public class StartScene {
       }
     });
 
+    btnXPanelBet.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        super.clicked(event, x, y);
+
+        btnXPanelBet.setTouchable(Touchable.disabled);
+        effect.zoomOut(gPanelBet, 2.5f, 2.5f, () -> {
+
+          btnXPanelBet.setTouchable(Touchable.enabled);
+          gPanelBet.getColor().a = 1f;
+          gPanelBet.remove();
+          blackPanelBet.remove();
+
+        });
+
+      }
+    });
+
+    iconSetting.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        super.clicked(event, x, y);
+
+        Runnable run = () -> {
+          iconSetting.setTouchable(Touchable.enabled);
+          gStartScene.addActor(blackSetting);
+          gStartScene.addActor(gPanelSetting);
+          effect.sclMinToMax(gPanelSetting);
+        };
+
+        iconSetting.setTouchable(Touchable.disabled);
+        effect.click(iconSetting, run);
+
+      }
+    });
+
   }
 
   private void handleClick() {
@@ -467,10 +668,9 @@ public class StartScene {
         Runnable run = () -> {
 
           gBtnStart.setTouchable(Touchable.enabled);
-          Effect.getInstance(game).zoomOut(gStartScene, () -> {
-            game.setData(3, 10000);
-            gStartScene.remove();
-          });
+          gStartScene.addActor(blackPanelBet);
+          gStartScene.addActor(gPanelBet);
+          effect.zoomIn(gPanelBet, 1f, 1f);
 
         };
 
@@ -497,6 +697,48 @@ public class StartScene {
       }
     });
 
+    btnStartPanelBet.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        super.clicked(event, x, y);
+
+        Runnable run = () -> {
+
+          Effect.getInstance(game).zoomOut(gStartScene, 2f, 2f, () -> {
+
+            btnStartPanelBet.setTouchable(Touchable.enabled);
+            game.setData(numOfPlayer, moneyBet);
+
+            blackPanelBet.remove();
+            gPanelBet.remove();
+            gStartScene.remove();
+
+          });
+
+        };
+
+        btnStartPanelBet.setTouchable(Touchable.disabled);
+        effect.click(btnStartPanelBet, run);
+
+      }
+    });
+
+  }
+
+  public void showStartScene() {
+
+    game.gStartScene.addActor(gStartScene);
+    effect.zoomIn(gStartScene, 1f, 1f);
+
+    //todo: get money player in preference
+    long money = GMain.pref.getLong("money");
+    lbMoneyPresent.setText(Logic.getInstance().convertMoneyBot(money));
+
+  }
+
+  public void setMoneyForLb() {
+    long money = GMain.pref.getLong("money");
+    lbMoneyPresent.setText(Logic.getInstance().convertMoneyBot(money));
   }
 
   public void addToScene() {

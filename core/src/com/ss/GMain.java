@@ -1,9 +1,11 @@
 package com.ss;
 
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.platform.IPlatform;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.ss.core.effect.SoundEffects;
 import com.ss.core.exSprite.particle.GParticleSystem;
 import com.ss.core.util.GAssetsManager;
 import com.ss.core.util.GDirectedGame;
@@ -22,6 +24,7 @@ public class GMain extends GDirectedGame {
   public static final int testType = 2;
   public static TextureAtlas liengAtlas, cardAtlas, startSceneAtlas;
   public static float ratioX, ratioY;
+  public static Preferences pref;
 
   public static IPlatform platform;
   public GMain(IPlatform plat){
@@ -82,12 +85,24 @@ public class GMain extends GDirectedGame {
   }
 
   public void create() {
-      liengAtlas = GAssetsManager.getTextureAtlas("lieng.atlas");
-      cardAtlas = GAssetsManager.getTextureAtlas("card.atlas");
-      startSceneAtlas = GAssetsManager.getTextureAtlas("start_scene.atlas");
-      this.init();
-      C.init();
-      this.setScreen(menuScreen());
+    liengAtlas = GAssetsManager.getTextureAtlas("lieng.atlas");
+    cardAtlas = GAssetsManager.getTextureAtlas("card.atlas");
+    startSceneAtlas = GAssetsManager.getTextureAtlas("start_scene.atlas");
+
+    pref = Gdx.app.getPreferences("lieng");
+
+    if (!pref.getBoolean("isNewbie")) {
+
+      pref.putBoolean("isNewbie", true);
+      pref.putLong("money", 1000000);
+      pref.flush();
+
+    }
+
+    this.init();
+    SoundEffects.initSound();
+    C.init();
+    this.setScreen(menuScreen());
   }
   
   public void dispose() {

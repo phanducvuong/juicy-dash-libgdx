@@ -85,8 +85,10 @@ public class DivideCard {
     turnCardDown++;
     if (turn >= game.numOfPlayer)
       turn = 0;
-    botPresent = game.lsBotActive.get(turn);
-    startDivide(game.lsCardDown.get(turnCardDown));
+    if (game.lsBotActive.size() > 0) {
+      botPresent = game.lsBotActive.get(turn);
+      startDivide(game.lsCardDown.get(turnCardDown));
+    }
 
   }
 

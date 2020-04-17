@@ -197,9 +197,12 @@ public class Effect {
 
   public void click(Button btn, Runnable onComplete) {
 
+    float sclX = btn.getScaleX();
+    float sclY = btn.getScaleY();
+
     btn.getGroup().addAction(sequence(
-            scaleTo(.9f, .9f, .05f, fastSlow),
-            scaleTo(1f, 1f, .05f, fastSlow),
+            scaleBy(.1f, .1f, .05f, fastSlow),
+            scaleTo(sclX, sclY, .05f, fastSlow),
             run(onComplete)
     ));
 
@@ -339,7 +342,7 @@ public class Effect {
 
   }
 
-  public void sclMinToMax(Group group) {
+  public void sclMinToMaxAndRotate(Group group) {
     group.addAction(
             parallel(
                     scaleTo(1f, 1f, .35f, linear),
@@ -348,7 +351,7 @@ public class Effect {
     );
   }
 
-  public void sclMaxToMin(Group group, Runnable onComplete) {
+  public void sclMaxToMinAndRotate(Group group, Runnable onComplete) {
     group.addAction(
             sequence(
                     parallel(
@@ -358,6 +361,21 @@ public class Effect {
                     run(onComplete)
             )
     );
+  }
+
+  public void zoomIn(Group group, float zX, float zY) {
+
+    SequenceAction seq = sequence(
+            parallel(
+                    scaleTo(zX, zY, .5f, fastSlow),
+                    alpha(1f, .5f, fastSlow)
+            )
+    );
+
+    group.getColor().a = 0f;
+    group.setScale(2f);
+    group.addAction(seq);
+
   }
 
   public void moveLight(Image light, float moveToX) {
@@ -377,18 +395,31 @@ public class Effect {
 
   }
 
-  public void zoomOut(Group group, Runnable onComplete) {
+  public void zoomOut(Group group, float zX, float zY, Runnable onComplete) {
 
     SequenceAction seq = sequence(
             parallel(
-                    scaleTo(2f, 2f, .75f, fastSlow),
-                    alpha(0f, .75f, fastSlow)
+                    scaleTo(zX, zY, .5f, fastSlow),
+                    alpha(0f, .5f, fastSlow)
             ),
             run(onComplete)
     );
 
     group.addAction(seq);
 
+  }
+
+  public void sclMinToMax(Group group) {
+    group.addAction(scaleTo(1f, 1f, .5f, fastSlow));
+  }
+
+  public void sclMaxToMin(Group group, Runnable onComplete) {
+    group.addAction(
+            sequence(
+                    scaleTo(0f, 0f, .25f, slowFast),
+                    run(onComplete)
+            )
+    );
   }
 
 }
