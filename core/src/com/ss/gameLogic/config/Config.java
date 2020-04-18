@@ -1,14 +1,21 @@
 package com.ss.gameLogic.config;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector2;
+import com.ss.GMain;
 import com.ss.core.util.GAssetsManager;
 import com.ss.core.util.GStage;
 
 public class Config {
 
   public static float ratio = Gdx.graphics.getWidth() / 720;
+
+  private static final FileHandle fh = Gdx.files.internal("wheel.json");
+  public static String wheelData = GMain.platform.GetConfigStringValue("", fh.readString());
+
+  public static final int SPIN_TIME = 3; //todo: remote config in firebase (default 3)
 
   public static float CENTER_X = GStage.getWorldWidth()/2;
   public static float CENTER_Y = GStage.getWorldHeight()/2;

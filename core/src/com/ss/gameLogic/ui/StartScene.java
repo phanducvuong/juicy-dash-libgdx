@@ -10,11 +10,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
 import com.ss.GMain;
 import com.ss.core.effect.SoundEffects;
 import com.ss.core.util.GClipGroup;
 import com.ss.core.util.GStage;
 import com.ss.core.util.GUI;
+import com.ss.data.WheelData;
 import com.ss.gameLogic.Game;
 import com.ss.gameLogic.config.C;
 import com.ss.gameLogic.config.Config;
@@ -22,6 +26,11 @@ import com.ss.gameLogic.config.Strings;
 import com.ss.gameLogic.effects.Effect;
 import com.ss.gameLogic.logic.Logic;
 import com.ss.gameLogic.objects.Button;
+import com.ss.gameLogic.objects.WheelMiniGame;
+import com.ss.minigames.Wheel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class StartScene {
 
@@ -43,8 +52,14 @@ public class StartScene {
   public Group gPanelSetting;
   public Image blackSetting, iconSound, iconMusic;
 
+  private Group gMiniGame;
+  private Image blackMiniGame, btnXMiniGame;
+  private int countSpin = 0;
+
   private int numOfPlayer = 6;
   private long moneyBet = 20000;
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////
 
   public StartScene(Game game, Group gParent) {
 
@@ -59,11 +74,107 @@ public class StartScene {
     initIcon();
     initPanelTutorial();
     initPanelBet();
+    initMiniGame();
     initPanelSetting();
     handleClick();
     handleClickIcon();
 
     setMoneyForLb();
+
+  }
+
+  private void initWheel() {
+
+    try {
+
+      List<WheelData> datas = new ArrayList<>();
+      JsonReader jReader = new JsonReader();
+      JsonValue jValue = jReader.parse(Config.wheelData);
+
+      for (JsonValue value : jValue) {
+        String region = value.get("region").asString();
+        int id = value.get("id").asInt();
+        int qty = value.get("qty").asInt();
+        String qtyText = value.get("qty_text").asString();
+        int percent = value.get("percent").asInt();
+
+        datas.add(new WheelData(region, id, qty, qtyText, percent));
+      }
+
+      WheelMiniGame wheel = WheelMiniGame.getInstance(datas);
+      wheel.setPosition(GStage.getWorldWidth()/2 - wheel.getWidth()/2, GStage.getWorldHeight()/2 - wheel.getHeight()/2 - 100);
+      wheel.addToScene(gMiniGame);
+
+      Label lbMoneySpin = new Label("Bạn nhận được: ", new Label.LabelStyle(Config.PLUS_MONEY_FONT, null));
+      lbMoneySpin.setAlignment(Align.center);
+      lbMoneySpin.setPosition(GStage.getWorldWidth()/2 - lbMoneySpin.getWidth()/2,
+                              GStage.getWorldHeight() - lbMoneySpin.getHeight() - 100);
+
+      wheel.addListener(new Wheel.EventListener() {
+        @Override
+        public boolean start() {
+          countSpin += 1;
+          return countSpin <= Config.SPIN_TIME;
+        }
+
+        @Override
+        public void end(Wheel.WheelItem item) {
+
+          String money = Logic.getInstance().convertMoneyBet(item.getQty());
+          lbMoneySpin.setText("+" + money);
+          gMiniGame.addActor(lbMoneySpin);
+
+        }
+
+        @Override
+        public void error(String msg) {
+
+        }
+      });
+
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
+
+  }
+
+  private void initMiniGame() {
+
+    blackMiniGame = GUI.createImage(GMain.liengAtlas, "bg_black");
+    blackMiniGame.setSize(GStage.getWorldWidth(), GStage.getWorldHeight());
+
+    gMiniGame = new Group();
+    gMiniGame.setSize(GStage.getWorldWidth(), GStage.getWorldHeight());
+
+    initWheel();
+
+    Label lbTitle = new Label(C.lang.titleMiniGame, new Label.LabelStyle(Config.ALERT_FONT, null));
+    lbTitle.setAlignment(Align.center);
+    lbTitle.setFontScale(1.2f);
+    lbTitle.setPosition(gMiniGame.getWidth()/2 - lbTitle.getWidth()/2, 50);
+    gMiniGame.addActor(lbTitle);
+
+    btnXMiniGame = GUI.createImage(GMain.startSceneAtlas, "icon_exit");
+    btnXMiniGame.setScale(1.5f);
+    btnXMiniGame.setPosition(20, 20);
+    gMiniGame.addActor(btnXMiniGame);
+
+    gMiniGame.setOrigin(Align.center);
+    gMiniGame.setScale(0);
+
+    btnXMiniGame.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        super.clicked(event, x, y);
+
+        effect.zoomOut(gMiniGame, 2f, 2f, () -> {
+          blackMiniGame.remove();
+          gMiniGame.remove();
+        });
+
+      }
+    });
 
   }
 
@@ -656,6 +767,26 @@ public class StartScene {
       }
     });
 
+    iconMiniGame.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        super.clicked(event, x, y);
+
+        Runnable run = () -> {
+
+          iconMiniGame.setTouchable(Touchable.enabled);
+          effect.zoomIn(gMiniGame, 1f, 1f);
+
+        };
+
+        iconMiniGame.setTouchable(Touchable.disabled);
+        gStartScene.addActor(blackMiniGame);
+        gStartScene.addActor(gMiniGame);
+        effect.click(iconMiniGame, run);
+
+      }
+    });
+
   }
 
   private void handleClick() {
@@ -674,7 +805,7 @@ public class StartScene {
 
         };
 
-
+        lbMoneyPresent.setText(Logic.getInstance().convertMoneyBot(GMain.pref.getLong("money")));
         gBtnStart.setTouchable(Touchable.disabled);
         Effect.getInstance(game).click(gBtnStart, run);
 

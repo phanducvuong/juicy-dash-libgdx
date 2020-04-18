@@ -48,7 +48,7 @@ public class DesktopLauncher {
 
       @Override
       public String GetConfigStringValue(String name, String defaultValue) {
-        return null;
+        return name.equals("") ? defaultValue : name;
       }
 
       @Override

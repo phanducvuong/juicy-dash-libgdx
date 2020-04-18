@@ -48,6 +48,7 @@ public class C {
       public static String notifyExitGame = "";
       public static String yes = "";
       public static String no = "";
+      public static String titleMiniGame = "";
 
       static void initLocalize() {
         FileHandle specFilehandle = Gdx.files.internal("i18n/lang_" + "id");
@@ -86,6 +87,7 @@ public class C {
         startPanelBet = locale.get("start_panel_bet");
         yes = locale.get("yes");
         no = locale.get("no");
+        titleMiniGame = locale.get("title_mini_game");
 
         if (idCountry.equals("VN"))
           tutorial = Strings.tutorialVN;
