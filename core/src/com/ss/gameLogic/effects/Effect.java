@@ -422,4 +422,13 @@ public class Effect {
     );
   }
 
+  public void rotate(Image img) {
+    img.addAction(
+            sequence(
+                    rotateBy(-10, .15f, linear),
+                    run(() -> rotate(img))
+            )
+    );
+  }
+
 }

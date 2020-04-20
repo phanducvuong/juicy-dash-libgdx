@@ -1,5 +1,7 @@
 package com.ss.gameLogic.ui;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -10,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.ss.GMain;
@@ -56,6 +57,9 @@ public class StartScene {
   private Image blackMiniGame, btnXMiniGame;
   private int countSpin = 0;
 
+  private Group gRank;
+  private Image blackRank;
+
   private int numOfPlayer = 6;
   private long moneyBet = 20000;
 
@@ -76,10 +80,102 @@ public class StartScene {
     initPanelBet();
     initMiniGame();
     initPanelSetting();
+    initRank();
     handleClick();
     handleClickIcon();
 
     setMoneyForLb();
+
+  }
+
+  private void initRank() {
+
+    blackRank = GUI.createImage(GMain.liengAtlas, "bg_black");
+    blackRank.setSize(GStage.getWorldWidth(), GStage.getWorldHeight());
+
+    gRank = new Group();
+    Image bgRank = GUI.createImage(GMain.startSceneAtlas, "bg_rank");
+    gRank.setSize(bgRank.getWidth(), bgRank.getHeight());
+    gRank.setOrigin(Align.center);
+    gRank.setPosition(Config.CENTER_X - gRank.getWidth()/2, Config.CENTER_Y - gRank.getHeight()/2);
+    gRank.addActor(bgRank);
+
+    Image banner = GUI.createImage(GMain.startSceneAtlas, "banner_rank");
+    banner.setPosition(gRank.getWidth()/2 - banner.getWidth()/2, -banner.getHeight()/2);
+
+    Group gPlayer = new Group();
+    gPlayer.setSize(bgRank.getWidth() - 50, bgRank.getHeight()/2 + 230);
+    gPlayer.setPosition(gRank.getWidth()/2 - gPlayer.getWidth()/2,
+                        gRank.getHeight() - gPlayer.getHeight() - 25);
+    gPlayer.setOrigin(Align.center);
+    gPlayer.setScale(1, -1);
+    gRank.addActor(gPlayer);
+    gRank.addActor(banner);
+
+    Table scroll = new Table();
+    for (int i=0; i < 100; i++) {
+
+      Group gItem = new Group();
+      gItem.setSize(gPlayer.getWidth() - 100, 133);
+      gItem.setPosition(gPlayer.getWidth()/2 - gItem.getWidth()/2, 0);
+
+      Image iconRank;
+      int id = i + 1;
+
+      //label: label
+      Label lbRank = new Label(id + "", new Label.LabelStyle(Config.ALERT_FONT, null));
+      Label lbName = new Label("player " + id, new Label.LabelStyle(Config.ALERT_FONT, null));
+      Label lbMoney = new Label("2M", new Label.LabelStyle(Config.ALERT_FONT, null));
+
+      if (i < 3)
+        iconRank = GUI.createImage(GMain.startSceneAtlas, "icon_rank_" + id);
+      else
+        iconRank = GUI.createImage(GMain.startSceneAtlas, "icon_rank_4");
+      iconRank.setPosition(50, 0);
+      gItem.addActor(iconRank);
+
+      if (i == 0)
+        setColorRank(Color.GOLD, i, lbRank, lbName, lbMoney);
+      else if (i == 1)
+        setColorRank(Color.LIGHT_GRAY, i, lbRank, lbName, lbMoney);
+      else if (i == 2)
+        setColorRank(Color.BROWN, i, lbRank, lbName, lbMoney);
+
+      //label: background rank
+      Image bgIconRank = GUI.createImage(GMain.startSceneAtlas, "bg_icon_rank");
+      bgIconRank.setPosition(iconRank.getX(), iconRank.getY());
+      gItem.addActor(bgIconRank);
+
+      lbRank.setPosition(iconRank.getX() + iconRank.getWidth()/2 - lbRank.getWidth()/2,
+                            iconRank.getY() + iconRank.getHeight()/2 - lbRank.getHeight()/2 + 25);
+      lbRank.setAlignment(Align.center);
+      lbRank.setFontScale(1, -1);
+      gItem.addActor(lbRank);
+
+      lbName.setAlignment(Align.left);
+      lbName.setPosition(iconRank.getX() + iconRank.getWidth() + 50,
+                          bgIconRank.getY() + bgIconRank.getHeight()/2 - lbRank.getHeight()/2 + 20);
+      lbName.setFontScale(1, -1);
+      gItem.addActor(lbName);
+
+      lbMoney.setAlignment(Align.right);
+      lbMoney.setPosition(bgIconRank.getX() + bgIconRank.getWidth() - lbMoney.getWidth() - 170,
+                          lbName.getY());
+      lbMoney.setFontScale(1, -1);
+      gItem.addActor(lbMoney);
+
+      scroll.add(gItem).padBottom(10);
+      scroll.row();
+
+    }
+
+    ScrollPane scrollPane = new ScrollPane(scroll);
+    Table table = new Table();
+    table.setFillParent(true);
+    table.add(scrollPane).fill().expand();
+    gPlayer.addActor(table);
+
+    gStartScene.addActor(gRank);
 
   }
 
@@ -102,7 +198,8 @@ public class StartScene {
       }
 
       WheelMiniGame wheel = WheelMiniGame.getInstance(datas);
-      wheel.setPosition(GStage.getWorldWidth()/2 - wheel.getWidth()/2, GStage.getWorldHeight()/2 - wheel.getHeight()/2 - 100);
+      wheel.setScale(1.5f, 1.5f);
+      wheel.setPosition(GStage.getWorldWidth()/2 - wheel.getWidth()/2, GStage.getWorldHeight()/2 - wheel.getHeight()/2);
       wheel.addToScene(gMiniGame);
 
       Label lbMoneySpin = new Label("Bạn nhận được: ", new Label.LabelStyle(Config.PLUS_MONEY_FONT, null));
@@ -114,12 +211,18 @@ public class StartScene {
         @Override
         public boolean start() {
           countSpin += 1;
-          return countSpin <= Config.SPIN_TIME;
+          if (countSpin <= Config.SPIN_TIME) {
+            btnXMiniGame.setTouchable(Touchable.disabled);
+            return true;
+          }
+          else
+            return false;
         }
 
         @Override
         public void end(Wheel.WheelItem item) {
 
+          btnXMiniGame.setTouchable(Touchable.enabled);
           String money = Logic.getInstance().convertMoneyBet(item.getQty());
           lbMoneySpin.setText("+" + money);
           gMiniGame.addActor(lbMoneySpin);
@@ -297,6 +400,13 @@ public class StartScene {
     btnStartPanelBet.setFontScale(.5f, .5f);
     btnStartPanelBet.setPosition(80, gPanelBet.getHeight()*1.5f - btnStartPanelBet.getHeight()*1.5f - 40);
     btnStartPanelBet.moveByLb(-5, 0);
+
+    Image flareStart = GUI.createImage(GMain.startSceneAtlas, "flare");
+    flareStart.setPosition(btnStartPanelBet.getX() + btnStartPanelBet.getWidth()/2 - flareStart.getWidth()/2,
+                            btnStartPanelBet.getY() + btnStartPanelBet.getHeight()/2 - flareStart.getHeight()/2);
+    flareStart.setOrigin(Align.center);
+    effect.rotate(flareStart);
+    gPanelBet.addActor(flareStart);
     btnStartPanelBet.addToGroup(gPanelBet);
 
     //label: choose number of player
@@ -825,6 +935,9 @@ public class StartScene {
       public void clicked(InputEvent event, float x, float y) {
         super.clicked(event, x, y);
 
+        Gdx.net.openURI("market://details?id=com.ilyon.cuberush");
+      //  Gdx.net.openURI("https://play.google.com/store/apps/details?id=com.ilyon.cuberush");
+
       }
     });
 
@@ -878,6 +991,14 @@ public class StartScene {
 
   public void remove() {
     gParent.remove();
+  }
+
+  private void setColorRank(Color color, int id, Label ...lb) {
+
+    lb[0].setColor(color);
+    lb[1].setColor(color);
+    lb[2].setColor(color);
+
   }
 
 }

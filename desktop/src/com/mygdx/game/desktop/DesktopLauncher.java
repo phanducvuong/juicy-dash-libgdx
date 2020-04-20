@@ -8,8 +8,8 @@ import com.ss.GMain;
 public class DesktopLauncher {
   public static void main (String[] arg) {
     LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-    config.width = 1280/2;
-    config.height = 720/2;
+    config.width = (int) (1280/1.5);
+    config.height = (int) (720/1.5);
     new LwjglApplication(new GMain(new IPlatform() {
       @Override
       public void log(String str) {
@@ -98,6 +98,26 @@ public class DesktopLauncher {
 
       @Override
       public void ShowLeaderboard() {
+
+      }
+
+      @Override
+      public void Restart() {
+
+      }
+
+      @Override
+      public int GetNotifyId() {
+        return 0;
+      }
+
+      @Override
+      public void SetDailyNotification(int id, String header, String content, int days, int hours) {
+
+      }
+
+      @Override
+      public void CancelDailyNotification(int id) {
 
       }
     }), config);

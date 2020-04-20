@@ -37,6 +37,10 @@ public interface IPlatform {
     public void ShowLeaderboard();
 
 
+    public void Restart();
+    public int GetNotifyId();
+    public void SetDailyNotification(int id, String header, String content, int days, int hours);
+    public void CancelDailyNotification(int id);
 
     public interface OnVideoRewardClosed{
         public void OnEvent(boolean success);

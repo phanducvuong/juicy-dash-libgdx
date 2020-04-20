@@ -85,6 +85,8 @@ public class GMain extends GDirectedGame {
   }
 
   public void create() {
+
+    initLocalNotification();
     liengAtlas = GAssetsManager.getTextureAtlas("lieng.atlas");
     cardAtlas = GAssetsManager.getTextureAtlas("card.atlas");
     startSceneAtlas = GAssetsManager.getTextureAtlas("start_scene.atlas");
@@ -104,8 +106,21 @@ public class GMain extends GDirectedGame {
     SoundEffects.initSound();
     C.init();
     this.setScreen(menuScreen());
+
   }
-  
+
+  private void initLocalNotification(){
+    platform.SetDailyNotification(1, "Lieng 2020", "Bam vao nhan duoc bao nhieu tien", 1, 18);
+    //platform.SetDailyNotification(3, "Lieng 2020", "Bam vao nhan duoc bao nhieu tien", 3, 18);
+    //platform.SetDailyNotification(7, "Lieng 2020", "Bam vao nhan duoc bao nhieu tien", 7, 18);
+
+    int noId = platform.GetNotifyId();
+    if(noId==-1){
+      //binhthuong
+    } else if(noId == 1){
+      //thuong
+    }
+  }
   public void dispose() {
     GMain.platform.log("############## gmain dispose");
     GParticleSystem.saveAllFreeMin();
