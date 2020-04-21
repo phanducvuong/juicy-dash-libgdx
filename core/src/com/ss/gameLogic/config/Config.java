@@ -12,8 +12,13 @@ public class Config {
 
   public static float ratio = Gdx.graphics.getWidth() / 720;
 
-  private static final FileHandle fh = Gdx.files.internal("wheel.json");
-  public static String wheelData = GMain.platform.GetConfigStringValue("", fh.readString());
+  private static final FileHandle fh1 = Gdx.files.internal("wheel.json");
+  public static String wheelData = GMain.platform.GetConfigStringValue("", fh1.readString());
+
+  private static final FileHandle fh2 = Gdx.files.internal("other_games.json");
+  public static String otherGameData = GMain.platform.GetConfigStringValue("", fh2.readString());
+
+  public static final FileHandle fhUnlockP = Gdx.files.internal("particles/unlock/unlock");
 
   public static final int SPIN_TIME = 3; //todo: remote config in firebase (default 3)
 

@@ -2,9 +2,6 @@ package com.ss.gameLogic.effects;
 
 import static com.badlogic.gdx.math.Interpolation.*;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
-
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
@@ -12,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.ss.core.action.exAction.GTemporalAction;
 import com.ss.gameLogic.Game;
-import com.ss.gameLogic.config.Config;
 import com.ss.gameLogic.logic.Logic;
 import com.ss.gameLogic.objects.Bot;
 import com.ss.gameLogic.objects.Button;

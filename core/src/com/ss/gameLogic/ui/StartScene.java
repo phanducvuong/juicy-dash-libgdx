@@ -1,6 +1,7 @@
 package com.ss.gameLogic.ui;
 
 import com.badlogic.gdx.Gdx;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -15,6 +16,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.ss.GMain;
+import com.ss.HTTPAssetLoader;
 import com.ss.core.effect.SoundEffects;
 import com.ss.core.util.GClipGroup;
 import com.ss.core.util.GStage;
@@ -25,6 +27,7 @@ import com.ss.gameLogic.config.C;
 import com.ss.gameLogic.config.Config;
 import com.ss.gameLogic.config.Strings;
 import com.ss.gameLogic.effects.Effect;
+import com.ss.gameLogic.effects.Particle;
 import com.ss.gameLogic.logic.Logic;
 import com.ss.gameLogic.objects.Button;
 import com.ss.gameLogic.objects.WheelMiniGame;
@@ -58,7 +61,11 @@ public class StartScene {
   private int countSpin = 0;
 
   private Group gRank;
-  private Image blackRank;
+  private Image blackRank, btnXRank;
+
+  private Group gCrossPanel;
+  private Image blackCrossPanel, btnXCrossPanel;
+  private List<Group> lsBgIcon;
 
   private int numOfPlayer = 6;
   private long moneyBet = 20000;
@@ -81,10 +88,25 @@ public class StartScene {
     initMiniGame();
     initPanelSetting();
     initRank();
+    initCrossPanel();
     handleClick();
     handleClickIcon();
 
     setMoneyForLb();
+
+  }
+
+  private void particleWheel() {
+
+    Particle p = new Particle(gStartScene, Config.fhUnlockP, "particles/unlock");
+    p.start(500, 500);
+
+    gStartScene.addAction(
+            sequence(
+                    delay(1f),
+                    run(this::particleWheel)
+            )
+    );
 
   }
 
@@ -99,6 +121,10 @@ public class StartScene {
     gRank.setOrigin(Align.center);
     gRank.setPosition(Config.CENTER_X - gRank.getWidth()/2, Config.CENTER_Y - gRank.getHeight()/2);
     gRank.addActor(bgRank);
+
+    btnXRank = GUI.createImage(GMain.startSceneAtlas, "icon_exit");
+    btnXRank.setScale(1.3f);
+    btnXRank.setPosition(20, 20);
 
     Image banner = GUI.createImage(GMain.startSceneAtlas, "banner_rank");
     banner.setPosition(gRank.getWidth()/2 - banner.getWidth()/2, -banner.getHeight()/2);
@@ -174,8 +200,27 @@ public class StartScene {
     table.setFillParent(true);
     table.add(scrollPane).fill().expand();
     gPlayer.addActor(table);
+    gRank.setScale(0);
 
-    gStartScene.addActor(gRank);
+    btnXRank.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        super.clicked(event, x, y);
+
+        Runnable run = () -> {
+
+          btnXRank.setTouchable(Touchable.enabled);
+          gRank.remove();
+          blackRank.remove();
+
+        };
+
+        btnXRank.setTouchable(Touchable.disabled);
+        btnXRank.remove();
+        effect.zoomOut(gRank, 2f, 2f, run);
+
+      }
+    });
 
   }
 
@@ -225,6 +270,7 @@ public class StartScene {
           btnXMiniGame.setTouchable(Touchable.enabled);
           String money = Logic.getInstance().convertMoneyBet(item.getQty());
           lbMoneySpin.setText("+" + money);
+          lbMoneySpin.setFontScale(1.2f);
           gMiniGame.addActor(lbMoneySpin);
 
         }
@@ -443,11 +489,9 @@ public class StartScene {
     gPanelBet.addActor(lbNumPlayer);
 
     //label: button x
-    btnXPanelBet = GUI.createImage(GMain.liengAtlas, "btn_x");
-    btnXPanelBet.setScale(1.5f);
-    btnXPanelBet.setPosition(bgPanel.getWidth()*bgPanel.getScaleX() - btnXPanelBet.getWidth()*btnXPanelBet.getScaleX()/2 + 100,
-            -(btnXPanelBet.getHeight()*btnXPanelBet.getScaleY()/2 - 40));
-    gPanelBet.addActor(btnXPanelBet);
+    btnXPanelBet = GUI.createImage(GMain.startSceneAtlas, "icon_exit");
+    btnXPanelBet.setScale(1.3f);
+    btnXPanelBet.setPosition(20, 20);
 
     //label: money player
     Image bgMoneyPlayer = GUI.createImage(GMain.startSceneAtlas, "bg_panel_bet_number");
@@ -847,6 +891,7 @@ public class StartScene {
         super.clicked(event, x, y);
 
         btnXPanelBet.setTouchable(Touchable.disabled);
+        btnXPanelBet.remove();
         effect.zoomOut(gPanelBet, 2.5f, 2.5f, () -> {
 
           btnXPanelBet.setTouchable(Touchable.enabled);
@@ -910,6 +955,7 @@ public class StartScene {
 
           gBtnStart.setTouchable(Touchable.enabled);
           gStartScene.addActor(blackPanelBet);
+          gStartScene.addActor(btnXPanelBet);
           gStartScene.addActor(gPanelBet);
           effect.zoomIn(gPanelBet, 1f, 1f);
 
@@ -927,6 +973,19 @@ public class StartScene {
       public void clicked(InputEvent event, float x, float y) {
         super.clicked(event, x, y);
 
+        Runnable run = () -> {
+
+          gBtnRank.setTouchable(Touchable.enabled);
+          effect.zoomIn(gRank, 1f, 1f);
+
+        };
+
+        gBtnRank.setTouchable(Touchable.disabled);
+        gStartScene.addActor(blackRank);
+        gStartScene.addActor(btnXRank);
+        gStartScene.addActor(gRank);
+        effect.click(gBtnRank, run);
+
       }
     });
 
@@ -935,8 +994,18 @@ public class StartScene {
       public void clicked(InputEvent event, float x, float y) {
         super.clicked(event, x, y);
 
-        Gdx.net.openURI("market://details?id=com.ilyon.cuberush");
-      //  Gdx.net.openURI("https://play.google.com/store/apps/details?id=com.ilyon.cuberush");
+        Runnable run = () -> {
+
+          gBtnOtherGame.setTouchable(Touchable.enabled);
+          effect.zoomIn(gCrossPanel, 1f, 1f);
+
+        };
+
+        gBtnOtherGame.setTouchable(Touchable.disabled);
+        gStartScene.addActor(blackCrossPanel);
+        gStartScene.addActor(btnXCrossPanel);
+        gStartScene.addActor(gCrossPanel);
+        effect.click(gBtnOtherGame, run);
 
       }
     });
@@ -953,6 +1022,7 @@ public class StartScene {
             btnStartPanelBet.setTouchable(Touchable.enabled);
             game.setData(numOfPlayer, moneyBet);
 
+            btnXPanelBet.remove();
             blackPanelBet.remove();
             gPanelBet.remove();
             gStartScene.remove();
@@ -998,6 +1068,114 @@ public class StartScene {
     lb[0].setColor(color);
     lb[1].setColor(color);
     lb[2].setColor(color);
+
+  }
+
+  private void initCrossPanel() {
+
+    lsBgIcon = new ArrayList<>();
+
+    blackCrossPanel = GUI.createImage(GMain.liengAtlas, "bg_black");
+    blackCrossPanel.setSize(GStage.getWorldWidth(), GStage.getWorldHeight());
+
+    btnXCrossPanel = GUI.createImage(GMain.startSceneAtlas, "icon_exit");
+    btnXCrossPanel.setScale(1.2f);
+    btnXCrossPanel.setPosition(20, 20);
+
+    gCrossPanel = new Group();
+    Image bgCross = GUI.createImage(GMain.startSceneAtlas, "bg_cross_panel");
+    gCrossPanel.setSize(bgCross.getWidth(), bgCross.getHeight());
+    gCrossPanel.setOrigin(Align.center);
+    gCrossPanel.setPosition(Config.CENTER_X - gCrossPanel.getWidth()/2,
+                            Config.CENTER_Y - gCrossPanel.getHeight()/2);
+    gCrossPanel.addActor(bgCross);
+
+    for (int i=0; i<4; i++) {
+
+      Group g = new Group();
+      Image bgIcon = GUI.createImage(GMain.startSceneAtlas, "bg_icon_cross");
+      g.setSize(bgIcon.getWidth(), bgIcon.getHeight());
+      g.setPosition(bgCross.getX() + 40 + 312*i, bgCross.getY() + bgCross.getHeight()/2 - bgIcon.getHeight()/2);
+      g.addActor(bgIcon);
+      lsBgIcon.add(g);
+
+    }
+
+    ArrayList<HTTPAssetLoader.LoadItem> loadItems = new ArrayList<>();
+
+    JsonReader jReader = new JsonReader();
+    JsonValue jValue = jReader.parse(Config.otherGameData);
+
+    for (JsonValue v : jValue)
+      loadItems.add(HTTPAssetLoader.LoadItem.newInst(
+              v.get("id").asInt(),
+              v.get("url").asString(),
+              v.get("display_name").asString(),
+              v.get("android_store_uri").asString(),
+              v.get("ios_store_uri").asString(),
+              v.get("fi_store_uri").asString()
+      ));
+
+    HTTPAssetLoader.inst().init(new HTTPAssetLoader.Listener() {
+
+      @Override
+      public void finish(ArrayList<HTTPAssetLoader.LoadItem> loadedItems) {
+
+        for (HTTPAssetLoader.LoadItem item : loadedItems){
+
+          Group gIcon = lsBgIcon.get(loadedItems.indexOf(item));
+          Image actor = new Image(new TextureRegionDrawable(item.getItemTexture()));
+          actor.setOrigin(Align.center);
+          actor.setSize(gIcon.getWidth(), gIcon.getHeight()/1.8f);
+          actor.setScale(1f, -1f);
+          actor.setY(30);
+          gIcon.addActor(actor);
+
+          Label lbName = new Label(item.getDisplayName(), new Label.LabelStyle(Config.ALERT_FONT, null));
+          lbName.setAlignment(Align.center);
+          lbName.setFontScale(.5f);
+          lbName.setPosition(actor.getX() + actor.getWidth()/2 - lbName.getWidth()/2,
+                                actor.getY() + actor.getHeight());
+          gIcon.addActor(lbName);
+          gCrossPanel.addActor(gIcon);
+
+          gIcon.addListener(new ClickListener() {
+
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+              super.clicked(event, x, y);
+              Gdx.net.openURI(item.getAndroidStoreURI());
+            }
+          });
+
+        }
+      }
+
+      @Override
+      public void error(Throwable e) {
+        e.printStackTrace();
+      }
+    }, loadItems);
+
+    gCrossPanel.setScale(0);
+
+    btnXCrossPanel.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        super.clicked(event, x, y);
+
+        btnXCrossPanel.setTouchable(Touchable.disabled);
+        btnXCrossPanel.remove();
+        effect.zoomOut(gCrossPanel, 2f, 2f, () -> {
+
+          btnXCrossPanel.setTouchable(Touchable.enabled);
+          gCrossPanel.remove();
+          blackCrossPanel.remove();
+
+        });
+
+      }
+    });
 
   }
 

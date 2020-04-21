@@ -3,10 +3,13 @@ package com.ss;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -58,7 +61,8 @@ public class HTTPAssetLoader {
       @Override
       public void handleHttpResponse (Net.HttpResponse httpResponse) {
         if (httpResponse.getStatus().getStatusCode() >= 200 && httpResponse.getStatus().getStatusCode() < 300) {
-          final InputStream is = httpResponse.getResultAsStream();
+
+          final byte[] rawByte = httpResponse.getResult();
           try {
 
             final FileHandle file;
@@ -66,25 +70,26 @@ public class HTTPAssetLoader {
               file = Gdx.files.external(path);
             else
               file = Gdx.files.local(path);
+            file.writeBytes(rawByte, false);
 
-            BufferedOutputStream bos = new BufferedOutputStream(file.write(false));
-            BufferedInputStream bis = new BufferedInputStream(is);
-
-            byte[] buffer = new byte[16384];
-            int len;
-
-            while ((len = bis.read(buffer)) > 0) {
-              bos.write(buffer, 0, len);
-            }
-
-            bos.flush();
-            bos.close();
-            bis.close();
+//            BufferedOutputStream bos = new BufferedOutputStream(file.write(false));
+//            BufferedInputStream bis = new BufferedInputStream(is);
+//            byte[] buffer = new byte[16384];
+//            int len;
+//
+//            while ((len = bis.read(buffer)) > 0) {
+//              bos.write(buffer, 0, len);
+//            }
+//
+//            bos.flush();
+//            bos.close();
+//            bis.close();
 
             Gdx.app.postRunnable(() -> {
               if (file.exists() && !errorFound && loadCount < mileStone) {
                 try {
                   Texture texture = new Texture(file);
+                  texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
                   item.itemTexture = new TextureRegion(texture);
                   loadCount++;
                   if (loadCount == mileStone) {
@@ -99,16 +104,6 @@ public class HTTPAssetLoader {
           catch (Exception e) {
             errorFound = true;
             Gdx.app.postRunnable(() -> listener.error(e));
-          }
-          finally {
-            if (is != null)
-              try {
-                is.close();
-              }
-              catch (IOException e) {
-                errorFound = true;
-                Gdx.app.postRunnable(() -> listener.error(e));
-              }
           }
         }
         else {

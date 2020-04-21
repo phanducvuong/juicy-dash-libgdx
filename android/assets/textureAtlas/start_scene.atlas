@@ -25,6 +25,13 @@ banner_rank
   orig: 1472, 324
   offset: 0, 0
   index: -1
+bg_cross_panel
+  rotate: false
+  xy: 2, 524
+  size: 1280, 720
+  orig: 1280, 720
+  offset: 0, 0
+  index: -1
 bg_icon_rank
   rotate: false
   xy: 2, 63
@@ -46,23 +53,16 @@ bg_rank
   orig: 1241, 778
   offset: 0, 0
   index: -1
-bg_start_game
-  rotate: false
-  xy: 2, 524
-  size: 1280, 720
-  orig: 1280, 720
-  offset: 0, 0
-  index: -1
 btn_other_game
   rotate: false
-  xy: 1284, 694
+  xy: 1284, 525
   size: 572, 167
   orig: 572, 167
   offset: 0, 0
   index: -1
 btn_rank
   rotate: false
-  xy: 1284, 525
+  xy: 1284, 694
   size: 572, 167
   orig: 572, 167
   offset: 0, 0
@@ -165,13 +165,6 @@ light_chip_bet
   orig: 86, 86
   offset: 0, 0
   index: -1
-music_off
-  rotate: false
-  xy: 1839, 288
-  size: 172, 172
-  orig: 172, 172
-  offset: 0, 0
-  index: -1
 panel_bet
   rotate: false
   xy: 1245, 1299
@@ -184,6 +177,13 @@ panel_setting
   xy: 1284, 863
   size: 600, 434
   orig: 600, 434
+  offset: 0, 0
+  index: -1
+sound_off
+  rotate: false
+  xy: 1839, 288
+  size: 172, 172
+  orig: 172, 172
   offset: 0, 0
   index: -1
 sound_on
@@ -199,66 +199,93 @@ size: 2048,2048
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+bg_icon_cross
+  rotate: false
+  xy: 1284, 1436
+  size: 264, 378
+  orig: 264, 378
+  offset: 0, 0
+  index: -1
 bg_panel_bet_number
   rotate: false
-  xy: 1513, 1794
+  xy: 231, 320
   size: 311, 91
   orig: 311, 91
   offset: 0, 0
   index: -1
+bg_start_game
+  rotate: false
+  xy: 2, 1094
+  size: 1280, 720
+  orig: 1280, 720
+  offset: 0, 0
+  index: -1
+btn_get
+  rotate: false
+  xy: 1854, 1726
+  size: 176, 88
+  orig: 176, 88
+  offset: 0, 0
+  index: -1
 btn_start_panel_bet
   rotate: false
-  xy: 251, 293
+  xy: 1550, 1605
   size: 240, 93
   orig: 240, 93
   offset: 0, 0
   index: -1
 flare
   rotate: false
-  xy: 1284, 1650
+  xy: 2, 176
   size: 227, 235
   orig: 227, 235
   offset: 0, 0
   index: -1
 icon_btn_start
   rotate: false
-  xy: 2, 176
+  xy: 1284, 1224
   size: 247, 210
   orig: 247, 210
   offset: 0, 0
   index: -1
 light_button
   rotate: false
-  xy: 840, 1090
+  xy: 1550, 1700
   size: 302, 114
   orig: 302, 114
   offset: 0, 0
   index: -1
-logo
-  rotate: false
-  xy: 2, 388
-  size: 836, 816
-  orig: 836, 816
-  offset: 0, 0
-  index: -1
-music_on
+music_off
   rotate: false
   xy: 2, 2
   size: 172, 172
   orig: 172, 172
   offset: 0, 0
   index: -1
+music_on
+  rotate: false
+  xy: 1284, 1050
+  size: 172, 172
+  orig: 172, 172
+  offset: 0, 0
+  index: -1
 panel_tutorial
   rotate: false
-  xy: 2, 1206
+  xy: 2, 413
   size: 1280, 679
   orig: 1280, 679
   offset: 0, 0
   index: -1
-sound_off
+
+start_scene3.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+logo
   rotate: false
-  xy: 1284, 1476
-  size: 172, 172
-  orig: 172, 172
+  xy: 2, 2
+  size: 836, 816
+  orig: 836, 816
   offset: 0, 0
   index: -1

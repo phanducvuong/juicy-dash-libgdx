@@ -1,0 +1,38 @@
+[
+  {
+    "id": 0,
+    "url": "https://lh3.googleusercontent.com/Kwt50fRXrdCrs4i9aKMXJXtmBkMq8XxxOBgoAJAp-o-UdWQERWEsbhFs4sTAnF5PgQ=s180",
+    "display_name": "Đấu Trường\nXe Tank",
+    "android_store_uri": "https://play.google.com/store/apps/details?id=jk.tank",
+    "ios_store_uri": "https://play.google.com/store/apps/details?id=jk.tank",
+    "fi_store_uri": "https://play.google.com/store/apps/details?id=jk.tank"
+  },
+
+  {
+    "id": 1,
+    "url": "https://lh3.googleusercontent.com/DEtZxImVjeF5_Akbsewg4AA1Ge_bKx9OP1gv0Xvo8tIiylH7BNXW1qcSOpMfEWV1ww=s180",
+    "display_name": "Công Chúa\nThời Trang",
+    "android_store_uri": "https://play.google.com/store/apps/details?id=jk.cloth",
+    "ios_store_uri": "https://play.google.com/store/apps/details?id=jk.cloth",
+    "fi_store_uri": "https://play.google.com/store/apps/details?id=jk.cloth"
+  },
+
+  {
+    "id": 2,
+    "url": "https://lh3.googleusercontent.com/Ir7GqKvQlSCZBtwUsPUHCK4Mht5DDdDA5FR1iGqgUct30cUHz0WDQ4oauSY7wx9CMq8=s180",
+    "display_name": "UNO Classic!",
+    "android_store_uri": "https://play.google.com/store/apps/details?id=jk.uno",
+    "ios_store_uri": "https://play.google.com/store/apps/details?id=jk.uno",
+    "fi_store_uri": "https://play.google.com/store/apps/details?id=jk.uno"
+  },
+
+  {
+    "id": 3,
+    "url": "https://lh3.googleusercontent.com/W8E8x6GYdKQ-FmtXRhf6SQjTsli0fWaGesU23hE04zdTh7CuM1AgST_TmjWfd1ktwDCF=s180",
+    "display_name": "Đầu Bếp\nSiêu Cấp",
+    "android_store_uri": "https://play.google.com/store/apps/details?id=jk.rescook",
+    "ios_store_uri": "https://play.google.com/store/apps/details?id=jk.rescook",
+    "fi_store_uri": "https://play.google.com/store/apps/details?id=jk.rescook"
+  }
+
+]
