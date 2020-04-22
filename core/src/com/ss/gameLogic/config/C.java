@@ -21,7 +21,7 @@ public class C {
     public static class lang {
 
       private static String idCountry = "";
-      private static I18NBundle locale;
+      public static I18NBundle locale;
       public static String title = "";
       public static String adsTimeLbl = "";
       public static String raise = "";
@@ -33,7 +33,7 @@ public class C {
       public static String minBet = "";
       public static String adsOutOfMoney = "";
       public static String startScene = "";
-      public static String rank = "";
+      public static String titleRank = "";
       public static String otherGame = "";
       public static String divideCard = "";
       public static String newRound = "";
@@ -74,7 +74,7 @@ public class C {
         receive = locale.get("receive");
         minBet = locale.get("min_bet");
         startScene = locale.get("start_scene");
-        rank = locale.get("rank");
+        titleRank = locale.get("title_rank");
         otherGame = locale.get("other_game");
         divideCard = locale.get("divide_card");
         newRound = locale.get("new_round");

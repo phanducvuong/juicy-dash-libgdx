@@ -1,6 +1,5 @@
 package com.ss.core.util;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -9,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.ss.GMain;
 
 public class GUI {
@@ -33,6 +33,53 @@ public class GUI {
       var4.disabled = var2[3];
       return new Button(var4);
    }
+
+  public static Button createTextButtonEx(TextureRegion texture, BitmapFont font, String text, int textOffsetX, int  textOffsetY){
+    return GUI.createTextButtonWithShadowEx(texture, font, text, Color.WHITE, Color.BROWN, 1f, textOffsetX, textOffsetY);
+
+  }
+
+  public static Button createTextButton(TextureRegion texture, BitmapFont font, String text){
+    return GUI.createTextButtonWithShadow(texture, font, text, Color.WHITE, Color.BROWN, 1f);
+  }
+
+  public static Button createTextButtonWithShadowEx(TextureRegion texture, BitmapFont font, String text, Color fontColor, Color shadowColor, float fontScale, int textOffsetX, int  textOffsetY){
+    Button btn = creatButton(texture);
+
+    Label shawdowlabel = new Label(text, new Label.LabelStyle(font, shadowColor));
+    shawdowlabel.setFontScale(fontScale);
+    btn.addActor(shawdowlabel);
+
+    Label label = new Label(text, new Label.LabelStyle(font, fontColor));
+    label.setFontScale(fontScale);
+    btn.addActor(label);
+
+
+
+    shawdowlabel.setPosition(btn.getWidth()/2 + textOffsetX,btn.getHeight()/2 + 3+ textOffsetY, Align.center);
+    label.setPosition(btn.getWidth()/2+ textOffsetX,btn.getHeight()/2 + textOffsetY, Align.center);
+
+    return btn;
+  }
+
+  public static Button createTextButtonWithShadow(TextureRegion texture, BitmapFont font, String text, Color fontColor, Color shadowColor, float fontScale){
+    Button btn = creatButton(texture);
+
+    Label shawdowlabel = new Label(text, new Label.LabelStyle(font, shadowColor));
+    shawdowlabel.setFontScale(fontScale);
+    btn.addActor(shawdowlabel);
+
+    Label label = new Label(text, new Label.LabelStyle(font, fontColor));
+    label.setFontScale(fontScale);
+    btn.addActor(label);
+
+
+
+    shawdowlabel.setPosition(btn.getWidth()/2,btn.getHeight()/2 + 3, Align.center);
+    label.setPosition(btn.getWidth()/2,btn.getHeight()/2 , Align.center);
+
+    return btn;
+  }
 
    public static Button creatButton(TextureAtlas atlas, String regionname) {
       return creatButton( atlas.findRegion(regionname));

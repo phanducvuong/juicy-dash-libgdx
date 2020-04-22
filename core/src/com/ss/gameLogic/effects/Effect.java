@@ -39,7 +39,7 @@ public class Effect {
     card.addAction(
             parallel(
                     moveTo(x, y, DUR_DIVIDE_CARD, fastSlow),
-                    scaleTo(.7f, .7f, DUR_DIVIDE_CARD, fastSlow),
+                    scaleTo(.45f, .45f, DUR_DIVIDE_CARD, fastSlow),
                     rotateTo(logic.rndRotate(), DUR_DIVIDE_CARD, linear)
             )
     );
@@ -80,7 +80,7 @@ public class Effect {
       if (indexBot == 0) {
         cardDown.setiClickCard(game.gamePlayUI);
         cardDown.addListener(cardUp);
-        cardUp.setScale(0, 1.8f);
+        cardUp.setScale(0, 1f);
       }
       else
         cardUp.setScale(0, SCL_CARD_INIT);
@@ -92,16 +92,16 @@ public class Effect {
     ParallelAction par;
     if (indexBot == 0)
       par = parallel(
-              scaleTo(1.8f, 1.8f, DUR_SCL_ROTATE_CARD, fastSlow),
+              scaleTo(1f, 1f, DUR_SCL_ROTATE_CARD, fastSlow),
               sequence(
                       rotateTo(logic.getDegreeBuyIndex(indexCard), DUR_SCL_ROTATE_CARD, fastSlow),
-                      moveBy(60*indexCard, 0, DUR_SPREAD_CARD, fastSlow),
+                      moveBy(35*indexCard, 0, DUR_SPREAD_CARD, fastSlow),
                       run(run)
               ));
     else
       par = sequence(
               rotateTo(logic.getDegreeBuyIndex(indexCard), DUR_SCL_ROTATE_CARD, fastSlow),
-              moveBy(28*indexCard, 0, DUR_SPREAD_CARD, fastSlow),
+              moveBy(16*indexCard, 0, DUR_SPREAD_CARD, fastSlow),
               run(run)
       );
 
@@ -122,11 +122,11 @@ public class Effect {
       cardDown.addAction(
               sequence(
                       parallel(
-                              scaleTo(1f, 1f, .5f, fastSlow),
+                              scaleTo(.8f, .8f, .5f, fastSlow),
                               moveTo(x - cardDown.getWidth()/2 - index*28 + 30, y - 10, .5f, fastSlow)
                       ),
                       run(() -> cardUp.setPosition(cardDown.getX(), cardDown.getY())),
-                      run(() -> showAllCard(cardDown, cardUp, 1f, 1f)),
+                      run(() -> showAllCard(cardDown, cardUp, .8f, .8f)),
                       run(() -> {
                         int i = bot.lsCardDown.indexOf(cardDown);
                         if (i == bot.lsCardDown.size() - 1)
@@ -141,8 +141,8 @@ public class Effect {
   public void flipCard(Card cardDown, Card cardUp) {
 
     cardDown.addAction(sequence(
-            scaleTo(0, 1.8f, DUR_SCL_CARD_PLAYER, linear),
-            run(() -> cardUp.addAction(scaleTo(1.8f, 1.8f, DUR_SCL_CARD_PLAYER, linear)))
+            scaleTo(0, 1f, DUR_SCL_CARD_PLAYER, linear),
+            run(() -> cardUp.addAction(scaleTo(1f, 1f, DUR_SCL_CARD_PLAYER, linear)))
     ));
 
   }
@@ -160,13 +160,13 @@ public class Effect {
 
     SequenceAction seq = sequence(
             parallel(
-                    moveBy(0, -100f, 5f, linear),
-                    alpha(0f, 10f, linear)
+                    moveBy(0, -50, 7f, linear),
+                    alpha(0f, 15f, linear)
             ),
             run(() -> {
               lb.setVisible(false);
               lb.getColor().a = 1f;
-              lb.moveBy(0, 100f);
+              lb.moveBy(0, 50f);
             })
     );
 
@@ -278,8 +278,9 @@ public class Effect {
 
     for (Chip chip : lsChip) {
 
-      float rndX = Math.round(Math.random() * 100);
-      float rndY = Math.round(Math.random() * 100);
+      chip.setScale(.5f);
+      float rndX = Math.round(Math.random() * 50);
+      float rndY = Math.round(Math.random() * 50);
       float rndPlusOrMinus = Math.round(Math.random() * 1);
 
       if (rndPlusOrMinus == 0) {
@@ -289,7 +290,7 @@ public class Effect {
 
       chip.addToScene(game.gChip);
       chip.addAction(
-              moveTo(CENTER_X + rndX, CENTER_Y + rndY, .5f, smooth)
+              moveTo(CENTER_X + rndX, CENTER_Y + rndY - 30, .5f, smooth)
       );
     }
 
@@ -363,8 +364,8 @@ public class Effect {
 
     SequenceAction seq = sequence(
             parallel(
-                    scaleTo(zX, zY, .5f, fastSlow),
-                    alpha(1f, .5f, fastSlow)
+                    scaleTo(zX, zY, .35f, fastSlow),
+                    alpha(1f, .35f, fastSlow)
             )
     );
 
@@ -395,8 +396,8 @@ public class Effect {
 
     SequenceAction seq = sequence(
             parallel(
-                    scaleTo(zX, zY, .5f, fastSlow),
-                    alpha(0f, .5f, fastSlow)
+                    scaleTo(zX, zY, .35f, fastSlow),
+                    alpha(0f, .35f, fastSlow)
             ),
             run(onComplete)
     );

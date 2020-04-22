@@ -62,21 +62,21 @@ public class Bot {
 
     bgInfo = GUI.createImage(GMain.liengAtlas, "info_user");
     if (id == 0) {
-      bgInfo.setScale(1.5f);
-      bgInfo.setPosition(pos.x - 370, pos.y + 130);
+      bgInfo.setScale(1.3f);
+      bgInfo.setPosition(pos.x - 200, pos.y + 100);
     }
     else if (id == 1 || id == 2)
-      bgInfo.setPosition(pos.x + 150, pos.y + 70);
+      bgInfo.setPosition(pos.x + 110, pos.y + 70);
     else
-      bgInfo.setPosition(pos.x - 160, pos.y + 70);
+      bgInfo.setPosition(pos.x - 100, pos.y + 70);
 
     avatar = GUI.createImage(GMain.liengAtlas, "avatar");
     avatar.setOrigin(Align.center);
     if (id == 0) {
-      avatar.setScale(1.5f);
-      avatar.setOrigin(avatar.getWidth()*1.5f/2, avatar.getHeight()*1.5f/2);
-      avatar.setPosition(bgInfo.getX() + bgInfo.getWidth()*1.5f/2 - avatar.getWidth()/2 + 10,
-                            bgInfo.getY() - avatar.getHeight()*1.5f + 50);
+      avatar.setScale(1.3f);
+      avatar.setOrigin(avatar.getWidth()*1.3f/2, avatar.getHeight()*1.3f/2);
+      avatar.setPosition(bgInfo.getX() + bgInfo.getWidth()*1.3f/2 - avatar.getWidth()/2,
+                            bgInfo.getY() - avatar.getHeight()*1.3f + 20);
     }
     else
       avatar.setPosition(bgInfo.getX() + bgInfo.getWidth()/2 - avatar.getWidth()/2 - 5, bgInfo.getY() - avatar.getHeight());
@@ -85,11 +85,12 @@ public class Bot {
     lbTotalMoney = new Label("$2M", new Label.LabelStyle(Config.MONEY_FONT, null));
     lbTotalMoney.setAlignment(Align.center);
     if (id == 0) {
-      lbTotalMoney.setFontScale(.75f);
-      lbTotalMoney.setPosition(bgInfo.getX()+bgInfo.getWidth()*1.5f/2-lbTotalMoney.getWidth()/2 - 5, bgInfo.getY()+bgInfo.getHeight()*1.5f-lbTotalMoney.getHeight() - 10);
+      lbTotalMoney.setFontScale(.5f);
+      lbTotalMoney.setPosition(bgInfo.getX()+bgInfo.getWidth()*1.3f/2-lbTotalMoney.getWidth()/2 - 5,
+              bgInfo.getY()+bgInfo.getHeight()*1.3f-lbTotalMoney.getHeight());
     }
     else {
-      lbTotalMoney.setFontScale(.5f);
+      lbTotalMoney.setFontScale(.35f);
       lbTotalMoney.setPosition(bgInfo.getX()+bgInfo.getWidth()/2-lbTotalMoney.getWidth()/2 - 5, bgInfo.getY()+bgInfo.getHeight()-lbTotalMoney.getHeight());
     }
 
@@ -97,17 +98,18 @@ public class Bot {
     lbNamePlayer = new Label("User", new Label.LabelStyle(Config.MONEY_FONT, Color.WHITE));
     lbNamePlayer.setAlignment(Align.center);
     if (id == 0) {
-      lbNamePlayer.setFontScale(.75f);
-      lbNamePlayer.setPosition(bgInfo.getX()+bgInfo.getWidth()*1.5f/2-lbNamePlayer.getWidth()/2 - 5, bgInfo.getY() + 5);
+      lbNamePlayer.setFontScale(.5f);
+      lbNamePlayer.setPosition(bgInfo.getX()+bgInfo.getWidth()*1.3f/2-lbNamePlayer.getWidth()/2 - 5, bgInfo.getY());
     }
     else {
-      lbNamePlayer.setFontScale(.5f);
-      lbNamePlayer.setPosition(bgInfo.getX()+bgInfo.getWidth()/2-lbNamePlayer.getWidth()/2 - 5, bgInfo.getY() - 2);
+      lbNamePlayer.setFontScale(.35f);
+      lbNamePlayer.setPosition(bgInfo.getX()+bgInfo.getWidth()/2-lbNamePlayer.getWidth()/2 - 5, bgInfo.getY() - 10);
     }
 
     //label: bg bet condition, lbConditionBet, lbMoneyBet, lbMoneyChange
     bgBetCondition = GUI.createImage(GMain.liengAtlas, "bet_condition");
     lbConditionBet = new Label("THEO", new Label.LabelStyle(Config.BUTTON_FONT, null));
+    lbConditionBet.setFontScale(.7f);
     lbConditionBet.setAlignment(Align.center);
     lbMoneyBet = new Label("999K", new Label.LabelStyle(Config.MONEY_FONT, null));
     lbMoneyBet.setAlignment(Align.center);
@@ -117,37 +119,37 @@ public class Bot {
     lbMoneyChange.setVisible(false);
 
     if (id == 0) {
-      lbMoneyBet.setFontScale(.8f);
-      lbConditionBet.setPosition(pos.x - 30, pos.y - 170);
-      bgBetCondition.setScale(1.3f);
+      lbMoneyBet.setFontScale(.5f);
+      lbConditionBet.setPosition(pos.x - 30, pos.y - 70);
+      bgBetCondition.setScale(1.2f);
       bgBetCondition.setPosition(lbConditionBet.getX() + lbConditionBet.getWidth() + 20,
-                                  lbConditionBet.getY() + lbConditionBet.getHeight()/2 - bgBetCondition.getHeight()*1.3f/2);
-      lbMoneyBet.setPosition(bgBetCondition.getX() + bgBetCondition.getWidth()*1.3f/2 - lbMoneyBet.getWidth()/2 + 30,
-                              bgBetCondition.getY() + bgBetCondition.getHeight()*1.3f/2 - lbMoneyBet.getHeight()/2 - 5);
+                                  lbConditionBet.getY() + lbConditionBet.getHeight()/2 - bgBetCondition.getHeight()*1.2f/2);
+      lbMoneyBet.setPosition(bgBetCondition.getX() + bgBetCondition.getWidth()*1.2f/2 - lbMoneyBet.getWidth()/2 + 30,
+                              bgBetCondition.getY() + bgBetCondition.getHeight()*1.2f/2 - lbMoneyBet.getHeight()/2 - 5);
 
       lbMoneyChange.setPosition(avatar.getX() + avatar.getWidth()/2 - lbMoneyChange.getWidth()/2 - 30,
                                 avatar.getY() + avatar.getHeight()/2 - lbMoneyChange.getHeight()/2);
     }
     else {
-      lbConditionBet.setFontScale(.8f);
-      lbMoneyBet.setFontScale(.6f);
+      lbConditionBet.setFontScale(.5f);
+      lbMoneyBet.setFontScale(.3f, .4f);
       if (id == 1 || id == 2) {
         bgBetCondition.setScaleX(-1);
         bgBetCondition.setPosition(bgInfo.getX() + bgInfo.getWidth()/2 - bgBetCondition.getWidth()/2,
                 bgInfo.getY() + bgInfo.getHeight() + bgBetCondition.getHeight()/2 - 40);
-        lbMoneyBet.setPosition(bgBetCondition.getX() - bgBetCondition.getWidth()/2 - lbMoneyBet.getWidth()/2 - 27,
+        lbMoneyBet.setPosition(bgBetCondition.getX() - bgBetCondition.getWidth()/2 - lbMoneyBet.getWidth()/2 - 15,
                 bgBetCondition.getY() + bgBetCondition.getHeight()/2 - lbMoneyBet.getHeight()/2 - 5);
       }
       else {
         bgBetCondition.setPosition(bgInfo.getX() + bgInfo.getWidth()/2 + bgBetCondition.getWidth()/2,
                                 bgInfo.getY() + bgInfo.getHeight() + bgBetCondition.getHeight()/2 - 40);
-        lbMoneyBet.setPosition(bgBetCondition.getX() + bgBetCondition.getWidth()/2 - lbMoneyBet.getWidth()/2 + 27,
+        lbMoneyBet.setPosition(bgBetCondition.getX() + bgBetCondition.getWidth()/2 - lbMoneyBet.getWidth()/2 + 15,
                 bgBetCondition.getY() + bgBetCondition.getHeight()/2 - lbMoneyBet.getHeight()/2 - 5);
       }
       lbConditionBet.setPosition(bgInfo.getX() + bgInfo.getWidth()/2 - lbConditionBet.getWidth()/2,
               bgBetCondition.getY() + bgBetCondition.getHeight()/2 - lbConditionBet.getHeight()/2);
 
-      lbMoneyChange.setFontScale(.8f);
+      lbMoneyChange.setFontScale(.5f);
       lbMoneyChange.setPosition(avatar.getX() + avatar.getWidth()/2 - lbMoneyChange.getWidth()/2 - 10,
               avatar.getY() + avatar.getHeight()/2 - lbMoneyChange.getHeight()/2);
     }

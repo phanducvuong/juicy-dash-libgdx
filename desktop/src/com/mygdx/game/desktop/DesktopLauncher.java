@@ -10,7 +10,7 @@ public class DesktopLauncher {
     LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
     config.width = (int) (1280/1.5);
     config.height = (int) (720/1.5);
-    new LwjglApplication(new GMain(new IPlatform() {
+    GMain game = new GMain(new IPlatform() {
       @Override
       public void log(String str) {
 
@@ -18,7 +18,7 @@ public class DesktopLauncher {
 
       @Override
       public String GetDefaultLanguage() {
-        return null;
+        return "en";
       }
 
       @Override
@@ -120,6 +120,8 @@ public class DesktopLauncher {
       public void CancelDailyNotification(int id) {
 
       }
-    }), config);
+    });
+    GMain.inst = game;
+    new LwjglApplication(game, config);
   }
 }

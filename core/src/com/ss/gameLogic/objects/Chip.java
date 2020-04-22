@@ -35,6 +35,10 @@ public class Chip {
     imgChip.setPosition(x, y);
   }
 
+  public void setScale(float scl) {
+    imgChip.setScale(scl);
+  }
+
   public void remove() {
     imgChip.remove();
   }

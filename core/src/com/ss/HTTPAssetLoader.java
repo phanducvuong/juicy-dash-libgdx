@@ -53,7 +53,7 @@ public class HTTPAssetLoader {
   }
 
   private void loadSingleTexture(LoadItem item) {
-    final String path = "http/" + item.id + ".png";
+    final String path = "http/" + item.id;
     Net.HttpRequest httpRequest = new Net.HttpRequest(Net.HttpMethods.GET);
     httpRequest.setUrl(item.textureURI);
 
@@ -63,12 +63,13 @@ public class HTTPAssetLoader {
         if (httpResponse.getStatus().getStatusCode() >= 200 && httpResponse.getStatus().getStatusCode() < 300) {
 
           final byte[] rawByte = httpResponse.getResult();
+//          final InputStream is = httpResponse.getResultAsStream();
           try {
 
             final FileHandle file;
-            if (Gdx.files.isExternalStorageAvailable())
-              file = Gdx.files.external(path);
-            else
+//            if (Gdx.files.isExternalStorageAvailable())
+//              file = Gdx.files.external(path);
+//            else
               file = Gdx.files.local(path);
             file.writeBytes(rawByte, false);
 

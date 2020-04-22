@@ -1,0 +1,76 @@
+
+leaderboard.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+panel
+  rotate: false
+  xy: 2, 402
+  size: 990, 597
+  orig: 990, 597
+  offset: 0, 0
+  index: -1
+rank0
+  rotate: false
+  xy: 760, 8
+  size: 67, 73
+  orig: 67, 73
+  offset: 0, 0
+  index: -1
+rank1
+  rotate: false
+  xy: 816, 264
+  size: 67, 73
+  orig: 67, 73
+  offset: 0, 0
+  index: -1
+rank2
+  rotate: false
+  xy: 885, 264
+  size: 67, 73
+  orig: 67, 73
+  offset: 0, 0
+  index: -1
+rank_overlay
+  rotate: false
+  xy: 412, 29
+  size: 346, 52
+  orig: 346, 52
+  offset: 0, 0
+  index: -1
+ribbon
+  rotate: false
+  xy: 2, 193
+  size: 812, 144
+  orig: 812, 144
+  offset: 0, 0
+  index: -1
+row_overlay
+  rotate: false
+  xy: 2, 339
+  size: 934, 61
+  orig: 934, 61
+  offset: 0, 0
+  index: -1
+tag
+  rotate: false
+  xy: 562, 83
+  size: 284, 108
+  orig: 284, 108
+  offset: 0, 0
+  index: -1
+textinput
+  rotate: false
+  xy: 2, 121
+  size: 558, 70
+  orig: 558, 70
+  offset: 0, 0
+  index: -1
+topscore
+  rotate: false
+  xy: 2, 2
+  size: 408, 117
+  orig: 408, 117
+  offset: 0, 0
+  index: -1

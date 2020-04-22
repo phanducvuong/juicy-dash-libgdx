@@ -6,19 +6,20 @@ import com.ss.gameLogic.Game;
 public class GameScene extends GScreen {
 
     @Override
-    public void dispose() {
+  public void dispose() {
 
-    }
+  }
 
-    @Override
-    public void init() {
+  @Override
+  public void init() {
 
-      new Game();
+    new Game();
 
-    }
+  }
 
-    @Override
-    public void run() {
+  @Override
+  public void run() {
 
-    }
+  }
+
 }

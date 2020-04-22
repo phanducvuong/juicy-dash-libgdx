@@ -6,286 +6,259 @@ filter: Nearest,Nearest
 repeat: none
 arrow_left
   rotate: false
-  xy: 1886, 894
-  size: 50, 65
-  orig: 50, 65
+  xy: 425, 33
+  size: 38, 49
+  orig: 38, 49
   offset: 0, 0
   index: -1
 arrow_right
   rotate: false
-  xy: 1886, 961
-  size: 50, 65
-  orig: 50, 65
+  xy: 1966, 1996
+  size: 38, 49
+  orig: 38, 49
   offset: 0, 0
   index: -1
 banner_rank
   rotate: false
-  xy: 2, 198
+  xy: 2, 219
   size: 1472, 324
   orig: 1472, 324
   offset: 0, 0
   index: -1
-bg_cross_panel
+bg_icon_cross
   rotate: false
-  xy: 2, 524
-  size: 1280, 720
-  orig: 1280, 720
+  xy: 1817, 1267
+  size: 179, 256
+  orig: 179, 256
   offset: 0, 0
   index: -1
 bg_icon_rank
   rotate: false
-  xy: 2, 63
+  xy: 2, 84
   size: 1078, 133
   orig: 1078, 133
   offset: 0, 0
   index: -1
 bg_panel_bet_chip
   rotate: false
-  xy: 1476, 230
-  size: 361, 293
-  orig: 361, 293
-  offset: 0, 0
-  index: -1
-bg_rank
-  rotate: false
-  xy: 2, 1246
-  size: 1241, 778
-  orig: 1241, 778
-  offset: 0, 0
-  index: -1
-btn_other_game
-  rotate: false
-  xy: 1284, 525
-  size: 572, 167
-  orig: 572, 167
-  offset: 0, 0
-  index: -1
-btn_rank
-  rotate: false
-  xy: 1284, 694
-  size: 572, 167
-  orig: 572, 167
-  offset: 0, 0
-  index: -1
-btn_start
-  rotate: false
-  xy: 1082, 29
-  size: 572, 167
-  orig: 572, 167
-  offset: 0, 0
-  index: -1
-chip_bet
-  rotate: false
-  xy: 2, 2
-  size: 59, 59
-  orig: 59, 59
-  offset: 0, 0
-  index: -1
-icon_btn_other_game
-  rotate: false
-  xy: 1656, 20
-  size: 218, 208
-  orig: 218, 208
-  offset: 0, 0
-  index: -1
-icon_btn_rank
-  rotate: false
-  xy: 1858, 637
-  size: 180, 224
-  orig: 180, 224
-  offset: 0, 0
-  index: -1
-icon_exit
-  rotate: false
-  xy: 1894, 1238
-  size: 120, 120
-  orig: 120, 120
-  offset: 0, 0
-  index: -1
-icon_gift
-  rotate: false
-  xy: 1894, 1360
-  size: 135, 120
-  orig: 135, 120
-  offset: 0, 0
-  index: -1
-icon_mini_game
-  rotate: false
-  xy: 1876, 166
-  size: 120, 120
-  orig: 120, 120
-  offset: 0, 0
-  index: -1
-icon_rank_1
-  rotate: false
-  xy: 1894, 1482
-  size: 134, 134
-  orig: 134, 134
-  offset: 0, 0
-  index: -1
-icon_rank_2
-  rotate: false
-  xy: 1894, 1754
-  size: 134, 134
-  orig: 134, 134
-  offset: 0, 0
-  index: -1
-icon_rank_3
-  rotate: false
-  xy: 1894, 1618
-  size: 134, 134
-  orig: 134, 134
-  offset: 0, 0
-  index: -1
-icon_rank_4
-  rotate: false
-  xy: 1894, 1890
-  size: 134, 134
-  orig: 134, 134
-  offset: 0, 0
-  index: -1
-icon_setting
-  rotate: false
-  xy: 1886, 1116
-  size: 120, 120
-  orig: 120, 120
-  offset: 0, 0
-  index: -1
-icon_tutorial
-  rotate: false
-  xy: 1876, 44
-  size: 120, 120
-  orig: 120, 120
-  offset: 0, 0
-  index: -1
-light_chip_bet
-  rotate: false
-  xy: 1886, 1028
-  size: 86, 86
-  orig: 86, 86
-  offset: 0, 0
-  index: -1
-panel_bet
-  rotate: false
-  xy: 1245, 1299
-  size: 647, 725
-  orig: 647, 725
-  offset: 0, 0
-  index: -1
-panel_setting
-  rotate: false
-  xy: 1284, 863
-  size: 600, 434
-  orig: 600, 434
-  offset: 0, 0
-  index: -1
-sound_off
-  rotate: false
-  xy: 1839, 288
-  size: 172, 172
-  orig: 172, 172
-  offset: 0, 0
-  index: -1
-sound_on
-  rotate: false
-  xy: 1858, 462
-  size: 172, 173
-  orig: 172, 173
-  offset: 0, 0
-  index: -1
-
-start_scene2.png
-size: 2048,2048
-format: RGBA8888
-filter: Nearest,Nearest
-repeat: none
-bg_icon_cross
-  rotate: false
-  xy: 1284, 1436
-  size: 264, 378
-  orig: 264, 378
+  xy: 1284, 687
+  size: 293, 239
+  orig: 293, 239
   offset: 0, 0
   index: -1
 bg_panel_bet_number
   rotate: false
-  xy: 231, 320
-  size: 311, 91
-  orig: 311, 91
+  xy: 211, 20
+  size: 212, 62
+  orig: 212, 62
+  offset: 0, 0
+  index: -1
+bg_rank
+  rotate: false
+  xy: 2, 1267
+  size: 1241, 778
+  orig: 1241, 778
   offset: 0, 0
   index: -1
 bg_start_game
   rotate: false
-  xy: 2, 1094
+  xy: 2, 545
   size: 1280, 720
   orig: 1280, 720
   offset: 0, 0
   index: -1
 btn_get
   rotate: false
-  xy: 1854, 1726
+  xy: 1823, 67
   size: 176, 88
   orig: 176, 88
   offset: 0, 0
   index: -1
-btn_start_panel_bet
+btn_other_game
   rotate: false
-  xy: 1550, 1605
-  size: 240, 93
-  orig: 240, 93
+  xy: 1453, 48
+  size: 368, 107
+  orig: 368, 107
   offset: 0, 0
   index: -1
-flare
+btn_rank
   rotate: false
-  xy: 2, 176
-  size: 227, 235
-  orig: 227, 235
+  xy: 1579, 703
+  size: 368, 107
+  orig: 368, 107
+  offset: 0, 0
+  index: -1
+btn_start
+  rotate: false
+  xy: 1082, 109
+  size: 369, 108
+  orig: 369, 108
+  offset: 0, 0
+  index: -1
+btn_start_panel_bet
+  rotate: false
+  xy: 2, 2
+  size: 207, 80
+  orig: 207, 80
+  offset: 0, 0
+  index: -1
+icon_btn_other_game
+  rotate: false
+  xy: 1817, 957
+  size: 149, 134
+  orig: 149, 134
   offset: 0, 0
   index: -1
 icon_btn_start
   rotate: false
-  xy: 1284, 1224
-  size: 247, 210
-  orig: 247, 210
+  xy: 1284, 551
+  size: 158, 134
+  orig: 158, 134
+  offset: 0, 0
+  index: -1
+icon_exit
+  rotate: false
+  xy: 1176, 15
+  size: 92, 92
+  orig: 92, 92
+  offset: 0, 0
+  index: -1
+icon_gift
+  rotate: false
+  xy: 1270, 15
+  size: 92, 92
+  orig: 92, 92
+  offset: 0, 0
+  index: -1
+icon_mini_game
+  rotate: false
+  xy: 1949, 727
+  size: 92, 92
+  orig: 92, 92
+  offset: 0, 0
+  index: -1
+icon_rank_1
+  rotate: false
+  xy: 1883, 821
+  size: 134, 134
+  orig: 134, 134
+  offset: 0, 0
+  index: -1
+icon_tutorial
+  rotate: false
+  xy: 1082, 15
+  size: 92, 92
+  orig: 92, 92
   offset: 0, 0
   index: -1
 light_button
   rotate: false
-  xy: 1550, 1700
+  xy: 1579, 812
   size: 302, 114
   orig: 302, 114
   offset: 0, 0
   index: -1
-music_off
+logo
+  rotate: false
+  xy: 1476, 157
+  size: 541, 528
+  orig: 541, 528
+  offset: 0, 0
+  index: -1
+panel_bet
+  rotate: false
+  xy: 1284, 928
+  size: 531, 595
+  orig: 531, 595
+  offset: 0, 0
+  index: -1
+panel_setting
+  rotate: false
+  xy: 1245, 1525
+  size: 719, 520
+  orig: 719, 520
+  offset: 0, 0
+  index: -1
+sound_on
+  rotate: false
+  xy: 1817, 1093
+  size: 172, 172
+  orig: 172, 172
+  offset: 0, 0
+  index: -1
+
+start_scene2.png
+size: 2048,512
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+bg_cross_panel
   rotate: false
   xy: 2, 2
+  size: 902, 507
+  orig: 902, 507
+  offset: 0, 0
+  index: -1
+flare
+  rotate: false
+  xy: 1080, 167
+  size: 162, 168
+  orig: 162, 168
+  offset: 0, 0
+  index: -1
+icon_btn_rank
+  rotate: false
+  xy: 1526, 375
+  size: 128, 134
+  orig: 128, 134
+  offset: 0, 0
+  index: -1
+icon_rank_2
+  rotate: false
+  xy: 906, 27
+  size: 134, 134
+  orig: 134, 134
+  offset: 0, 0
+  index: -1
+icon_rank_3
+  rotate: false
+  xy: 1390, 375
+  size: 134, 134
+  orig: 134, 134
+  offset: 0, 0
+  index: -1
+icon_rank_4
+  rotate: false
+  xy: 1254, 375
+  size: 134, 134
+  orig: 134, 134
+  offset: 0, 0
+  index: -1
+icon_setting
+  rotate: false
+  xy: 1656, 417
+  size: 92, 92
+  orig: 92, 92
+  offset: 0, 0
+  index: -1
+music_off
+  rotate: false
+  xy: 906, 337
   size: 172, 172
   orig: 172, 172
   offset: 0, 0
   index: -1
 music_on
   rotate: false
-  xy: 1284, 1050
+  xy: 1080, 337
   size: 172, 172
   orig: 172, 172
   offset: 0, 0
   index: -1
-panel_tutorial
+sound_off
   rotate: false
-  xy: 2, 413
-  size: 1280, 679
-  orig: 1280, 679
-  offset: 0, 0
-  index: -1
-
-start_scene3.png
-size: 1024,1024
-format: RGBA8888
-filter: Nearest,Nearest
-repeat: none
-logo
-  rotate: false
-  xy: 2, 2
-  size: 836, 816
-  orig: 836, 816
+  xy: 906, 163
+  size: 172, 172
+  orig: 172, 172
   offset: 0, 0
   index: -1

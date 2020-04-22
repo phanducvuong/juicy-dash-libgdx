@@ -141,7 +141,6 @@ public class Bet {
     bot.convertTotalMoneyToString();
     bot.eftChipOut(game);
 
-
   }
 
   public void TO(Bot player, long moneyBet) {

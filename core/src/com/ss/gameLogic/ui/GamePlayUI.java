@@ -152,14 +152,14 @@ public class GamePlayUI implements IClickCard {
   private void initIcon() {
 
     Image iconSetting = GUI.createImage(GMain.startSceneAtlas, "icon_setting");
-    iconSetting.setScale(.8f);
-    iconSetting.setPosition(GStage.getWorldWidth() - iconSetting.getWidth() - 30, 20);
+    iconSetting.setScale(.6f);
+    iconSetting.setPosition(GStage.getWorldWidth() - iconSetting.getWidth() - 10, 10);
     iconSetting.setOrigin(Align.center);
     game.gBtn.addActor(iconSetting);
 
     Image iconExit = GUI.createImage(GMain.startSceneAtlas, "icon_exit");
-    iconExit.setScale(.8f);
-    iconExit.setPosition(iconSetting.getX() - iconExit.getWidth() - 20, iconSetting.getY());
+    iconExit.setScale(.6f);
+    iconExit.setPosition(iconSetting.getX() - iconExit.getWidth() + 20, iconSetting.getY());
     iconExit.setOrigin(Align.center);
     game.gBtn.addActor(iconExit);
 
@@ -212,18 +212,21 @@ public class GamePlayUI implements IClickCard {
   private void initButtonBet() {
 
     btnTo = new Button(GMain.liengAtlas, "btn_to", C.lang.raise, Config.BUTTON_FONT);
-    btnTo.setPosition(GStage.getWorldWidth()/2 + 50, GStage.getWorldHeight() - btnTo.getHeight() - 10);
+    btnTo.setPosition(GStage.getWorldWidth()/2 + 20, GStage.getWorldHeight() - btnTo.getHeight() - 10);
     btnTo.startEftLight(game);
+    btnTo.setFontScale(.6f, .6f);
     btnTo.addToGroup(game.gBtn);
 
     btnTheo = new Button(GMain.liengAtlas, "btn_theo", C.lang.call, Config.BUTTON_FONT);
-    btnTheo.setPosition(btnTo.getX() + btnTheo.getWidth() + 20, btnTo.getY());
+    btnTheo.setPosition(btnTo.getX() + btnTheo.getWidth(), btnTo.getY());
     btnTheo.startEftLight(game);
+    btnTheo.setFontScale(.6f, .6f);
     btnTheo.addToGroup(game.gBtn);
 
     btnUp = new Button(GMain.liengAtlas, "btn_up", C.lang.fold, Config.BUTTON_FONT);
-    btnUp.setPosition(btnTheo.getX() + btnUp.getWidth() + 20, btnTheo.getY());
+    btnUp.setPosition(btnTheo.getX() + btnUp.getWidth(), btnTheo.getY());
     btnUp.startEftLight(game);
+    btnUp.setFontScale(.6f, .6f);
     btnUp.addToGroup(game.gBtn);
 
   }
@@ -233,7 +236,7 @@ public class GamePlayUI implements IClickCard {
     gRateMoney = new GClipGroup();
     bgRateMoney = GUI.createImage(GMain.liengAtlas, "bg_rate_money");
     gRateMoney.setClipArea(0, 0, bgRateMoney.getWidth(), bgRateMoney.getHeight());
-    gRateMoney.setPosition(btnTo.getX() + 15, btnTo.getY() - btnTo.getHeight() + 60);
+    gRateMoney.setPosition(btnTo.getX() + 15, btnTo.getY() - btnTo.getHeight() + 30);
 
     controlRateMoney = GUI.createImage(GMain.liengAtlas, "control_rate_money");
     controlRateMoney.setPosition(bgRateMoney.getX() - 2,
@@ -248,9 +251,10 @@ public class GamePlayUI implements IClickCard {
     game.gBackground.addActor(gRateMoney);
 
     lbMoneyRate = new Label("$0", new Label.LabelStyle(Config.PLUS_MONEY_FONT, null));
-    lbMoneyRate.setFontScale(.8f);
-    lbMoneyRate.setPosition(gRateMoney.getX() + bgRateMoney.getWidth() + 20,
-                                gRateMoney.getY() + bgRateMoney.getHeight()/2 - lbMoneyRate.getHeight()/2 - 10);
+    lbMoneyRate.setFontScale(.7f);
+    lbMoneyRate.setAlignment(Align.center);
+    lbMoneyRate.setPosition(gRateMoney.getX() + bgRateMoney.getWidth()/2 - 20,
+                                gRateMoney.getY() + bgRateMoney.getHeight() - lbMoneyRate.getHeight() - 50);
     game.gBot.addActor(lbMoneyRate);
 
     //label: drag and drop
@@ -496,14 +500,13 @@ public class GamePlayUI implements IClickCard {
     game.gBackground.addActor(bgTable);
 
     Image bgTotalMoneyBet = GUI.createImage(GMain.liengAtlas, "bg_money_bet");
-    bgTotalMoneyBet.setScale(1.7f);
-    bgTotalMoneyBet.setPosition(Config.CENTER_X - bgTotalMoneyBet.getWidth()*1.7f/2,
-                                Config.CENTER_Y - bgTotalMoneyBet.getHeight()*1.7f/2 - 150);
+    bgTotalMoneyBet.setPosition(Config.CENTER_X - bgTotalMoneyBet.getWidth()/2,
+                                Config.CENTER_Y - bgTotalMoneyBet.getHeight()/2 - 100);
     game.gBackground.addActor(bgTotalMoneyBet);
 
     lbTotoalMoneyBet = new Label("$10,000", new Label.LabelStyle(Config.MONEY_FONT, null));
     lbTotoalMoneyBet.setAlignment(Align.center);
-    lbTotoalMoneyBet.setFontScale(.8f, .9f);
+    lbTotoalMoneyBet.setFontScale(.5f, .6f);
     lbTotoalMoneyBet.setPosition(bgTotalMoneyBet.getX() + bgTotalMoneyBet.getWidth()*bgTotalMoneyBet.getScaleX()/2 - lbTotoalMoneyBet.getWidth()/2 + 30,
                                   bgTotalMoneyBet.getY() + bgTotalMoneyBet.getHeight()*bgTotalMoneyBet.getScaleY()/2 - lbTotoalMoneyBet.getHeight()/2 - 5);
     game.gBackground.addActor(lbTotoalMoneyBet);
@@ -522,6 +525,7 @@ public class GamePlayUI implements IClickCard {
     gBannerWin.addActor(lbWin);
 
     lbMinBet = new Label(C.lang.minBet + " $10,000", new Label.LabelStyle(Config.BUTTON_FONT, null));
+    lbMinBet.setFontScale(.6f);
     lbMinBet.setAlignment(Align.center);
     lbMinBet.setPosition(Config.CENTER_X - lbMinBet.getWidth()/2, Config.CENTER_Y - lbMinBet.getHeight()/2);
     lbMinBet.getColor().a = 0;
@@ -540,7 +544,7 @@ public class GamePlayUI implements IClickCard {
 
     Label lbAertAds = new Label(C.lang.adsOutOfMoney, new Label.LabelStyle(Config.ALERT_FONT, null));
     lbAertAds.setAlignment(Align.center);
-    lbAertAds.setFontScale(.7f);
+    lbAertAds.setFontScale(.55f);
     lbAertAds.setPosition(bgAlert.getX() + bgAlert.getWidth()/2 - lbAertAds.getWidth()/2,
                               bgAlert.getY() + bgAlert.getHeight()/2 - lbAertAds.getHeight()/2 - 180);
     gAlerrAds.addActor(lbAertAds);
@@ -562,8 +566,9 @@ public class GamePlayUI implements IClickCard {
     btnNewRound = new Button(GMain.liengAtlas, "btn_divide", C.lang.divideCard, Config.ALERT_FONT);
     btnNewRound.setPosition(Config.CENTER_X - btnNewRound.getWidth()/2,
                             Config.CENTER_Y - btnNewRound.getHeight()/2);
-    btnNewRound.setFontScale(.8f, .8f);
     btnNewRound.moveByLb(0, -10);
+    btnNewRound.setFontScale(.5f, .5f);
+    btnNewRound.moveByLb(0, -5);
     btnNewRound.addToGroup(game.gBtn);
 
   }
