@@ -22,7 +22,7 @@ public class GMain extends GDirectedGame {
   public static int screenHeight = 0;
   public static int screenWidth = 0;
   public static final int testType = 2;
-  public static TextureAtlas liengAtlas, cardAtlas, startSceneAtlas, wheelAtlas;
+  public static TextureAtlas liengAtlas, cardAtlas, startSceneAtlas, wheelAtlas, particleAtlas;
   public static float ratioX, ratioY;
   public static Preferences pref;
   public static GameScene gameScene;
@@ -49,12 +49,9 @@ public class GMain extends GDirectedGame {
     });
   }
 
-  private static GScreen menuScreen()
-  {
+  private static GScreen menuScreen() {
     return gameScene = new GameScene();
   }
-
-
 
   public void create() {
 
@@ -63,6 +60,7 @@ public class GMain extends GDirectedGame {
     cardAtlas = GAssetsManager.getTextureAtlas("card.atlas");
     startSceneAtlas = GAssetsManager.getTextureAtlas("start_scene.atlas");
     wheelAtlas = GAssetsManager.getTextureAtlas("wheel.atlas");
+    particleAtlas = GAssetsManager.getTextureAtlas("particle.atlas");
 
     pref = Gdx.app.getPreferences("lieng");
 

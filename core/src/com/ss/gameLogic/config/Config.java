@@ -18,12 +18,13 @@ public class Config {
   private static final FileHandle fh2 = Gdx.files.internal("other_games.json");
   public static String otherGameData = GMain.platform.GetConfigStringValue("", fh2.readString());
 
-  public static final FileHandle fhUnlockP = Gdx.files.internal("particles/unlock/unlock");
-
   public static final int SPIN_TIME = 3; //todo: remote config in firebase (default 3)
 
   public static float CENTER_X = GStage.getWorldWidth()/2;
   public static float CENTER_Y = GStage.getWorldHeight()/2;
+
+  public static float SCL_EFFECT_WIN = 3f;
+  public static float SCL_EFFECT_ALL_IN = 3f;
 
   public static final BitmapFont MONEY_FONT = GAssetsManager.getBitmapFont("money_font.fnt");
   public static final BitmapFont BUTTON_FONT = GAssetsManager.getBitmapFont("btn_font.fnt");

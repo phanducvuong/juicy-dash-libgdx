@@ -401,7 +401,7 @@ timeline2: 1.0
 - Tint - 
 colorsCount: 9
 colors0: 1.0
-colors1: 0.93333334
+colors1: 0.90588236
 colors2: 0.3372549
 colors3: 1.0
 colors4: 0.7921569
@@ -584,14 +584,22 @@ lowMax: 0.0
 highMin: 1.0
 highMax: 1.0
 relative: false
-scalingCount: 3
+scalingCount: 7
 scaling0: 0.0
-scaling1: 0.7894737
-scaling2: 0.0
-timelineCount: 3
+scaling1: 0.61403507
+scaling2: 1.0
+scaling3: 1.0
+scaling4: 0.8245614
+scaling5: 0.49122807
+scaling6: 0.0
+timelineCount: 7
 timeline0: 0.0
-timeline1: 0.20547946
-timeline2: 1.0
+timeline1: 0.07534247
+timeline2: 0.2260274
+timeline3: 0.5273973
+timeline4: 0.80136985
+timeline5: 0.96575344
+timeline6: 1.0
 - Options - 
 attached: false
 continuous: false
@@ -601,7 +609,7 @@ behind: false
 premultipliedAlpha: false
 spriteMode: single
 - Image Paths -
-guankashengli05.png
+coin.png
 
 
 sss
@@ -692,10 +700,12 @@ lowMax: 0.0
 highMin: 500.0
 highMax: 250.0
 relative: false
-scalingCount: 1
+scalingCount: 2
 scaling0: 1.0
-timelineCount: 1
+scaling1: 1.0
+timelineCount: 2
 timeline0: 0.0
+timeline1: 1.0
 - Angle - 
 active: false
 - Rotation - 

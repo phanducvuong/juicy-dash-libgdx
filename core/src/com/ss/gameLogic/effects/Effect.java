@@ -407,7 +407,7 @@ public class Effect {
   }
 
   public void sclMinToMax(Group group) {
-    group.addAction(scaleTo(1f, 1f, .5f, fastSlow));
+    group.addAction(scaleTo(1f, 1f, .35f, fastSlow));
   }
 
   public void sclMaxToMin(Group group, Runnable onComplete) {

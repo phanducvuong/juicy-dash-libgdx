@@ -96,28 +96,6 @@ public class StartScene {
 
     setMoneyForLb();
 
-    particleWheel();
-
-  }
-
-  private void particleWheel() {
-
-    Particle p = new Particle(gStartScene, Config.fhUnlockP, "particles/unlock");
-    p.start(500, 500);
-
-    Image test = GUI.createImage(GMain.liengAtlas, "btn_x");
-    gStartScene.addActor(test);
-    test.addListener(new ClickListener() {
-
-      @Override
-      public void clicked(InputEvent event, float x, float y) {
-        super.clicked(event, x, y);
-
-        p.start(500, 500);
-
-      }
-    });
-
   }
 
   private void initRank() {

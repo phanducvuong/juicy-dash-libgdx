@@ -421,15 +421,15 @@ public class Logic {
 
     if (bot.id == 0) {
       bot.posChipOut.x = bot.avatar.getX() + bot.avatar.getWidth() + 30;
-      bot.posChipOut.y = bot.avatar.getY() - 50;
+      bot.posChipOut.y = bot.avatar.getY() - 35;
 
       bot.posChipReceive.x = bot.posChipOut.x;
       bot.posChipReceive.y = bot.posChipOut.y;
     }else if (bot.id == 1 || bot.id == 2) {
-      bot.posChipOut.x = bot.bgInfo.getX() - 130;
+      bot.posChipOut.x = bot.bgInfo.getX() - 80;
       bot.posChipOut.y = bot.bgInfo.getY() + bot.bgInfo.getHeight() - 60;
 
-      bot.posChipReceive.x = bot.bgInfo.getX() - 130;
+      bot.posChipReceive.x = bot.bgInfo.getX() - 80;
       bot.posChipReceive.y = bot.bgInfo.getY() + bot.bgInfo.getHeight() - 60;
     }else {
       bot.posChipOut.x = bot.bgInfo.getX() + bot.bgInfo.getWidth() + 150;

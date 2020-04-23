@@ -102,6 +102,10 @@ public class Card {
     card.setColor(color);
   }
 
+  public Group getParent() {
+    return card.getParent();
+  }
+
   public void addCardToScene(Group group) {
     group.addActor(card);
   }
@@ -128,6 +132,10 @@ public class Card {
 
   public float getScaleY() {
     return card.getScaleY();
+  }
+
+  public float getScaleX() {
+    return card.getScaleX();
   }
 
   public boolean isActive() {

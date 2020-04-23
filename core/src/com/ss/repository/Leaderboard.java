@@ -24,6 +24,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.JsonValue;
 
 //ok any current project have this one
+import com.ss.GMain;
 import com.ss.core.exSprite.GShapeSprite;
 import com.ss.core.util.GAssetsManager;
 import com.ss.core.util.GLayer;
@@ -129,6 +130,14 @@ public class Leaderboard extends GScreen {
 
   }
 
+//  private float acc = 0;
+//  @Override
+//  public void render(float var1) {
+//    super.render(var1);
+//    acc+=Gdx.graphics.getDeltaTime();
+//    if (acc >= 2)
+//      setScreen(screenService.backScreen());
+//  }
 
   @Override
   public void init() {

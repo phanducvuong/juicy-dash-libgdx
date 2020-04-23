@@ -5,6 +5,11 @@ import com.ss.gameLogic.Game;
 
 public class GameScene extends GScreen {
 
+  private Game game;
+  public GameScene() {
+    game = new Game();
+  }
+
     @Override
   public void dispose() {
 
@@ -12,14 +17,11 @@ public class GameScene extends GScreen {
 
   @Override
   public void init() {
-
-    new Game();
-
+    game.initLayer();
   }
 
   @Override
   public void run() {
 
   }
-
 }

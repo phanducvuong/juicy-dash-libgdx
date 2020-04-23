@@ -1,5 +1,6 @@
 package com.ss.gameLogic.ui;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -17,6 +18,7 @@ import com.ss.gameLogic.Game;
 import com.ss.gameLogic.config.C;
 import com.ss.gameLogic.config.Config;
 import com.ss.gameLogic.effects.Effect;
+import com.ss.gameLogic.effects.Particle;
 import com.ss.gameLogic.interfaces.IClickCard;
 import com.ss.gameLogic.logic.Logic;
 import com.ss.gameLogic.objects.Bot;
@@ -54,6 +56,8 @@ public class GamePlayUI implements IClickCard {
   private Group gPanelInGame;
   private Image blackPanelInGame;
 
+  public Particle pWin, pAllIn, pUnlock;
+
   public GamePlayUI(Game game) {
 
     this.game = game;
@@ -65,11 +69,38 @@ public class GamePlayUI implements IClickCard {
     initRateMoney();
     initIcon();
     initPanelInGame();
+    initParticles();
     handleClickBtnBet();
     handleClickBtnAlert();
     hideBtnBet();
 
-    testClick();
+  }
+
+  private void initParticles() {
+
+    String key = "";
+    if (C.lang.idCountry.equals("vn"))
+      key = "win_vn";
+    else
+      key = "win_en";
+    pWin = new Particle(game.gEffect, Gdx.files.internal("particles/win"), key);
+
+    pAllIn = new Particle(game.gEffect, Gdx.files.internal("particles/all_in"));
+
+    pUnlock = new Particle(game.gTest, Gdx.files.internal("particles/unlock"));
+
+    Image test = GUI.createImage(GMain.liengAtlas, "btn_x");
+    game.gTest.addActor(test);
+    test.addListener(new ClickListener() {
+
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        super.clicked(event, x, y);
+
+        pUnlock.start(500, 500, 2f);
+
+      }
+    });
 
   }
 
@@ -86,17 +117,20 @@ public class GamePlayUI implements IClickCard {
     gPanelInGame.addActor(panelInGame);
 
     Label lbTxt = new Label(C.lang.notifyExitGame, new Label.LabelStyle(Config.ALERT_FONT, null));
+    lbTxt.setFontScale(.7f);
     lbTxt.setAlignment(Align.center);
     lbTxt.setPosition(gPanelInGame.getWidth()/2 - lbTxt.getWidth()/2, 170);
     gPanelInGame.addActor(lbTxt);
 
     Button btnOK = new Button(GMain.liengAtlas, "btn_divide", C.lang.yes, Config.ALERT_FONT);
     btnOK.setPosition(120, gPanelInGame.getHeight() - btnOK.getHeight() - 20);
+    btnOK.setFontScale(.7f, .7f);
     btnOK.moveByLb(0, -10);
     btnOK.addToGroup(gPanelInGame);
 
     Button btnNo = new Button(GMain.liengAtlas, "btn_divide", C.lang.no, Config.ALERT_FONT);
     btnNo.setPosition(gPanelInGame.getWidth() - btnNo.getWidth() - 120, btnOK.getY());
+    btnNo.setFontScale(.7f, .7f);
     btnNo.moveByLb(0, -10);
     btnNo.addToGroup(gPanelInGame);
 
@@ -471,26 +505,6 @@ public class GamePlayUI implements IClickCard {
 
   }
 
-  private void testClick() {
-
-//    Image click = GUI.createImage(GMain.liengAtlas, "button_start");
-//    game.gBtn.addActor(click);
-//
-//    click.addListener(new ClickListener() {
-//      @Override
-//      public void clicked(InputEvent event, float x, float y) {
-//        super.clicked(event, x, y);
-//
-//        showAllWhenFindWinner();
-//        System.out.println(logic.timeDelayToNextTurnBet());
-//        System.out.println(Math.round(Math.random() * 1));
-//        showAlertAds();
-//
-//      }
-//    });
-
-  }
-
   private void initUIGame() {
 
 //    btnNewRound = new Button()
@@ -594,7 +608,7 @@ public class GamePlayUI implements IClickCard {
 
   public void showAllWhenFindWinner(List<Bot> lsBot, Bot winner) {
 
-    System.out.println("TOTAL MONEY: " + game.bet.totalMoney);
+//    System.out.println("TOTAL MONEY: " + game.bet.totalMoney);
 
     for (Bot bot : lsBot) {
       if (bot.id != 0) {
@@ -616,8 +630,10 @@ public class GamePlayUI implements IClickCard {
 
     if (winner.id != 0)
       effect.winnerIsBot(winner);
-    else
+    else {
+      pWin.start(Config.CENTER_X, Config.CENTER_Y - 100, Config.SCL_EFFECT_WIN); //particle
       winner.eftMoneyWinner(game, game.bet.totalMoney);
+    }
 
   }
 
@@ -629,8 +645,10 @@ public class GamePlayUI implements IClickCard {
     effect.arrangeLsChip(lsAllChip, winner);
     if (winner.id != 0)
       effect.winnerIsBot(winner);
-    else
+    else {
+      pWin.start(Config.CENTER_X, Config.CENTER_Y - 100, Config.SCL_EFFECT_WIN); //particle
       winner.eftMoneyWinner(game, game.bet.totalMoney);
+    }
   }
 
   private void hideBtnBet() {

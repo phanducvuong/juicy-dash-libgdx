@@ -26,12 +26,20 @@ public class Game {
   private Logic logic;
   private Effect effect;
 
-  public Group gBackground, gCard, gBtn, gAlert, gBot, gEffect, gChip, gStartScene;
+  public Group gBackground,
+          gCard,
+          gBtn,
+          gAlert,
+          gBot,
+          gEffect,
+          gChip,
+          gStartScene,
+          gTest;
 
   public List<Bot> lsBot, lsBotActive; //reset lsBotActive when change numOfPlayer
   public List<Card> lsCardDown, lsCardUp;
   public Bot winner; //set null when player go out startScene screen
-  public int numOfPlayer = 6;
+  public int numOfPlayer = 2;
   public long moneyBet = 10000;
   private long tempMoneyPlayer = 20000;
   public boolean isInGame = false;
@@ -42,6 +50,15 @@ public class Game {
   public Bet bet;
 
   public Game() {
+
+    gBackground = new Group();
+    gBot = new Group();
+    gBtn = new Group();
+    gChip = new Group();
+    gCard = new Group();
+    gEffect = new Group();
+    gAlert = new Group();
+    gStartScene = new Group();
 
     this.lsBotActive = new ArrayList<>();
     this.logic = Logic.getInstance();
@@ -56,8 +73,6 @@ public class Game {
     divideCard = new DivideCard(this);
     gamePlayUI = new GamePlayUI(this);
     bet = new Bet(this);
-
-//    newRound();
 
   }
 
@@ -78,16 +93,7 @@ public class Game {
 
   }
 
-  private void initLayer() {
-
-    gBackground = new Group();
-    gBot = new Group();
-    gBtn = new Group();
-    gChip = new Group();
-    gCard = new Group();
-    gEffect = new Group();
-    gAlert = new Group();
-    gStartScene = new Group();
+  public void initLayer() {
 
     GStage.addToLayer(GLayer.ui, gBackground);
     GStage.addToLayer(GLayer.ui, gBot);
@@ -98,11 +104,19 @@ public class Game {
     GStage.addToLayer(GLayer.ui, gAlert);
     GStage.addToLayer(GLayer.ui, gStartScene);
 
+    gTest = new Group();
+    GStage.addToLayer(GLayer.ui, gTest);
+
   }
 
   public void setData(int numOfPlayer, long moneyBet) {
     this.numOfPlayer = numOfPlayer;
     this.moneyBet = moneyBet;
+
+    for (Bot bot : lsBot) {
+      bot.reset();
+      bot.removeActor();
+    }
 
     gamePlayUI.showBtnNewRound();
     getLsBotActive();

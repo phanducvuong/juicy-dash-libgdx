@@ -1,5 +1,6 @@
 package com.ss.core.effect;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
@@ -44,21 +45,14 @@ public class ParticleEffects extends Actor {
     pe.draw(batch);
   }
 
-  public void start(float x, float y) {
+  public void start(float x, float y, float scl) {
     pe.reset();
     poolEffect = pep.obtain();
+    this.setZIndex(1000);
     setX(x);
     setY(y);
-    this.setZIndex(1000);
+    pe.scaleEffect(scl);
     group.addActor(this);
   }
-
-  public void setScaleEffect(float scaleFactor) {
-      pe.scaleEffect(scaleFactor);
-  }
-
-//  public interface IFinished {
-//    void finished();
-//  }
 
 }

@@ -20,7 +20,7 @@ public class C {
 
     public static class lang {
 
-      private static String idCountry = "";
+      public static String idCountry = "";
       public static I18NBundle locale;
       public static String title = "";
       public static String adsTimeLbl = "";
@@ -89,7 +89,7 @@ public class C {
         no = locale.get("no");
         titleMiniGame = locale.get("title_mini_game");
 
-        if (idCountry.equals("VN"))
+        if (idCountry.equals("vn"))
           tutorial = Strings.tutorialVN;
         else
           tutorial = Strings.tutorialEN;
