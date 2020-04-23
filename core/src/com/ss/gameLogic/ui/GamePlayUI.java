@@ -56,7 +56,7 @@ public class GamePlayUI implements IClickCard {
   private Group gPanelInGame;
   private Image blackPanelInGame;
 
-  public Particle pWin, pAllIn, pUnlock;
+  public Particle pWin, pAllIn, pMoneyWheel;
 
   public GamePlayUI(Game game) {
 
@@ -78,29 +78,27 @@ public class GamePlayUI implements IClickCard {
 
   private void initParticles() {
 
-    String key = "";
     if (C.lang.idCountry.equals("vn"))
-      key = "win_vn";
+      pWin = new Particle(game.gEffect, Gdx.files.internal("particles/win_vn"));
     else
-      key = "win_en";
-    pWin = new Particle(game.gEffect, Gdx.files.internal("particles/win"), key);
+      pWin = new Particle(game.gEffect, Gdx.files.internal("particles/win_en"));
 
     pAllIn = new Particle(game.gEffect, Gdx.files.internal("particles/all_in"));
 
-    pUnlock = new Particle(game.gTest, Gdx.files.internal("particles/unlock"));
+    pMoneyWheel = new Particle(game.gTest, Gdx.files.internal("particles/money_wheel"));
 
-    Image test = GUI.createImage(GMain.liengAtlas, "btn_x");
-    game.gTest.addActor(test);
-    test.addListener(new ClickListener() {
-
-      @Override
-      public void clicked(InputEvent event, float x, float y) {
-        super.clicked(event, x, y);
-
-        pUnlock.start(500, 500, 2f);
-
-      }
-    });
+//    Image test = GUI.createImage(GMain.liengAtlas, "btn_x");
+//    game.gTest.addActor(test);
+//    test.addListener(new ClickListener() {
+//
+//      @Override
+//      public void clicked(InputEvent event, float x, float y) {
+//        super.clicked(event, x, y);
+//
+//        pMoneyWheel.start(500, 500, 1f);
+//
+//      }
+//    });
 
   }
 

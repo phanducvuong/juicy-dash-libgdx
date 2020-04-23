@@ -1,8 +1,10 @@
 package com.ss.gameLogic.ui;
 
 import com.badlogic.gdx.Gdx;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -12,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
@@ -27,7 +30,6 @@ import com.ss.gameLogic.config.C;
 import com.ss.gameLogic.config.Config;
 import com.ss.gameLogic.config.Strings;
 import com.ss.gameLogic.effects.Effect;
-import com.ss.gameLogic.effects.Particle;
 import com.ss.gameLogic.logic.Logic;
 import com.ss.gameLogic.objects.Button;
 import com.ss.gameLogic.objects.WheelMiniGame;
@@ -60,7 +62,7 @@ public class StartScene {
   private Group gMiniGame;
   private Image blackMiniGame, btnXMiniGame;
   private int countSpin = 0;
-  private Label lbMoneySpin;
+  private Label lbMoneySpin, lbTitle;
 
   private Group gRank;
   private Image blackRank, btnXRank;
@@ -95,6 +97,28 @@ public class StartScene {
     handleClickIcon();
 
     setMoneyForLb();
+
+    testBitmap();
+
+  }
+
+  private void testBitmap() {
+
+    BitmapFont bitmap = Config.ALERT_FONT;
+    BitmapFont.Glyph glyph = bitmap.getData().getGlyph('A');
+    Sprite s = new Sprite(bitmap.getRegion().getTexture(), glyph.srcX, glyph.srcY, glyph.width, glyph.height);
+    s.flip(false, true);
+
+//    System.out.println(glyph.srcX + "  " + glyph.srcY + "  " + glyph.width + "  " + glyph.height);
+
+    System.out.println(bitmap.getRegion().getRegionX() + " " +
+            bitmap.getRegion().getRegionX() + " " +
+            bitmap.getRegion().getRegionWidth() + " " +
+            bitmap.getRegion().getRegionHeight());
+
+    Image i = new Image(s);
+
+    game.gTest.addActor(i);
 
   }
 
@@ -235,30 +259,139 @@ public class StartScene {
       wheel.setPosition(GStage.getWorldWidth()/2 - wheel.getWidth()/2, GStage.getWorldHeight()/2 - wheel.getHeight()/2 + 30);
       wheel.addToScene(gMiniGame);
 
-      lbMoneySpin = new Label("Bạn nhận được: ", new Label.LabelStyle(Config.PLUS_MONEY_FONT, null));
-      lbMoneySpin.setAlignment(Align.center);
-      lbMoneySpin.setPosition(GStage.getWorldWidth()/2 - lbMoneySpin.getWidth()/2,
-                              GStage.getWorldHeight() - lbMoneySpin.getHeight() - 50);
+      Group gLbMoneyWheel = new Group();
 
+      lbMoneySpin = new Label("Bạn nhận được: ", new Label.LabelStyle(Config.PLUS_MONEY_FONT, null));
+      lbMoneySpin.setFontScale(1.5f);
+      lbMoneySpin.setAlignment(Align.center);
+//      lbMoneySpin.setPosition(GStage.getWorldWidth()/2 - lbMoneySpin.getWidth()/2,
+//                              GStage.getWorldHeight()/2 - lbMoneySpin.getHeight()/2);
+
+      int tempCount = Config.SPIN_TIME - countSpin;
+      Label lbRemain = new Label(C.lang.remain + " " + tempCount, new Label.LabelStyle(Config.ALERT_FONT, null));
+      lbRemain.setAlignment(Align.center);
+      lbRemain.setFontScale(.7f);
+      lbRemain.setPosition(Config.CENTER_X - lbRemain.getWidth()/2,
+                              GStage.getWorldHeight() - lbRemain.getHeight() - 50);
+      gMiniGame.addActor(lbRemain);
+
+      gLbMoneyWheel.addActor(lbMoneySpin);
+      gLbMoneyWheel.setSize(lbMoneySpin.getWidth(), lbMoneySpin.getHeight());
+      gLbMoneyWheel.setOrigin(Align.center);
+      gLbMoneyWheel.setPosition(GStage.getWorldWidth()/2 - lbMoneySpin.getWidth()/2,
+              GStage.getWorldHeight()/2 - lbMoneySpin.getHeight()/2);
+      gLbMoneyWheel.setScale(0);
+
+      //label: panel ads to get countSpin
+      Group gAdsSpin = new Group();
+      Image panel = GUI.createImage(GMain.liengAtlas, "panel_ads");
+      gAdsSpin.setSize(panel.getWidth(), panel.getHeight());
+      gAdsSpin.setOrigin(Align.center);
+      gAdsSpin.setPosition(Config.CENTER_X - gAdsSpin.getWidth()/2, Config.CENTER_Y - gAdsSpin.getHeight()/2);
+      gAdsSpin.addActor(panel);
+
+      Label lbAds = new Label(C.lang.timeSpinWheelAds, new Label.LabelStyle(Config.ALERT_FONT, null));
+      lbAds.setAlignment(Align.center);
+      lbAds.setFontScale(.8f);
+      lbAds.setPosition(gAdsSpin.getWidth()/2 - lbAds.getWidth()/2,
+              gAdsSpin.getHeight()/2 - lbAds.getHeight()/2 - 170);
+      gAdsSpin.addActor(lbAds);
+
+      Button btnGet = new Button(GMain.startSceneAtlas, "btn_get", C.lang.yes, Config.ALERT_FONT);
+      btnGet.setFontScale(.6f, .6f);
+      btnGet.setPosition(gAdsSpin.getWidth()/2 - btnGet.getWidth()/2,
+              gAdsSpin.getHeight() - btnGet.getHeight() - 10);
+      btnGet.moveByLb(0, -5);
+      btnGet.addToGroup(gAdsSpin);
+
+      Image btnXAdsSpin = GUI.createImage(GMain.liengAtlas, "btn_x");
+      btnXAdsSpin.setPosition(panel.getX() + panel.getWidth() - btnXAdsSpin.getWidth()/2,
+              panel.getX() - btnXAdsSpin.getHeight()/2);
+      btnXAdsSpin.setOrigin(Align.center);
+      gAdsSpin.addActor(btnXAdsSpin);
+
+      gAdsSpin.setScale(0); //scale group parent
+
+      //label: add listener
+      btnGet.addListener(new ClickListener() {
+        @Override
+        public void clicked(InputEvent event, float x, float y) {
+          super.clicked(event, x, y);
+
+          //todo: check ads in platform, visible lbtitle, lbRemain, enable btnXMiniGame
+          Runnable run = () -> {
+
+            btnGet.setTouchable(Touchable.enabled);
+
+          };
+
+          btnGet.setTouchable(Touchable.disabled);
+          effect.click(btnGet, run);
+
+        }
+      });
+
+      btnXAdsSpin.addListener(new ClickListener() {
+        @Override
+        public void clicked(InputEvent event, float x, float y) {
+          super.clicked(event, x, y);
+
+          lbTitle.setVisible(true);
+          lbRemain.setVisible(true);
+
+          effect.sclMaxToMin(gAdsSpin, () -> btnXMiniGame.setTouchable(Touchable.enabled));
+
+        }
+      });
+
+      //label: drag listener wheel
       wheel.addListener(new Wheel.EventListener() {
         @Override
         public boolean start() {
+
           countSpin += 1;
           if (countSpin <= Config.SPIN_TIME) {
+
+            int t = Config.SPIN_TIME - countSpin;
+            lbRemain.setText(C.lang.remain + " " + t);
             btnXMiniGame.setTouchable(Touchable.disabled);
             return true;
+
           }
-          else
+          else {
+
+            lbRemain.setText(C.lang.remain + " " + 0);
+            lbTitle.setVisible(false);
+            lbRemain.setVisible(false);
+            btnXMiniGame.setTouchable(Touchable.disabled);
+
+            gMiniGame.addActor(gAdsSpin);
+            effect.sclMinToMax(gAdsSpin);
+
             return false;
+          }
         }
 
         @Override
         public void end(Wheel.WheelItem item) {
 
+          effect.sclMinToMax(gLbMoneyWheel);
+          game.gamePlayUI.pMoneyWheel.start(Config.CENTER_X, Config.CENTER_Y, .8f);
+
           btnXMiniGame.setTouchable(Touchable.enabled);
           String money = Logic.getInstance().convertMoneyBet(item.getQty());
           lbMoneySpin.setText("+" + money);
-          gMiniGame.addActor(lbMoneySpin);
+          gMiniGame.addActor(gLbMoneyWheel);
+
+          game.gEffect.addAction(
+                  sequence(
+                          delay(3f),
+                          run(() -> {
+                            game.gamePlayUI.pMoneyWheel.remove();
+                            effect.sclMaxToMin(gLbMoneyWheel, () -> {});
+                          })
+                  )
+          );
 
         }
 
@@ -285,7 +418,7 @@ public class StartScene {
 
     initWheel();
 
-    Label lbTitle = new Label(C.lang.titleMiniGame, new Label.LabelStyle(Config.ALERT_FONT, null));
+    lbTitle = new Label(C.lang.titleMiniGame, new Label.LabelStyle(Config.ALERT_FONT, null));
     lbTitle.setFontScale(.8f);
     lbTitle.setAlignment(Align.center);
     lbTitle.setPosition(gMiniGame.getWidth()/2 - lbTitle.getWidth()/2, 20);
@@ -303,6 +436,7 @@ public class StartScene {
       public void clicked(InputEvent event, float x, float y) {
         super.clicked(event, x, y);
 
+        game.gamePlayUI.pMoneyWheel.remove(); //remove particle
         effect.zoomOut(gMiniGame, 2f, 2f, () -> {
           blackMiniGame.remove();
           gMiniGame.remove();
@@ -1160,7 +1294,7 @@ public class StartScene {
 
   private void resetPosLbMoneySpin() {
     lbMoneySpin.setPosition(GStage.getWorldWidth()/2 - lbMoneySpin.getWidth()/2,
-            GStage.getWorldHeight() - lbMoneySpin.getHeight() - 50);
+            GStage.getWorldHeight()/2 - lbMoneySpin.getHeight()/2);
   }
 
 }

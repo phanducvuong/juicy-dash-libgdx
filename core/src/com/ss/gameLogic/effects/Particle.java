@@ -12,19 +12,6 @@ public class Particle {
   public boolean isAlive = false;
   private ParticleEffects particle;
 
-  public Particle(Group group, FileHandle fileHandle, String key) {
-
-    ParticleEffect pe = new ParticleEffect();
-
-    if (GMain.particleAtlas.findRegion(key) != null)
-      GMain.particleAtlas.findRegion(key).name = key.split("_")[0];
-    pe.load(fileHandle, GMain.particleAtlas);
-
-    ParticleEffectPool pep = new ParticleEffectPool(pe, 0, 100);
-    particle = new ParticleEffects(group, pep, pe);
-
-  }
-
   public Particle(Group group, FileHandle fileHandle) {
 
     ParticleEffect pe = new ParticleEffect();
@@ -40,6 +27,10 @@ public class Particle {
     isAlive = true;
     particle.start(x, y,sclEffect);
 
+  }
+
+  public void remove() {
+    particle.remove();
   }
 
 }

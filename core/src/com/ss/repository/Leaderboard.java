@@ -130,15 +130,6 @@ public class Leaderboard extends GScreen {
 
   }
 
-//  private float acc = 0;
-//  @Override
-//  public void render(float var1) {
-//    super.render(var1);
-//    acc+=Gdx.graphics.getDeltaTime();
-//    if (acc >= 2)
-//      setScreen(screenService.backScreen());
-//  }
-
   @Override
   public void init() {
     //Level.loadData();

@@ -6,7 +6,7 @@ filter: Nearest,Nearest
 repeat: none
 arrow_left
   rotate: false
-  xy: 425, 33
+  xy: 1959, 106
   size: 38, 49
   orig: 38, 49
   offset: 0, 0
@@ -65,13 +65,6 @@ bg_start_game
   xy: 2, 545
   size: 1280, 720
   orig: 1280, 720
-  offset: 0, 0
-  index: -1
-btn_get
-  rotate: false
-  xy: 1823, 67
-  size: 176, 88
-  orig: 176, 88
   offset: 0, 0
   index: -1
 btn_other_game
@@ -144,6 +137,13 @@ icon_rank_1
   orig: 134, 134
   offset: 0, 0
   index: -1
+icon_rank_3
+  rotate: false
+  xy: 1823, 21
+  size: 134, 134
+  orig: 134, 134
+  offset: 0, 0
+  index: -1
 icon_tutorial
   rotate: false
   xy: 1082, 15
@@ -199,65 +199,65 @@ bg_cross_panel
   orig: 902, 507
   offset: 0, 0
   index: -1
+btn_get
+  rotate: false
+  xy: 906, 396
+  size: 255, 113
+  orig: 255, 113
+  offset: 0, 0
+  index: -1
 flare
   rotate: false
-  xy: 1080, 167
+  xy: 1337, 341
   size: 162, 168
   orig: 162, 168
   offset: 0, 0
   index: -1
 icon_btn_rank
   rotate: false
-  xy: 1526, 375
+  xy: 1773, 375
   size: 128, 134
   orig: 128, 134
   offset: 0, 0
   index: -1
 icon_rank_2
   rotate: false
-  xy: 906, 27
-  size: 134, 134
-  orig: 134, 134
-  offset: 0, 0
-  index: -1
-icon_rank_3
-  rotate: false
-  xy: 1390, 375
+  xy: 1501, 375
   size: 134, 134
   orig: 134, 134
   offset: 0, 0
   index: -1
 icon_rank_4
   rotate: false
-  xy: 1254, 375
+  xy: 1637, 375
   size: 134, 134
   orig: 134, 134
   offset: 0, 0
   index: -1
 icon_setting
   rotate: false
-  xy: 1656, 417
+  xy: 1903, 417
   size: 92, 92
   orig: 92, 92
   offset: 0, 0
   index: -1
 music_off
   rotate: false
-  xy: 906, 337
+  xy: 906, 48
   size: 172, 172
   orig: 172, 172
   offset: 0, 0
   index: -1
 music_on
   rotate: false
-  xy: 1080, 337
+  xy: 1163, 337
   size: 172, 172
   orig: 172, 172
   offset: 0, 0
   index: -1
 sound_off
   rotate: false
-  xy: 906, 163
+  xy: 906, 222
   size: 172, 172
   orig: 172, 172
   offset: 0, 0

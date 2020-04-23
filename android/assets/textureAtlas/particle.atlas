@@ -6,70 +6,84 @@ filter: Nearest,Nearest
 repeat: none
 006
   rotate: false
-  xy: 1392, 394
+  xy: 132, 135
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 034
   rotate: false
-  xy: 1479, 590
+  xy: 1479, 691
   size: 508, 21
   orig: 508, 21
   offset: 0, 0
   index: -1
+043
+  rotate: false
+  xy: 1134, 429
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
 all_in
   rotate: false
-  xy: 2, 428
+  xy: 2, 529
   size: 1475, 183
   orig: 1475, 183
   offset: 0, 0
   index: -1
 coin
   rotate: false
-  xy: 1479, 553
+  xy: 2, 2
   size: 33, 35
   orig: 33, 35
   offset: 0, 0
   index: -1
 guankashengli02
   rotate: false
-  xy: 1084, 168
+  xy: 1084, 269
   size: 21, 78
   orig: 21, 78
   offset: 0, 0
   index: -1
 guankashengli03
   rotate: false
-  xy: 2, 2
+  xy: 1479, 625
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 guankashengli04
   rotate: false
-  xy: 1134, 360
+  xy: 1392, 495
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 guankashengli06
   rotate: false
-  xy: 1134, 394
+  xy: 1134, 495
   size: 256, 32
   orig: 256, 32
   offset: 0, 0
   index: -1
+spark-alt2
+  rotate: false
+  xy: 2, 39
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
 win_en
   rotate: false
-  xy: 2, 248
+  xy: 2, 349
   size: 1130, 178
   orig: 1130, 178
   offset: 0, 0
   index: -1
 win_vn
   rotate: false
-  xy: 2, 68
+  xy: 2, 169
   size: 1080, 178
   orig: 1080, 178
   offset: 0, 0

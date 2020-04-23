@@ -98,6 +98,10 @@ public class WheelMiniGame {
     gParent.addActor(Wheel.inst());
   }
 
+  public void setColor(Color color) {
+    Wheel.inst().setColor(color);
+  }
+
   public void addListener(Wheel.EventListener eventListener) {
     Wheel.inst().setWheelListener(eventListener);
   }

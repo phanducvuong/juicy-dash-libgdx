@@ -67,6 +67,7 @@ public class LDBFactory {
     public GScreen backScreen() {
       return GMain.gameScene;
     }
+
   }
 
   private static class RService implements Leaderboard.RankingService {
@@ -80,5 +81,6 @@ public class LDBFactory {
     public int getCurrentScore(int rank) {
       return 100000;
     }
+
   }
 }
