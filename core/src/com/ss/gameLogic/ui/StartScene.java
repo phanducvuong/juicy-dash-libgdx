@@ -18,6 +18,7 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
+import com.platform.IPlatform;
 import com.ss.GMain;
 import com.ss.HTTPAssetLoader;
 import com.ss.core.effect.SoundEffects;
@@ -43,6 +44,7 @@ public class StartScene {
 
   private Effect effect;
   private Game game;
+  private IPlatform plf = GMain.platform;
   private Group gParent, gStartScene;
 
   private Group gBtnStart, gBtnRank, gBtnOtherGame;
@@ -98,27 +100,30 @@ public class StartScene {
 
     setMoneyForLb();
 
-    testBitmap();
+//    testBitmap();
+
+    int idNotify = plf.GetNotifyId();
+    //todo: show panel reward when come back game
 
   }
 
   private void testBitmap() {
 
-    BitmapFont bitmap = Config.ALERT_FONT;
-    BitmapFont.Glyph glyph = bitmap.getData().getGlyph('A');
-    Sprite s = new Sprite(bitmap.getRegion().getTexture(), glyph.srcX, glyph.srcY, glyph.width, glyph.height);
-    s.flip(false, true);
-
+//    BitmapFont bitmap = Config.ALERT_FONT;
+//    BitmapFont.Glyph glyph = bitmap.getData().getGlyph('A');
+//    Sprite s = new Sprite(bitmap.getRegion().getTexture(), glyph.srcX, glyph.srcY, glyph.width, glyph.height);
+//    s.flip(false, true);
+//
 //    System.out.println(glyph.srcX + "  " + glyph.srcY + "  " + glyph.width + "  " + glyph.height);
-
-    System.out.println(bitmap.getRegion().getRegionX() + " " +
-            bitmap.getRegion().getRegionX() + " " +
-            bitmap.getRegion().getRegionWidth() + " " +
-            bitmap.getRegion().getRegionHeight());
-
-    Image i = new Image(s);
-
-    game.gTest.addActor(i);
+//
+//    System.out.println(bitmap.getRegion().getRegionX() + " " +
+//            bitmap.getRegion().getRegionX() + " " +
+//            bitmap.getRegion().getRegionWidth() + " " +
+//            bitmap.getRegion().getRegionHeight());
+//
+//    Image i = new Image(s);
+//
+//    game.gTest.addActor(i);
 
   }
 
@@ -322,6 +327,20 @@ public class StartScene {
           Runnable run = () -> {
 
             btnGet.setTouchable(Touchable.enabled);
+            if (plf.isVideoRewardReady())
+              plf.ShowVideoReward((boolean success) -> {
+
+                if (success) {
+                  lbRemain.setText(C.lang.remain + " " + Config.SPIN_TIME_ADS);
+                  countSpin -= Config.SPIN_TIME_ADS;
+
+                  lbTitle.setVisible(true);
+                  lbRemain.setVisible(true);
+
+                  effect.sclMaxToMin(gAdsSpin, () -> btnXMiniGame.setTouchable(Touchable.enabled));
+                }
+
+              });
 
           };
 
@@ -360,6 +379,8 @@ public class StartScene {
           }
           else {
 
+            countSpin = Config.SPIN_TIME;
+
             lbRemain.setText(C.lang.remain + " " + 0);
             lbTitle.setVisible(false);
             lbRemain.setVisible(false);
@@ -377,6 +398,11 @@ public class StartScene {
 
           effect.sclMinToMax(gLbMoneyWheel);
           game.gamePlayUI.pMoneyWheel.start(Config.CENTER_X, Config.CENTER_Y, .8f);
+
+          //save money
+          long moneyy = GMain.pref.getLong("money");
+          moneyy += item.getQty();
+          Logic.getInstance().saveMoney(moneyy);
 
           btnXMiniGame.setTouchable(Touchable.enabled);
           String money = Logic.getInstance().convertMoneyBet(item.getQty());
@@ -1089,15 +1115,15 @@ public class StartScene {
 
         Runnable run = () -> {
 
-//          gBtnRank.setTouchable(Touchable.enabled);
-//          effect.zoomIn(gRank, 1f, 1f);
+          gBtnRank.setTouchable(Touchable.enabled);
           GMain.inst.setScreen(LDBFactory.getLDB());
+
         };
 
         gBtnRank.setTouchable(Touchable.disabled);
-        gStartScene.addActor(blackRank);
-        gStartScene.addActor(btnXRank);
-        gStartScene.addActor(gRank);
+//        gStartScene.addActor(blackRank);
+//        gStartScene.addActor(btnXRank);
+//        gStartScene.addActor(gRank);
         effect.click(gBtnRank, run);
 
       }
@@ -1146,6 +1172,7 @@ public class StartScene {
         };
 
         btnStartPanelBet.setTouchable(Touchable.disabled);
+        game.gamePlayUI.addToScene();
         effect.click(btnStartPanelBet, run);
 
       }

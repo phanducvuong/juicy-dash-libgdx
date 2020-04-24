@@ -1,6 +1,5 @@
 package com.ss.gameLogic.logic;
 
-import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.math.Vector2;
 import com.ss.GMain;
 import com.ss.gameLogic.Game;
@@ -249,8 +248,10 @@ public class Logic {
   }
 
   public void chkMoneyBot(Bot bot, long moneyBet, long moneyRnd) {
-    if (bot.getTotalMoney() < moneyBet)
-      bot.setTotalMoney(initMoneyBot(moneyRnd));
+    if (bot.getTotalMoney() < moneyBet) {
+      bot.setTotalMoney(initMoneyBot(moneyRnd, moneyBet));
+      bot.changeAvatar(game);
+    }
   }
 
   public int countBotAlive(List<Bot> lsBot) {
@@ -263,11 +264,13 @@ public class Logic {
 
   }
 
-  public long initMoneyBot(long moneyPlayer) {
+  public long initMoneyBot(long moneyPlayer, long moneyBet) {
     float rnd = (float) Math.round(Math.random() * 10000)/10000;
     long tempMoney = (long) (moneyPlayer * 10 * rnd)/1000;
     tempMoney = tempMoney*1000;
-    return tempMoney <= moneyPlayer ? moneyPlayer*2 : tempMoney;
+    return tempMoney <= moneyPlayer ?
+           moneyPlayer == 0 ? (moneyBet * 3) : (moneyPlayer*2 + moneyBet)
+           : (tempMoney + moneyBet);
   }
 
   public long rndMoneyTo(long moneyBot) {
@@ -402,7 +405,7 @@ public class Logic {
 
   private List<Chip> creatImgChip(long countChip, int type, Vector2 pos) {
 
-    countChip = countChip >= 10 ? 9 : countChip;
+    countChip = countChip >= 4 ? 3 : countChip;
     List<Chip> tempLsChip = new ArrayList<>();
 
     for (int i=0; i<countChip; i++) {

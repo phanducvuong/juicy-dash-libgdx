@@ -29,8 +29,10 @@ public class GMain extends GDirectedGame {
 
   public static IPlatform platform;
   public static GMain inst;
-  public GMain(IPlatform plat){
+
+  public GMain(IPlatform plat) {
     platform = plat;
+    inst = this;
   }
 
   private void init() {
@@ -80,7 +82,7 @@ public class GMain extends GDirectedGame {
   }
 
   private void initLocalNotification(){
-    platform.SetDailyNotification(1, "Lieng 2020", "Bam vao nhan duoc bao nhieu tien", 1, 18);
+    platform.SetDailyNotification(1, "Liêng 2020", "Bam vao nhan duoc bao nhieu tien", 1, 18);
     //platform.SetDailyNotification(3, "Lieng 2020", "Bam vao nhan duoc bao nhieu tien", 3, 18);
     //platform.SetDailyNotification(7, "Lieng 2020", "Bam vao nhan duoc bao nhieu tien", 7, 18);
 
@@ -90,7 +92,9 @@ public class GMain extends GDirectedGame {
     } else if(noId == 1){
       //thuong
     }
+
   }
+
   public void dispose() {
     GMain.platform.log("############## gmain dispose");
     GParticleSystem.saveAllFreeMin();

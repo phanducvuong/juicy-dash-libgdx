@@ -227,6 +227,59 @@ public class Effect {
 
   }
 
+  public void changeAvatarBot(Bot bot) {
+
+    int id = bot.id;
+    Image   avatar = bot.avatar,
+            bgInfo = bot.bgInfo;
+    Label   lbMoney = bot.lbTotalMoney,
+            lbName = bot.lbNamePlayer;
+
+    switch (id) {
+
+      case 1: case 2:
+        moveByXY(avatar, 200, 0, bot::getNewAvatar);
+        moveByXY(bgInfo, 200, 0, () -> {});
+        moveByXY(lbMoney, 200, 0, () -> {});
+        moveByXY(lbName, 200, 0, () -> {});
+        break;
+      case 3:
+        moveByXY(avatar, 0, -200, bot::getNewAvatar);
+        moveByXY(bgInfo, 0, -200, () -> {});
+        moveByXY(lbMoney, 0, -200, () -> {});
+        moveByXY(lbName, 0, -200, () -> {});
+        break;
+      case 4: case 5:
+        moveByXY(avatar, -200, 0, bot::getNewAvatar);
+        moveByXY(bgInfo, -200, 0, () -> {});
+        moveByXY(lbMoney, -200, 0, () -> {});
+        moveByXY(lbName, -200, 0, () -> {});
+        break;
+
+    }
+
+  }
+
+  private void moveByXY(Image img, float x, float y, Runnable onComplete) {
+    img.addAction(
+            sequence(
+                    moveBy(x, y, .15f, fastSlow),
+                    run(onComplete),
+                    moveBy(-x, -y, .35f, fastSlow)
+            )
+    );
+  }
+
+  private void moveByXY(Label lb, float x, float y, Runnable onComplete) {
+    lb.addAction(
+            sequence(
+                    moveBy(x, y, .15f, fastSlow),
+                    run(onComplete),
+                    moveBy(-x, -y, .35f, fastSlow)
+            )
+    );
+  }
+
   public void moveCardResidual(Card card, int index, Runnable onComplete) {
     card.getCard().addAction(
             parallel(

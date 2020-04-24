@@ -268,6 +268,8 @@ public class Bet {
     botPresent = null;
     totalMoney = 0;
     idBotKeepMaxMoneyTo = -1;
+    turn = -1;
+    game.gBot.clearActions();
 
   }
 

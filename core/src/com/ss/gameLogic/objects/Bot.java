@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.ss.GMain;
 import com.ss.core.util.GUI;
@@ -24,7 +25,7 @@ public class Bot {
 
   private boolean isActive = false, isAlive = false;
   public boolean isStartBet = false;
-  public int id; //position bot
+  public int id, idAvatar; //position bot
   public int idRule = -1; //-1 special else point of desk
   private long totalMoney = 0, totalMoneyBet = 0;
 
@@ -32,7 +33,7 @@ public class Bot {
   public Vector2 posChipOut, posChipReceive;
 
   private Group gBot, gEffect;
-  private Label lbTotalMoney, lbNamePlayer;
+  public Label lbTotalMoney, lbNamePlayer;
   public Image avatar, bgInfo;
 
   private Image bgBetCondition;
@@ -45,6 +46,7 @@ public class Bot {
     this.gBot = gBot;
     this.gEffect = gEffect;
     this.id = id;
+    this.idAvatar = id + 7;
     this.lsCardDown = new ArrayList<>();
     this.lsCardUp = new ArrayList<>();
     this.lsChip = new ArrayList<>();
@@ -70,7 +72,9 @@ public class Bot {
     else
       bgInfo.setPosition(pos.x - 100, pos.y + 70);
 
-    avatar = GUI.createImage(GMain.liengAtlas, "avatar");
+    int temp = id + 1;
+    avatar = GUI.createImage(GMain.liengAtlas, "bot" + temp);
+    avatar.setName(id+"");
     avatar.setOrigin(Align.center);
     if (id == 0) {
       avatar.setScale(1.3f);
@@ -154,6 +158,24 @@ public class Bot {
               avatar.getY() + avatar.getHeight()/2 - lbMoneyChange.getHeight()/2);
     }
 
+  }
+
+  public void changeAvatar(Game game) {
+    //todo: sound change bot
+    reset();
+    Effect.getInstance(game).changeAvatarBot(this);
+  }
+
+  public void getNewAvatar() {
+    if (avatar.getName().equals(id+"")) {
+      avatar.setDrawable(new TextureRegionDrawable(GMain.liengAtlas.findRegion("bot" + idAvatar)));
+      avatar.setName(idAvatar + "");
+    }
+    else {
+      int t = id + 1;
+      avatar.setDrawable(new TextureRegionDrawable(GMain.liengAtlas.findRegion("bot" + t)));
+      avatar.setName(id + "");
+    }
   }
 
   public void eftLbMoneyChange(Game game, long moneyChange) {
@@ -247,6 +269,8 @@ public class Bot {
     hideConditionBet();
     lbConditionBet.setText(C.lang.allIn);
     lbConditionBet.setVisible(true);
+    lbConditionBet.setZIndex(1000);
+
   }
 
   public void THEO(long money) {
@@ -259,6 +283,7 @@ public class Bot {
     hideConditionBet();
     lbConditionBet.setText(C.lang.call);
     lbConditionBet.setVisible(true);
+    lbConditionBet.setZIndex(1000);
 
     logic.getPosChipBuyBot(this);
     logic.calculateChip(lsChip, money, posChipOut);
@@ -318,6 +343,7 @@ public class Bot {
 
     lbConditionBet.setText(C.lang.raise);
     lbConditionBet.setVisible(true);
+    lbConditionBet.setZIndex(1000);
 
     lbMoneyBet.setText(logic.convertMoneyBot(moneyBet));
     lbMoneyBet.setVisible(true);

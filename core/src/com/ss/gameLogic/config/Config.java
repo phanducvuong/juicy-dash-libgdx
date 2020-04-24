@@ -35,12 +35,13 @@ public class Config {
   public static final BitmapFont PLUS_MONEY_FONT = GAssetsManager.getBitmapFont("plus_money_font.fnt");
   public static final BitmapFont ALERT_FONT = GAssetsManager.getBitmapFont("alert_font.fnt");
   public static final BitmapFont TUTORIAL = GAssetsManager.getBitmapFont("tutorial_font.fnt");
+  public static final BitmapFont RANK_FONT = GAssetsManager.getBitmapFont("rank_font.fnt");
 
   public static final Vector2 POS_DESK_RESIDUAL = new Vector2(100, 1070);
   public static final Vector2 POS_BOT_0 = new Vector2(GStage.getWorldWidth()/2 - 170, GStage.getWorldHeight() - 200);
   public static final Vector2 POS_BOT_1 = new Vector2(GStage.getWorldWidth() - 270, GStage.getWorldHeight()/2 + 10);
   public static final Vector2 POS_BOT_2 = new Vector2(GStage.getWorldWidth() - 310, GStage.getWorldHeight()/2 - 200);
-  public static final Vector2 POS_BOT_3 = new Vector2(GStage.getWorldWidth()/2 - 30, 30);
+  public static final Vector2 POS_BOT_3 = new Vector2(GStage.getWorldWidth()/2 - 30, 40);
   public static final Vector2 POS_BOT_4 = new Vector2(180, POS_BOT_2.y);
   public static final Vector2 POS_BOT_5 = new Vector2(POS_BOT_4.x - 45, POS_BOT_1.y);
 

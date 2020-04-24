@@ -8,6 +8,7 @@ import com.ss.core.util.GLayer;
 import com.ss.core.util.GStage;
 import com.ss.gameLogic.card.Number;
 import com.ss.gameLogic.card.Type;
+import com.ss.gameLogic.config.C;
 import com.ss.gameLogic.effects.Effect;
 import com.ss.gameLogic.logic.Bet;
 import com.ss.gameLogic.logic.DivideCard;
@@ -100,9 +101,9 @@ public class Game {
     GStage.addToLayer(GLayer.ui, gChip);
     GStage.addToLayer(GLayer.ui, gCard);
     GStage.addToLayer(GLayer.ui, gBtn);
+    GStage.addToLayer(GLayer.ui, gStartScene);
     GStage.addToLayer(GLayer.ui, gEffect);
     GStage.addToLayer(GLayer.ui, gAlert);
-    GStage.addToLayer(GLayer.ui, gStartScene);
 
     gTest = new Group();
     GStage.addToLayer(GLayer.ui, gTest);
@@ -118,6 +119,7 @@ public class Game {
       bot.removeActor();
     }
 
+    gamePlayUI.lbMoneyBetInGame.setText(C.lang.bet + ": " + logic.convertMoneyBet(moneyBet));
     gamePlayUI.showBtnNewRound();
     getLsBotActive();
   }
@@ -163,7 +165,7 @@ public class Game {
       if (lsBotActive.indexOf(bot) == 0)
         bot.setTotalMoney(GMain.pref.getLong("money"));
       else
-        bot.setTotalMoney(logic.initMoneyBot(lsBotActive.get(0).getTotalMoney()));
+        bot.setTotalMoney(logic.initMoneyBot(lsBotActive.get(0).getTotalMoney(), moneyBet));
       bot.setAlive(true);
       bot.setActive(true);
       bot.addToScene();
@@ -253,6 +255,7 @@ public class Game {
     winner = Rule.getInstance().getBotWinner(tempLsBot);
     tempLsBot.remove(winner);
 
+    //if money bot is < money bet or == 0 => new bot
     gBot.addAction(
             sequence(
                     delay(1f),
@@ -284,6 +287,7 @@ public class Game {
       winner.hideConditionBet();
       gamePlayUI.showCardWinner(winner);
       gamePlayUI.showBannerWin(winner);
+
     }
 
     //todo: show bot win
