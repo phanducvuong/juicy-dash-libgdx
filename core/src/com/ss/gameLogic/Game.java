@@ -185,8 +185,6 @@ public class Game {
       divideCard.setTurn(lsBotActive.indexOf(winner));
 
     for (Bot bot : lsBotActive) {
-      if (lsBotActive.indexOf(bot) != 0)
-        logic.chkMoneyBot(bot, moneyBet, tempMoneyPlayer);
       bot.reset();
       bot.setTotalMoneyBet(moneyBet);
     }
@@ -287,7 +285,6 @@ public class Game {
       winner.hideConditionBet();
       gamePlayUI.showCardWinner(winner);
       gamePlayUI.showBannerWin(winner);
-
     }
 
     //todo: show bot win

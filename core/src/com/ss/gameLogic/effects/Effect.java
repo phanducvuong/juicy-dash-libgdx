@@ -129,8 +129,10 @@ public class Effect {
                       run(() -> showAllCard(cardDown, cardUp, .8f, .8f)),
                       run(() -> {
                         int i = bot.lsCardDown.indexOf(cardDown);
-                        if (i == bot.lsCardDown.size() - 1)
+                        if (i == bot.lsCardDown.size() - 1) {
                           bot.eftMoneyWinner(game, game.bet.totalMoney);
+                          logic.chkMoneyBotIsZero(game.lsBotActive, game.moneyBet, game.lsBot.get(0).getTotalMoney());
+                        }
                       })
               )
       );

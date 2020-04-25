@@ -14,6 +14,7 @@ public class C {
         public static long moneyAds = Config.MONEY_ADS;
         public static long minusMoney = Config.MINUS_MONEY_EXIT_GAME;
         public static long spinAdsTime = Config.SPIN_TIME_ADS;
+        public static long moneyBigWin = Config.REWARD_BIG_WIN;
         static void initRemoteConfig() {
 
         }
@@ -52,6 +53,7 @@ public class C {
       public static String titleMiniGame = "";
       public static String remain = "";
       public static String timeSpinWheelAds = "";
+      public static String moneyBigWin = "";
 
       static void initLocalize() {
         FileHandle specFilehandle = Gdx.files.internal("i18n/lang_" + "id");
@@ -101,6 +103,7 @@ public class C {
         adsOutOfMoney = locale.format("out_of_money", remote.moneyAds);
         notifyExitGame = locale.format("notify_exit_game", remote.minusMoney);
         timeSpinWheelAds = locale.format("time_spin_wheel_ads", remote.spinAdsTime);
+        moneyBigWin = locale.format("money_big_win", remote.moneyBigWin);
 
       }
     }

@@ -250,8 +250,17 @@ public class Logic {
   public void chkMoneyBot(Bot bot, long moneyBet, long moneyRnd) {
     if (bot.getTotalMoney() < moneyBet) {
       bot.setTotalMoney(initMoneyBot(moneyRnd, moneyBet));
+      bot.convertTotalMoneyToString();
       bot.changeAvatar(game);
     }
+  }
+
+  public void chkMoneyBotIsZero(List<Bot> lsBot, long moneyBet, long moneyPlayer) {
+
+    for (Bot bot : lsBot)
+      if (bot.id != 0)
+        chkMoneyBot(bot, moneyBet, moneyPlayer);
+
   }
 
   public int countBotAlive(List<Bot> lsBot) {

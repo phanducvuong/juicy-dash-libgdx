@@ -22,6 +22,8 @@ public class Config {
   public static final int SPIN_TIME_ADS = 1; //todo: spin time ads
   public static final int MONEY_ADS = 1000000; //todo: remote config 1000000 (default 500000)
   public static final int MINUS_MONEY_EXIT_GAME = 2; //todo: remote config minus money when player exit game during game is playing (default 2)
+  public static final int REWARD_BIG_WIN = 5; //todo:// remote config reward big win (default x5)
+  public static final int MULTI_MONEY_BET_BIG_WIN = 3; //todo:// remote config show big win (default 3)
 
   public static float CENTER_X = GStage.getWorldWidth()/2;
   public static float CENTER_Y = GStage.getWorldHeight()/2;

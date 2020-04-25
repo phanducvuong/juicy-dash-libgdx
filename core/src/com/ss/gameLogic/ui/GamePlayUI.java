@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.utils.Align;
+import com.platform.IPlatform;
 import com.ss.GMain;
 import com.ss.core.util.GClipGroup;
 import com.ss.core.util.GStage;
@@ -36,6 +37,7 @@ public class GamePlayUI implements IClickCard {
   private Logic logic = Logic.getInstance();
   private Effect effect;
   private Game game;
+  private IPlatform plf = GMain.platform;
   public List<Chip> lsAllChip;
 
   private Image bgTable, bgTotalMoneyBet, bgMoneyBetInGame, iconSetting, iconExit;
@@ -53,13 +55,18 @@ public class GamePlayUI implements IClickCard {
   private long moneyBet; //rate money to bet of player
   private float rateXMin, rateXMax;
 
-  private Group gAlerrAds;
+  private Group gAlertAds;
   private Image bgBlackAlertAds, btnAlertAds, btnXAlertAds;
 
   private Group gPanelInGame;
   private Image blackPanelInGame;
 
   public Particle pWin, pAllIn, pMoneyWheel;
+
+  private Group gBigWin;
+  private Image blackBigWin;
+  private Label lbMoneyBigWin;
+  private Button btnX2BigWin;
 
   public GamePlayUI(Game game) {
 
@@ -73,6 +80,7 @@ public class GamePlayUI implements IClickCard {
     initIcon();
     initPanelInGame();
     initParticles();
+    initIconBigWin();
     handleClickBtnBet();
     handleClickBtnAlert();
     hideBtnBet();
@@ -115,6 +123,97 @@ public class GamePlayUI implements IClickCard {
     lbMoneyRate.remove();
     iconSetting.remove();
     iconExit.remove();
+
+  }
+
+  public void initIconBigWin() {
+
+    blackBigWin = GUI.createImage(GMain.liengAtlas, "bg_black");
+    blackBigWin.setSize(GStage.getWorldWidth(), GStage.getWorldHeight());
+
+    gBigWin = new Group();
+    Image flare = GUI.createImage(GMain.liengAtlas, "flare_big_win");
+    flare.setOrigin(Align.center);
+    gBigWin.setSize(flare.getWidth(), flare.getHeight());
+    gBigWin.setOrigin(Align.center);
+    gBigWin.setPosition(Config.CENTER_X - gBigWin.getWidth()/2, Config.CENTER_Y - gBigWin.getHeight()/2);
+    gBigWin.addActor(flare);
+
+    Image bgBigWin = GUI.createImage(GMain.liengAtlas, "bg_big_win");
+    bgBigWin.setPosition(flare.getX() + flare.getWidth()/2 - bgBigWin.getWidth()/2,
+                         flare.getY() + flare.getHeight()/2 - bgBigWin.getHeight()/2 + 100);
+    gBigWin.addActor(bgBigWin);
+
+    Image bigWin;
+    if (C.lang.idCountry.equals("vn"))
+      bigWin = GUI.createImage(GMain.liengAtlas, "big_win_vn");
+    else
+      bigWin = GUI.createImage(GMain.liengAtlas, "big_win_en");
+
+    bigWin.setPosition(flare.getX() + flare.getWidth()/2 - bigWin.getWidth()/2,
+                       flare.getY() + flare.getHeight()/2 - bigWin.getHeight()/2 - 130);
+    gBigWin.addActor(bigWin);
+
+    lbMoneyBigWin = new Label("$1,000,000", new Label.LabelStyle(Config.PLUS_MONEY_FONT, null));
+    lbMoneyBigWin.setAlignment(Align.center);
+    lbMoneyBigWin.setPosition(bgBigWin.getX() + bgBigWin.getWidth()/2 - lbMoneyBigWin.getWidth()/2,
+                              bgBigWin.getY() + bgBigWin.getHeight()/2 - lbMoneyBigWin.getHeight()/2);
+    gBigWin.addActor(lbMoneyBigWin);
+
+    Image iconChip = GUI.createImage(GMain.liengAtlas, "icon_chip_big_win");
+    iconChip.setPosition(lbMoneyBigWin.getX() - iconChip.getWidth() - 20,
+            lbMoneyBigWin.getY() + lbMoneyBigWin.getHeight()/2 - iconChip.getHeight()/2 + 10);
+    gBigWin.addActor(iconChip);
+
+    btnX2BigWin = new Button(GMain.liengAtlas, "btn_big_win", C.lang.moneyBigWin, Config.ALERT_FONT);
+    btnX2BigWin.setPosition(bgBigWin.getX() + bgBigWin.getWidth()/2 - btnX2BigWin.getWidth()/2,
+            bgBigWin.getY() + bgBigWin.getHeight() - btnX2BigWin.getHeight()/2);
+    btnX2BigWin.setFontScale(.4f, .4f);
+    btnX2BigWin.moveByLb(30, -50);
+    btnX2BigWin.addToGroup(gBigWin);
+
+    Image btnXBigWin = GUI.createImage(GMain.liengAtlas, "btn_x");
+    btnXBigWin.setPosition(bigWin.getX() + bigWin.getWidth() - 10, bigWin.getY() - 30);
+    btnXBigWin.setScale(.8f);
+    gBigWin.addActor(btnXBigWin);
+
+    gBigWin.setScale(0);
+
+    //effect
+    effect.rotate(flare);
+
+    //listener
+    btnX2BigWin.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        super.clicked(event, x, y);
+
+        if (plf.isVideoRewardReady())
+          plf.ShowVideoReward((boolean success) -> {
+
+            if (success) {
+
+              long money = GMain.pref.getLong("money") + game.bet.totalMoney * (Config.REWARD_BIG_WIN - 1);
+              logic.saveMoney(money);
+              game.lsBot.get(0).setTotalMoney(money);
+              game.lsBot.get(0).convertTotalMoneyToString();
+
+            }
+
+          });
+
+      }
+    });
+
+    btnXBigWin.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        super.clicked(event, x, y);
+
+        hideBigWin();
+
+      }
+    });
 
   }
 
@@ -530,9 +629,9 @@ public class GamePlayUI implements IClickCard {
                 logic.saveMoney(game.lsBotActive.get(0).getTotalMoney());
 
                 btnNewRound.addToGroup(game.gBtn);
-                effect.sclMaxToMin(gAlerrAds, () -> {
+                effect.sclMaxToMin(gAlertAds, () -> {
                   bgBlackAlertAds.remove();
-                  gAlerrAds.remove();
+                  gAlertAds.remove();
                 });
               }
 
@@ -552,9 +651,9 @@ public class GamePlayUI implements IClickCard {
         super.clicked(event, x, y);
 
         btnNewRound.addToGroup(game.gBtn);
-        effect.sclMaxToMin(gAlerrAds, () -> {
+        effect.sclMaxToMin(gAlertAds, () -> {
           bgBlackAlertAds.remove();
-          gAlerrAds.remove();
+          gAlertAds.remove();
         });
 
       }
@@ -613,33 +712,33 @@ public class GamePlayUI implements IClickCard {
     bgBlackAlertAds = GUI.createImage(GMain.liengAtlas, "bg_black");
     bgBlackAlertAds.setSize(GStage.getWorldWidth(), GStage.getWorldHeight());
 
-    gAlerrAds = new Group();
+    gAlertAds = new Group();
     Image bgAlert = GUI.createImage(GMain.liengAtlas, "panel_ads");
-    gAlerrAds.setSize(bgAlert.getWidth(), bgAlert.getHeight());
+    gAlertAds.setSize(bgAlert.getWidth(), bgAlert.getHeight());
 
-    gAlerrAds.setOrigin(bgAlert.getWidth()/2, bgAlert.getHeight()/2);
-    gAlerrAds.setPosition(Config.CENTER_X - bgAlert.getWidth()/2, Config.CENTER_Y - bgAlert.getHeight()/2);
-    gAlerrAds.addActor(bgAlert);
+    gAlertAds.setOrigin(bgAlert.getWidth()/2, bgAlert.getHeight()/2);
+    gAlertAds.setPosition(Config.CENTER_X - bgAlert.getWidth()/2, Config.CENTER_Y - bgAlert.getHeight()/2);
+    gAlertAds.addActor(bgAlert);
 
     Label lbAertAds = new Label(C.lang.adsOutOfMoney, new Label.LabelStyle(Config.ALERT_FONT, null));
     lbAertAds.setAlignment(Align.center);
     lbAertAds.setFontScale(.55f);
     lbAertAds.setPosition(bgAlert.getX() + bgAlert.getWidth()/2 - lbAertAds.getWidth()/2,
                               bgAlert.getY() + bgAlert.getHeight()/2 - lbAertAds.getHeight()/2 - 180);
-    gAlerrAds.addActor(lbAertAds);
+    gAlertAds.addActor(lbAertAds);
 
     btnAlertAds = GUI.createImage(GMain.liengAtlas, "btn_ads");
     btnAlertAds.setPosition(bgAlert.getX() + bgAlert.getWidth()/2 - btnAlertAds.getWidth()/2,
                             bgAlert.getY() + bgAlert.getHeight() - btnAlertAds.getHeight() - 20);
     btnAlertAds.setOrigin(Align.center);
-    gAlerrAds.addActor(btnAlertAds);
+    gAlertAds.addActor(btnAlertAds);
 
     btnXAlertAds = GUI.createImage(GMain.liengAtlas, "btn_x");
     btnXAlertAds.setPosition(bgAlert.getX() + bgAlert.getWidth() - btnXAlertAds.getWidth()/2,-btnXAlertAds.getHeight()/2);
     btnXAlertAds.setOrigin(Align.center);
-    gAlerrAds.addActor(btnXAlertAds);
+    gAlertAds.addActor(btnXAlertAds);
 
-    gAlerrAds.setScale(0);
+    gAlertAds.setScale(0);
 
     //label: button new round
     btnNewRound = new Button(GMain.liengAtlas, "btn_divide", C.lang.divideCard, Config.ALERT_FONT);
@@ -654,8 +753,8 @@ public class GamePlayUI implements IClickCard {
 
   public void showAlertAds() {
     game.gAlert.addActor(bgBlackAlertAds);
-    game.gAlert.addActor(gAlerrAds);
-    effect.sclMinToMax(gAlerrAds);
+    game.gAlert.addActor(gAlertAds);
+    effect.sclMinToMax(gAlertAds);
   }
 
   public void showBtnNewRound() {
@@ -701,6 +800,9 @@ public class GamePlayUI implements IClickCard {
     else {
       pWin.start(Config.CENTER_X, Config.CENTER_Y - 100, Config.SCL_EFFECT_WIN); //particle
       winner.eftMoneyWinner(game, game.bet.totalMoney);
+      logic.chkMoneyBotIsZero(game.lsBotActive, game.moneyBet, game.lsBot.get(0).getTotalMoney());
+
+      showBigWin();
     }
 
   }
@@ -719,7 +821,33 @@ public class GamePlayUI implements IClickCard {
     else {
       pWin.start(Config.CENTER_X, Config.CENTER_Y - 100, Config.SCL_EFFECT_WIN); //particle
       winner.eftMoneyWinner(game, game.bet.totalMoney);
+      logic.chkMoneyBotIsZero(game.lsBotActive, game.moneyBet, game.lsBot.get(0).getTotalMoney());
+
+      showBigWin();
     }
+  }
+
+  private void showBigWin() {
+
+    if (game.bet.totalMoney >= (game.moneyBet * Config.MULTI_MONEY_BET_BIG_WIN)) {
+      game.gAlert.addActor(blackBigWin);
+      game.gAlert.addActor(gBigWin);
+      lbMoneyBigWin.setText(logic.convertMoneyBet(game.bet.totalMoney));
+
+      effect.zoomIn(gBigWin, 1f, 1f);
+    }
+
+  }
+
+  private void hideBigWin() {
+
+    effect.zoomOut(gBigWin, 2f, 2f,
+       () -> {
+          blackBigWin.remove();
+          gBigWin.remove();
+       }
+    );
+
   }
 
   private void hideBtnBet() {
@@ -784,6 +912,7 @@ public class GamePlayUI implements IClickCard {
   public void showBannerWin(Bot bot) {
     game.isInGame = false;
     logic.saveMoney(game.lsBot.get(0).getTotalMoney());
+
     System.out.println(game.lsBot.get(0).getTotalMoney() + "    " + GMain.pref.getLong("money"));
     if (bot.id != 0) {
       Image avatar = bot.avatar;
