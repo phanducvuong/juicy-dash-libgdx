@@ -132,14 +132,14 @@ icon_mini_game
   index: -1
 icon_rank_1
   rotate: false
-  xy: 1883, 821
+  xy: 1823, 21
   size: 134, 134
   orig: 134, 134
   offset: 0, 0
   index: -1
-icon_rank_3
+icon_rank_2
   rotate: false
-  xy: 1823, 21
+  xy: 1883, 821
   size: 134, 134
   orig: 134, 134
   offset: 0, 0
@@ -220,7 +220,7 @@ icon_btn_rank
   orig: 128, 134
   offset: 0, 0
   index: -1
-icon_rank_2
+icon_rank_3
   rotate: false
   xy: 1501, 375
   size: 134, 134

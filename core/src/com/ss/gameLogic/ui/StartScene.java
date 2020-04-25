@@ -37,8 +37,15 @@ import com.ss.gameLogic.objects.WheelMiniGame;
 import com.ss.minigames.Wheel;
 import com.ss.scenes.LDBFactory;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class StartScene {
 
@@ -243,6 +250,8 @@ public class StartScene {
 
   private void initWheel() {
 
+    chkDayToDonateSpin();
+
     try {
 
       List<WheelData> datas = new ArrayList<>();
@@ -272,8 +281,7 @@ public class StartScene {
 //      lbMoneySpin.setPosition(GStage.getWorldWidth()/2 - lbMoneySpin.getWidth()/2,
 //                              GStage.getWorldHeight()/2 - lbMoneySpin.getHeight()/2);
 
-      int tempCount = Config.SPIN_TIME - countSpin;
-      Label lbRemain = new Label(C.lang.remain + " " + tempCount, new Label.LabelStyle(Config.ALERT_FONT, null));
+      Label lbRemain = new Label(C.lang.remain + " " + countSpin, new Label.LabelStyle(Config.ALERT_FONT, null));
       lbRemain.setAlignment(Align.center);
       lbRemain.setFontScale(.7f);
       lbRemain.setPosition(Config.CENTER_X - lbRemain.getWidth()/2,
@@ -297,13 +305,13 @@ public class StartScene {
 
       Label lbAds = new Label(C.lang.timeSpinWheelAds, new Label.LabelStyle(Config.ALERT_FONT, null));
       lbAds.setAlignment(Align.center);
-      lbAds.setFontScale(.8f);
+      lbAds.setFontScale(1.2f);
       lbAds.setPosition(gAdsSpin.getWidth()/2 - lbAds.getWidth()/2,
               gAdsSpin.getHeight()/2 - lbAds.getHeight()/2 - 170);
       gAdsSpin.addActor(lbAds);
 
       Button btnGet = new Button(GMain.startSceneAtlas, "btn_get", C.lang.yes, Config.ALERT_FONT);
-      btnGet.setFontScale(.6f, .6f);
+//      btnGet.setFontScale(1f, 1f);
       btnGet.setPosition(gAdsSpin.getWidth()/2 - btnGet.getWidth()/2,
               gAdsSpin.getHeight() - btnGet.getHeight() - 10);
       btnGet.moveByLb(0, -5);
@@ -331,16 +339,21 @@ public class StartScene {
               plf.ShowVideoReward((boolean success) -> {
 
                 if (success) {
-                  lbRemain.setText(C.lang.remain + " " + Config.SPIN_TIME_ADS);
-                  countSpin -= Config.SPIN_TIME_ADS;
+                  countSpin += 1;
+                  Logic.getInstance().saveSpin(countSpin);
+                  lbRemain.setText(C.lang.remain + " " + countSpin);
 
                   lbTitle.setVisible(true);
                   lbRemain.setVisible(true);
 
                   effect.sclMaxToMin(gAdsSpin, () -> btnXMiniGame.setTouchable(Touchable.enabled));
                 }
+                else
+                  game.gamePlayUI.showAlertFailNetwork();
 
               });
+            else
+              game.gamePlayUI.showAlertFailNetwork();
 
           };
 
@@ -368,18 +381,16 @@ public class StartScene {
         @Override
         public boolean start() {
 
-          countSpin += 1;
-          if (countSpin <= Config.SPIN_TIME) {
+          if (countSpin > 0) {
 
-            int t = Config.SPIN_TIME - countSpin;
+            int t = countSpin - 1;
             lbRemain.setText(C.lang.remain + " " + t);
             btnXMiniGame.setTouchable(Touchable.disabled);
+
             return true;
 
           }
           else {
-
-            countSpin = Config.SPIN_TIME;
 
             lbRemain.setText(C.lang.remain + " " + 0);
             lbTitle.setVisible(false);
@@ -395,6 +406,9 @@ public class StartScene {
 
         @Override
         public void end(Wheel.WheelItem item) {
+
+          countSpin -= 1;
+          Logic.getInstance().saveSpin(countSpin);
 
           effect.sclMinToMax(gLbMoneyWheel);
           game.gamePlayUI.pMoneyWheel.start(Config.CENTER_X, Config.CENTER_Y, .8f);
@@ -423,6 +437,8 @@ public class StartScene {
 
         @Override
         public void error(String msg) {
+
+          System.out.println("ERR");
 
         }
       });
@@ -488,6 +504,7 @@ public class StartScene {
 
     Label lbTitle = new Label(C.lang.titleSetting, new Label.LabelStyle(Config.ALERT_FONT, null));
     lbTitle.setAlignment(Align.center);
+    lbTitle.setFontScale(1.2f);
     lbTitle.setPosition(gPanelSetting.getWidth()/2 - lbTitle.getWidth()/2, 50);
     gPanelSetting.addActor(lbTitle);
 
@@ -498,7 +515,7 @@ public class StartScene {
 
     Label lbMusic = new Label(C.lang.music, new Label.LabelStyle(Config.ALERT_FONT, null));
     lbMusic.setAlignment(Align.center);
-    lbMusic.setFontScale(.55f);
+    lbMusic.setFontScale(.6f);
     lbMusic.setPosition(iconMusic.getX() + iconMusic.getWidth()/2 - lbMusic.getWidth()/2,
                         iconMusic.getY() + iconMusic.getHeight() + lbMusic.getHeight()/2);
     gPanelSetting.addActor(lbMusic);
@@ -510,7 +527,7 @@ public class StartScene {
 
     Label lbSound = new Label(C.lang.sound, new Label.LabelStyle(Config.ALERT_FONT, null));
     lbSound.setAlignment(Align.center);
-    lbSound.setFontScale(.55f);
+    lbSound.setFontScale(.6f);
     lbSound.setPosition(iconSound.getX() + iconSound.getWidth()/2 - lbMusic.getWidth()/2,
             iconSound.getY() + iconSound.getHeight() + lbSound.getHeight()/2);
     gPanelSetting.addActor(lbSound);
@@ -585,9 +602,9 @@ public class StartScene {
 
     //label: button start
     btnStartPanelBet = new Button(GMain.startSceneAtlas,"btn_start_panel_bet", C.lang.startPanelBet, Config.ALERT_FONT);
-    btnStartPanelBet.setFontScale(.4f, .4f);
+    btnStartPanelBet.setFontScale(.6f, .6f);
     btnStartPanelBet.setPosition(15, gPanelBet.getHeight() - btnStartPanelBet.getHeight() - 40);
-    btnStartPanelBet.moveByLb(-5, -2);
+    btnStartPanelBet.moveByLb(-5, 0);
 
     Image flareStart = GUI.createImage(GMain.startSceneAtlas, "flare");
     flareStart.setPosition(btnStartPanelBet.getX() + btnStartPanelBet.getWidth()/2 - flareStart.getWidth()/2,
@@ -603,9 +620,9 @@ public class StartScene {
     gPanelBet.addActor(bgChooseNumPlayer);
 
     Label lbTxtNumPlayer = new Label(C.lang.players, new Label.LabelStyle(Config.ALERT_FONT, null));
-    lbTxtNumPlayer.setFontScale(.45f, .5f);
+    lbTxtNumPlayer.setFontScale(.7f, .7f);
     lbTxtNumPlayer.setAlignment(Align.center);
-    lbTxtNumPlayer.setPosition(-110, bgChooseNumPlayer.getY() + bgChooseNumPlayer.getHeight()*bgChooseNumPlayer.getScaleY()/2 - lbTxtNumPlayer.getHeight()/2 - 10);
+    lbTxtNumPlayer.setPosition(-20, bgChooseNumPlayer.getY() + bgChooseNumPlayer.getHeight()*bgChooseNumPlayer.getScaleY()/2 - lbTxtNumPlayer.getHeight()/2 - 5);
     gPanelBet.addActor(lbTxtNumPlayer);
 
     arrLeft = GUI.createImage(GMain.startSceneAtlas, "arrow_left");
@@ -621,9 +638,10 @@ public class StartScene {
     gPanelBet.addActor(arrRight);
 
     lbNumPlayer = new Label("6", new Label.LabelStyle(Config.ALERT_FONT, null));
+    lbNumPlayer.setFontScale(1.1f);
     lbNumPlayer.setAlignment(Align.center);
     lbNumPlayer.setPosition(bgChooseNumPlayer.getX() + bgChooseNumPlayer.getWidth()*bgChooseNumPlayer.getScaleX()/2 - lbNumPlayer.getWidth()/2,
-            bgChooseNumPlayer.getY() + bgChooseNumPlayer.getHeight()*bgChooseNumPlayer.getScaleY()/2 - lbNumPlayer.getHeight()/2 - 20);
+            bgChooseNumPlayer.getY() + bgChooseNumPlayer.getHeight()*bgChooseNumPlayer.getScaleY()/2 - lbNumPlayer.getHeight()/2 - 5);
     gPanelBet.addActor(lbNumPlayer);
 
     //label: button x
@@ -636,17 +654,17 @@ public class StartScene {
     gPanelBet.addActor(bgMoneyPlayer);
 
     Label lbMoneyPlayer = new Label(C.lang.moneyPlayer, new Label.LabelStyle(Config.ALERT_FONT, null));
-    lbMoneyPlayer.setFontScale(.45f, .5f);
+    lbMoneyPlayer.setFontScale(.7f, .7f);
     lbMoneyPlayer.setAlignment(Align.center);
-    lbMoneyPlayer.setPosition(bgMoneyPlayer.getX() - lbMoneyPlayer.getWidth() + 140,
-                              bgMoneyPlayer.getY() + bgMoneyPlayer.getHeight()*bgMoneyPlayer.getScaleY()/2 - lbMoneyPlayer.getHeight()/2 - 10);
+    lbMoneyPlayer.setPosition(lbTxtNumPlayer.getX() - 10,
+                              bgMoneyPlayer.getY() + bgMoneyPlayer.getHeight()*bgMoneyPlayer.getScaleY()/2 - lbMoneyPlayer.getHeight()/2 - 5);
     gPanelBet.addActor(lbMoneyPlayer);
 
     lbMoneyPresent = new Label("$32,000", new Label.LabelStyle(Config.ALERT_FONT, null));
-    lbMoneyPresent.setFontScale(.8f);
+    lbMoneyPresent.setFontScale(.9f);
     lbMoneyPresent.setAlignment(Align.center);
     lbMoneyPresent.setPosition(bgMoneyPlayer.getX() + bgMoneyPlayer.getWidth()*bgMoneyPlayer.getScaleX()/2 - lbMoneyPresent.getWidth()/2,
-                                bgMoneyPlayer.getY() + bgMoneyPlayer.getHeight()*bgMoneyPlayer.getScaleY()/2 - lbMoneyPresent.getHeight()/2 - 15);
+                                bgMoneyPlayer.getY() + bgMoneyPlayer.getHeight()*bgMoneyPlayer.getScaleY()/2 - lbMoneyPresent.getHeight()/2);
     gPanelBet.addActor(lbMoneyPresent);
 
     //label: bet
@@ -656,9 +674,9 @@ public class StartScene {
     gPanelBet.addActor(bgChooseBet);
 
     Label lbTxtBet = new Label(C.lang.bet, new Label.LabelStyle(Config.ALERT_FONT, null));
-    lbTxtBet.setFontScale(.45f, .5f);
+    lbTxtBet.setFontScale(.7f, .7f);
     lbTxtBet.setAlignment(Align.center);
-    lbTxtBet.setPosition(-105, bgChooseBet.getY() - lbTxtBet.getHeight()/2 + 20);
+    lbTxtBet.setPosition(lbTxtNumPlayer.getX(), bgChooseBet.getY() - lbTxtBet.getHeight()/2 + 20);
     gPanelBet.addActor(lbTxtBet);
 
     flareChip = GUI.createImage(GMain.liengAtlas, "flare_chip");
@@ -737,7 +755,7 @@ public class StartScene {
 
       if (index == 0) {
         Group g = createLb(gLb, Strings.aaa[index], scroll, 0);
-        scroll.add(g).padBottom(50).padTop(30);
+        scroll.add(g).padBottom(80).padTop(30);
       }
       else {
 
@@ -749,7 +767,7 @@ public class StartScene {
 
           sBuff.append(ss).append(" ");
 
-          if (i >= 9) {
+          if (i >= 12) {
 
             Group g = createLb(gLb, sBuff.toString(), scroll, 1);
             sBuff.delete(0, sBuff.length());
@@ -763,7 +781,7 @@ public class StartScene {
             Group g = createLb(gLb, sBuff.toString(), scroll, 1);
             sBuff.delete(0, sBuff.length());
 
-            scroll.add(g).padTop(80);
+            scroll.add(g).padTop(40);
 
           }
 
@@ -796,14 +814,14 @@ public class StartScene {
     g.setOrigin(Align.center);
     g.setScale(1f, -1f);
 
-    Label lbTutorial = new Label(string, new Label.LabelStyle(Config.TUTORIAL, null));
+    Label lbTutorial = new Label(string, new Label.LabelStyle(Config.ALERT_FONT, null));
     if (align == 0) {
       lbTutorial.setAlignment(Align.center);
-      lbTutorial.setFontScale(.8f);
+      lbTutorial.setFontScale(1.2f);
       lbTutorial.setPosition(g.getWidth()/2 - lbTutorial.getWidth()/2, lbTutorial.getY());
     }
     else {
-      lbTutorial.setFontScale(.5f);
+      lbTutorial.setFontScale(.6f);
       lbTutorial.setAlignment(Align.left);
     }
 
@@ -831,10 +849,10 @@ public class StartScene {
     gBtnStart.setPosition(GStage.getWorldWidth()-btnStart.getWidth()-40, 200);
 
     Label lbStart = new Label(C.lang.startScene, new Label.LabelStyle(Config.ALERT_FONT, null));
-    lbStart.setFontScale(.55f);
+    lbStart.setFontScale(.8f);
     lbStart.setAlignment(Align.center);
     lbStart.setPosition(btnStart.getX() + btnStart.getWidth()/2 - lbStart.getWidth()/2 + 25,
-                        btnStart.getY() + btnStart.getHeight()/2 - lbStart.getHeight()/2 - 10);
+                        btnStart.getY() + btnStart.getHeight()/2 - lbStart.getHeight()/2 - 5);
     gBtnStart.addActor(lbStart);
 
     GClipGroup gClipStart = new GClipGroup();
@@ -863,10 +881,10 @@ public class StartScene {
     gBtnRank.setPosition(gBtnStart.getX(), gBtnStart.getY() + gBtnRank.getHeight() + 50);
 
     Label lbRank = new Label(C.lang.titleRank, new Label.LabelStyle(Config.ALERT_FONT, null));
-    lbRank.setFontScale(.55f);
+    lbRank.setFontScale(.8f);
     lbRank.setAlignment(Align.center);
     lbRank.setPosition(btnRank.getX() + btnRank.getWidth()/2 - lbRank.getWidth()/2 + 20,
-            btnRank.getY() + btnRank.getHeight()/2 - lbRank.getHeight()/2 - 10);
+            btnRank.getY() + btnRank.getHeight()/2 - lbRank.getHeight()/2 - 5);
     gBtnRank.addActor(lbRank);
 
     GClipGroup gClipRank = new GClipGroup();
@@ -895,10 +913,10 @@ public class StartScene {
     gBtnOtherGame.setPosition(gBtnRank.getX(), gBtnRank.getY() + gBtnRank.getHeight() + 50);
 
     Label lbOtherGame = new Label(C.lang.otherGame, new Label.LabelStyle(Config.ALERT_FONT, null));
-    lbOtherGame.setFontScale(.45f, .55f);
+    lbOtherGame.setFontScale(.8f);
     lbOtherGame.setAlignment(Align.center);
     lbOtherGame.setPosition(btnOtherGame.getX() + btnOtherGame.getWidth()/2 - lbOtherGame.getWidth()/2 + 30,
-            btnOtherGame.getY() + btnOtherGame.getHeight()/2 - lbOtherGame.getHeight()/2 - 10);
+            btnOtherGame.getY() + btnOtherGame.getHeight()/2 - lbOtherGame.getHeight()/2 - 5);
     gBtnOtherGame.addActor(lbOtherGame);
 
     GClipGroup gClipOtherGame = new GClipGroup();
@@ -1273,7 +1291,7 @@ public class StartScene {
 
           Label lbName = new Label(item.getDisplayName(), new Label.LabelStyle(Config.ALERT_FONT, null));
           lbName.setAlignment(Align.center);
-          lbName.setFontScale(.35f);
+          lbName.setFontScale(.5f);
           lbName.setPosition(actor.getX() + actor.getWidth()/2 - lbName.getWidth()/2,
                                 actor.getY() + actor.getHeight() + 60);
           gIcon.addActor(lbName);
@@ -1316,6 +1334,28 @@ public class StartScene {
 
       }
     });
+
+  }
+
+  private void chkDayToDonateSpin() {
+
+    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.US);
+    try {
+
+      Date dayInPre = formatter.parse(GMain.pref.getString("day"));
+      Date dayNow = Calendar.getInstance().getTime();
+
+      if (!Logic.getInstance().isSameDay(dayInPre, dayNow)) {
+        countSpin = Config.SPIN_TIME;
+        Logic.getInstance().saveSpin(countSpin);
+        Logic.getInstance().saveDay(formatter.format(dayNow));
+      }
+      else
+        countSpin = GMain.pref.getInteger("spin");
+
+    } catch (ParseException e) {
+      e.printStackTrace();
+    }
 
   }
 

@@ -20,15 +20,16 @@ public class WheelMiniGame {
 
   private WheelMiniGame(List<WheelData> data) {
 
-    FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("GROBOLD.ttf"));
+    FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Alter_Gothic.ttf"));
     FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-    parameter.size = 26;
-    parameter.spaceX = 1;
+    parameter.size = 50;
+//    parameter.spaceX = 1;
     parameter.genMipMaps = true;
     parameter.minFilter = Texture.TextureFilter.MipMapLinearNearest;
     parameter.magFilter = Texture.TextureFilter.Linear;
     parameter.borderStraight = true;
     parameter.borderColor = Color.BLACK;
+    parameter.shadowColor = Color.GRAY;
     parameter.borderWidth = 2.6f;
     BitmapFont font12 = generator.generateFont(parameter); // font size 12 pixels
     generator.dispose(); // don't forget to dispose to avoid memory leaks!
@@ -56,7 +57,7 @@ public class WheelMiniGame {
     Wheel.inst().setWheelListener(new Wheel.EventListener() {
       @Override
       public boolean start() {
-        return true;
+        return false;
       }
 
       @Override

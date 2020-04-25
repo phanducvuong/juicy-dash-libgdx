@@ -12,7 +12,9 @@ import com.ss.gameLogic.objects.Card;
 import com.ss.gameLogic.objects.Chip;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 public class Logic {
@@ -476,6 +478,36 @@ public class Logic {
   public void saveMoney(long money) {
     GMain.pref.putLong("money", money);
     GMain.pref.flush();
+  }
+
+  public void saveSpin(int spin) {
+    GMain.pref.putInteger("spin", spin);
+    GMain.pref.flush();
+  }
+
+  public void saveDay(String day) {
+    GMain.pref.putString("day", day);
+    GMain.pref.flush();
+  }
+
+  public String getDayOfWeek() {
+    Calendar calendar = Calendar.getInstance();
+    int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+    return dayOfWeek+"";
+  }
+
+  public boolean isSameDay(Date date1, Date date2) {
+
+    Calendar calendar1 = Calendar.getInstance();
+    calendar1.setTime(date1);
+
+    Calendar calendar2 = Calendar.getInstance();
+    calendar2.setTime(date2);
+
+    return calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR)
+            && calendar1.get(Calendar.MONTH) == calendar2.get(Calendar.MONTH)
+            && calendar1.get(Calendar.DAY_OF_MONTH) == calendar2.get(Calendar.DAY_OF_MONTH);
+
   }
 
   public long getMoneyBuyId(String id) {

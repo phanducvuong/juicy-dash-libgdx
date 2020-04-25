@@ -68,6 +68,12 @@ public class GamePlayUI implements IClickCard {
   private Label lbMoneyBigWin;
   private Button btnX2BigWin;
 
+  private Group gAlertDonate;
+  private Image blackDonate;
+
+  private Group gAlertFailNetwork;
+  private Image blackNetwork;
+
   public GamePlayUI(Game game) {
 
     this.game = game;
@@ -81,6 +87,8 @@ public class GamePlayUI implements IClickCard {
     initPanelInGame();
     initParticles();
     initIconBigWin();
+    initPanelDonate();
+    initPanelFailNetwork();
     handleClickBtnBet();
     handleClickBtnAlert();
     hideBtnBet();
@@ -198,6 +206,8 @@ public class GamePlayUI implements IClickCard {
               game.lsBot.get(0).setTotalMoney(money);
               game.lsBot.get(0).convertTotalMoneyToString();
 
+              hideBigWin();
+
             }
 
           });
@@ -256,21 +266,19 @@ public class GamePlayUI implements IClickCard {
     gPanelInGame.addActor(panelInGame);
 
     Label lbTxt = new Label(C.lang.notifyExitGame, new Label.LabelStyle(Config.ALERT_FONT, null));
-    lbTxt.setFontScale(.7f);
+//    lbTxt.setFontScale(.7f);
     lbTxt.setAlignment(Align.center);
-    lbTxt.setPosition(gPanelInGame.getWidth()/2 - lbTxt.getWidth()/2, 170);
+    lbTxt.setPosition(gPanelInGame.getWidth()/2 - lbTxt.getWidth()/2, 130);
     gPanelInGame.addActor(lbTxt);
 
-    Button btnOK = new Button(GMain.liengAtlas, "btn_divide", C.lang.yes, Config.ALERT_FONT);
+    Button btnOK = new Button(GMain.liengAtlas, "btn_divide", C.lang.yes, Config.BUTTON_FONT);
     btnOK.setPosition(120, gPanelInGame.getHeight() - btnOK.getHeight() - 20);
-    btnOK.setFontScale(.7f, .7f);
-    btnOK.moveByLb(0, -10);
+    btnOK.setFontScale(.8f, .8f);
     btnOK.addToGroup(gPanelInGame);
 
-    Button btnNo = new Button(GMain.liengAtlas, "btn_divide", C.lang.no, Config.ALERT_FONT);
+    Button btnNo = new Button(GMain.liengAtlas, "btn_divide", C.lang.no, Config.BUTTON_FONT);
     btnNo.setPosition(gPanelInGame.getWidth() - btnNo.getWidth() - 120, btnOK.getY());
-    btnNo.setFontScale(.7f, .7f);
-    btnNo.moveByLb(0, -10);
+    btnNo.setFontScale(.8f, .8f);
     btnNo.addToGroup(gPanelInGame);
 
     gPanelInGame.setScale(0);
@@ -389,19 +397,20 @@ public class GamePlayUI implements IClickCard {
     btnTo = new Button(GMain.liengAtlas, "btn_to", C.lang.raise, Config.BUTTON_FONT);
     btnTo.setPosition(GStage.getWorldWidth()/2 + 20, GStage.getWorldHeight() - btnTo.getHeight() - 10);
     btnTo.startEftLight(game);
-    btnTo.setFontScale(.6f, .6f);
+    btnTo.setFontScale(.8f, .8f);
 //    btnTo.addToGroup(game.gBtn);
 
     btnTheo = new Button(GMain.liengAtlas, "btn_theo", C.lang.call, Config.BUTTON_FONT);
     btnTheo.setPosition(btnTo.getX() + btnTheo.getWidth(), btnTo.getY());
     btnTheo.startEftLight(game);
-    btnTheo.setFontScale(.6f, .6f);
+    btnTheo.setFontScale(.8f, .8f);
+    btnTheo.moveByLb(0, -2f);
 //    btnTheo.addToGroup(game.gBtn);
 
     btnUp = new Button(GMain.liengAtlas, "btn_up", C.lang.fold, Config.BUTTON_FONT);
     btnUp.setPosition(btnTheo.getX() + btnUp.getWidth(), btnTheo.getY());
     btnUp.startEftLight(game);
-    btnUp.setFontScale(.6f, .6f);
+    btnUp.setFontScale(.8f, .8f);
 //    btnUp.addToGroup(game.gBtn);
 
   }
@@ -488,6 +497,103 @@ public class GamePlayUI implements IClickCard {
         super.dragStop(event, x, y, pointer);
       }
     });
+
+  }
+
+  private void initPanelDonate() {
+
+    blackDonate = GUI.createImage(GMain.liengAtlas, "bg_black");
+    blackDonate.setSize(GStage.getWorldWidth(), GStage.getWorldHeight());
+
+    gAlertDonate = new Group();
+    Image donate = GUI.createImage(GMain.liengAtlas, "panel_ads");
+    donate.setScale(.8f);
+    gAlertDonate.setSize(donate.getWidth()*.8f, donate.getHeight()*.8f);
+    gAlertDonate.setOrigin(Align.center);
+    gAlertDonate.setPosition(Config.CENTER_X - gAlertDonate.getWidth()/2,
+            Config.CENTER_Y - gAlertDonate.getHeight()/2);
+    gAlertDonate.addActor(donate);
+
+    Label lbDonate = new Label(C.lang.donate, new Label.LabelStyle(Config.ALERT_FONT, null));
+    lbDonate.setAlignment(Align.center);
+    lbDonate.setFontScale(.9f);
+    lbDonate.setPosition(donate.getX() + donate.getWidth()*donate.getScaleX()/2 - lbDonate.getWidth()/2,
+            donate.getY() + donate.getHeight()*donate.getScaleY()/2 - lbDonate.getHeight()/2 - 60);
+    gAlertDonate.addActor(lbDonate);
+
+    Button btnOk = new Button(GMain.startSceneAtlas, "btn_get", C.lang.yes, Config.BUTTON_FONT);
+    btnOk.setPosition(donate.getX() + donate.getWidth()*donate.getScaleX()/2 - btnOk.getWidth()/2,
+            donate.getY() + donate.getHeight()*donate.getScaleY() - btnOk.getHeight() - 5);
+    btnOk.moveByLb(0, -5);
+    btnOk.addToGroup(gAlertDonate);
+
+    gAlertDonate.setScale(0);
+
+    btnOk.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        super.clicked(event, x, y);
+
+        long money = GMain.pref.getLong("money") + Config.MONEY_DONATE;
+        logic.saveMoney(money);
+        game.lsBot.get(0).setTotalMoney(money);
+        game.lsBot.get(0).convertTotalMoneyToString();
+
+        removeAlertAds();
+        btnNewRound.addToGroup(game.gBtn);
+        effect.sclMaxToMin(gAlertDonate, () -> {
+          blackDonate.remove();
+          gAlertDonate.remove();
+        });
+
+      }
+    });
+
+  }
+
+  private void initPanelFailNetwork() {
+
+    blackNetwork = GUI.createImage(GMain.liengAtlas, "bg_black");
+    blackNetwork.setSize(GStage.getWorldWidth(), GStage.getWorldHeight());
+
+    gAlertFailNetwork = new Group();
+    Image netWork = GUI.createImage(GMain.liengAtlas, "panel_ads");
+    netWork.setScale(.8f);
+    gAlertFailNetwork.setSize(netWork.getWidth()*.8f, netWork.getHeight()*.8f);
+    gAlertFailNetwork.setOrigin(Align.center);
+    gAlertFailNetwork.setPosition(Config.CENTER_X - gAlertFailNetwork.getWidth()/2,
+            Config.CENTER_Y - gAlertFailNetwork.getHeight()/2);
+    gAlertFailNetwork.addActor(netWork);
+
+    Label lbFailNetwork = new Label(C.lang.failNetwork, new Label.LabelStyle(Config.ALERT_FONT, null));
+    lbFailNetwork.setAlignment(Align.center);
+    lbFailNetwork.setFontScale(.9f);
+    lbFailNetwork.setPosition(netWork.getX() + netWork.getWidth()*netWork.getScaleX()/2 - lbFailNetwork.getWidth()/2,
+            netWork.getY() + netWork.getHeight()*netWork.getScaleY()/2 - lbFailNetwork.getHeight()/2 - 60);
+    gAlertFailNetwork.addActor(lbFailNetwork);
+
+    Button btnOk = new Button(GMain.startSceneAtlas, "btn_get", C.lang.yes, Config.BUTTON_FONT);
+    btnOk.setPosition(netWork.getX() + netWork.getWidth()*netWork.getScaleX()/2 - btnOk.getWidth()/2,
+            netWork.getY() + netWork.getHeight()*netWork.getScaleY() - btnOk.getHeight() - 5);
+    btnOk.moveByLb(0, -5);
+    btnOk.addToGroup(gAlertFailNetwork);
+
+    gAlertFailNetwork.setScale(0);
+
+    btnOk.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        super.clicked(event, x, y);
+
+        effect.sclMaxToMin(gAlertFailNetwork, () -> {
+          blackNetwork.remove();
+          gAlertFailNetwork.remove();
+        });
+
+      }
+    });
+
+    game.gTest.addActor(gAlertFailNetwork);
 
   }
 
@@ -610,32 +716,39 @@ public class GamePlayUI implements IClickCard {
   private void handleClickBtnAlert() {
 
     btnAlertAds.addListener(new ClickListener() {
-      @Override
-      public void clicked(InputEvent event, float x, float y) {
-        super.clicked(event, x, y);
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+              super.clicked(event, x, y);
 
-        Runnable run = () -> {
+              Runnable run = () -> {
 
-          btnAlertAds.setTouchable(Touchable.enabled);
+                btnAlertAds.setTouchable(Touchable.enabled);
 
-          //todo: show ads
-          if (GMain.platform.isVideoRewardReady())
-            GMain.platform.ShowVideoReward((boolean success) -> {
+                //todo: show ads
+                if (GMain.platform.isVideoRewardReady())
+                  GMain.platform.ShowVideoReward((boolean success) -> {
 
-              if (success) {
-                game.lsBotActive.get(0).setTotalMoney(Config.MONEY_ADS);
-                game.lsBotActive.get(0).convertTotalMoneyToString();
+                    if (success) {
+                      long money = game.lsBotActive.get(0).getTotalMoney();
+                      game.lsBotActive.get(0).setTotalMoney(Config.MONEY_ADS + money);
+                      game.lsBotActive.get(0).convertTotalMoneyToString();
 
-                logic.saveMoney(game.lsBotActive.get(0).getTotalMoney());
+                      logic.saveMoney(game.lsBotActive.get(0).getTotalMoney());
 
-                btnNewRound.addToGroup(game.gBtn);
-                effect.sclMaxToMin(gAlertAds, () -> {
-                  bgBlackAlertAds.remove();
-                  gAlertAds.remove();
-                });
-              }
+                      btnNewRound.addToGroup(game.gBtn);
+                      effect.sclMaxToMin(gAlertAds, () -> {
+                        bgBlackAlertAds.remove();
+                        gAlertAds.remove();
+                      });
+                    }
+                    else
+                      showAlertFailNetwork();
 
-            });
+                  });
+                else if (game.lsBot.get(0).getTotalMoney() < 10000)
+                  showAlertDonate();
+                else
+                  showAlertFailNetwork();
 
         };
 
@@ -722,7 +835,7 @@ public class GamePlayUI implements IClickCard {
 
     Label lbAertAds = new Label(C.lang.adsOutOfMoney, new Label.LabelStyle(Config.ALERT_FONT, null));
     lbAertAds.setAlignment(Align.center);
-    lbAertAds.setFontScale(.55f);
+    lbAertAds.setFontScale(.9f);
     lbAertAds.setPosition(bgAlert.getX() + bgAlert.getWidth()/2 - lbAertAds.getWidth()/2,
                               bgAlert.getY() + bgAlert.getHeight()/2 - lbAertAds.getHeight()/2 - 180);
     gAlertAds.addActor(lbAertAds);
@@ -745,8 +858,7 @@ public class GamePlayUI implements IClickCard {
     btnNewRound.setPosition(Config.CENTER_X - btnNewRound.getWidth()/2,
                             Config.CENTER_Y - btnNewRound.getHeight()/2);
     btnNewRound.moveByLb(0, -10);
-    btnNewRound.setFontScale(.5f, .5f);
-    btnNewRound.moveByLb(0, -5);
+    btnNewRound.setFontScale(.8f, .8f);
 //    btnNewRound.addToGroup(game.gBtn);
 
   }
@@ -755,6 +867,28 @@ public class GamePlayUI implements IClickCard {
     game.gAlert.addActor(bgBlackAlertAds);
     game.gAlert.addActor(gAlertAds);
     effect.sclMinToMax(gAlertAds);
+  }
+
+  private void removeAlertAds() {
+    gAlertAds.setScale(0);
+    bgBlackAlertAds.remove();
+    gAlertAds.remove();
+  }
+
+  public void showAlertFailNetwork() {
+
+    game.gAlert.addActor(blackNetwork);
+    game.gAlert.addActor(gAlertFailNetwork);
+    effect.sclMinToMax(gAlertFailNetwork);
+
+  }
+
+  public void showAlertDonate() {
+
+    game.gAlert.addActor(blackDonate);
+    game.gAlert.addActor(gAlertDonate);
+    effect.sclMinToMax(gAlertDonate);
+
   }
 
   public void showBtnNewRound() {

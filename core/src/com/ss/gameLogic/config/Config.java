@@ -18,6 +18,7 @@ public class Config {
   private static final FileHandle fh2 = Gdx.files.internal("other_games.json");
   public static String otherGameData = GMain.platform.GetConfigStringValue("", fh2.readString());
 
+  public static final long MONEY_DONATE = 500000; //todo: remote config donate money when wrong network
   public static final int SPIN_TIME = 3; //todo: remote config in firebase (default 3)
   public static final int SPIN_TIME_ADS = 1; //todo: spin time ads
   public static final int MONEY_ADS = 1000000; //todo: remote config 1000000 (default 500000)
@@ -36,7 +37,6 @@ public class Config {
   public static final BitmapFont WIN_FONT = GAssetsManager.getBitmapFont("win_font.fnt");
   public static final BitmapFont PLUS_MONEY_FONT = GAssetsManager.getBitmapFont("plus_money_font.fnt");
   public static final BitmapFont ALERT_FONT = GAssetsManager.getBitmapFont("alert_font.fnt");
-  public static final BitmapFont TUTORIAL = GAssetsManager.getBitmapFont("tutorial_font.fnt");
   public static final BitmapFont RANK_FONT = GAssetsManager.getBitmapFont("rank_font.fnt");
 
   public static final Vector2 POS_DESK_RESIDUAL = new Vector2(100, 1070);

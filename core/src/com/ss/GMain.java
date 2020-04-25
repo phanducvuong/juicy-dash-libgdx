@@ -13,7 +13,12 @@ import com.ss.core.util.GScreen;
 import com.ss.core.util.GStage;
 import com.ss.core.util.GStage.StageBorder;
 import com.ss.gameLogic.config.C;
+import com.ss.gameLogic.config.Config;
 import com.ss.scenes.GameScene;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class GMain extends GDirectedGame {
 
@@ -68,8 +73,13 @@ public class GMain extends GDirectedGame {
 
     if (!pref.getBoolean("isNewbie")) {
 
+      SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.US);
+      String day = formatter.format(Calendar.getInstance().getTime());
+
       pref.putBoolean("isNewbie", true);
       pref.putLong("money", 1000000);
+      pref.putString("day", day);
+      pref.putInteger("spin", Config.SPIN_TIME);
       pref.flush();
 
     }
