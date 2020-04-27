@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.ss.core.action.exAction.GSimpleAction;
+import com.ss.core.effect.SoundEffects;
 import com.ss.core.util.GStage;
 import com.ss.gameLogic.Game;
 import com.ss.gameLogic.effects.Effect;
@@ -69,6 +70,8 @@ public class DivideCard {
     Image card = (Image) a;
     card.setZIndex(1000);
     Vector2 v = logic.getPosByIdBot(botPresent.id);
+
+    SoundEffects.startSound("divide_card");
 
     effect.divide(card, v.x, v.y);
     game.gCard.addAction(sequence(

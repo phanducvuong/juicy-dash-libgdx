@@ -28,7 +28,7 @@ public class Button {
   private Group group;
   public boolean isLightStart = false;
 
-  public Button(TextureAtlas atlas,String region, String txt, BitmapFont fontStyle) {
+  public Button(TextureAtlas atlas, String region, String txt, BitmapFont fontStyle) {
 
     this.group = new Group();
     posLight = new ArrayList<>();

@@ -80,6 +80,9 @@ public class StartScene {
   private Image blackCrossPanel, btnXCrossPanel;
   private List<Group> lsBgIcon;
 
+  private Group gAlertAdsDonateStart;
+  private Image blackDonateStart;
+
   private int numOfPlayer = 6;
   private long moneyBet = 20000;
 
@@ -94,6 +97,8 @@ public class StartScene {
     this.gStartScene.setSize(GStage.getWorldWidth(), GStage.getWorldHeight());
     this.gStartScene.setOrigin(Align.center);
 
+    SoundEffects.startMusic();
+
     initUI();
     initIcon();
     initPanelTutorial();
@@ -102,6 +107,7 @@ public class StartScene {
     initPanelSetting();
     initRank();
     initCrossPanel();
+    initDonateStart();
     handleClick();
     handleClickIcon();
 
@@ -109,8 +115,7 @@ public class StartScene {
 
 //    testBitmap();
 
-    int idNotify = plf.GetNotifyId();
-    //todo: show panel reward when come back game
+//    int idNotify = plf.GetNotifyId();
 
   }
 
@@ -134,6 +139,98 @@ public class StartScene {
 
   }
 
+  private void initDonateStart() {
+
+    blackDonateStart = GUI.createImage(GMain.liengAtlas, "bg_black");
+    blackDonateStart.setSize(GStage.getWorldWidth(), GStage.getWorldHeight());
+
+    gAlertAdsDonateStart = new Group();
+    Image donateStart = GUI.createImage(GMain.liengAtlas, "panel_ads");
+    gAlertAdsDonateStart.setSize(donateStart.getWidth(), donateStart.getHeight());
+    gAlertAdsDonateStart.setOrigin(Align.center);
+    gAlertAdsDonateStart.setPosition(GStage.getWorldWidth()/2 - gAlertAdsDonateStart.getWidth()/2,
+            GStage.getWorldHeight()/2 - gAlertAdsDonateStart.getHeight()/2);
+    gAlertAdsDonateStart.addActor(donateStart);
+
+    String moneyDonate = Logic.getInstance().convertMoneyBet(Config.ADS_DONATE_START);
+    Label lbDonateStart = new Label(C.lang.adsDonateStart + "\n" + moneyDonate, new Label.LabelStyle(Config.ALERT_FONT, null));
+    lbDonateStart.setAlignment(Align.center);
+    lbDonateStart.setFontScale(1f);
+    lbDonateStart.setPosition(donateStart.getX() + donateStart.getWidth()/2 - lbDonateStart.getWidth()/2,
+            donateStart.getY() + donateStart.getHeight()/2 - lbDonateStart.getHeight()/2 - 150);
+    gAlertAdsDonateStart.addActor(lbDonateStart);
+
+    Button btnOK = new Button(GMain.startSceneAtlas, "btn_get", C.lang.yes, Config.BUTTON_FONT);
+    btnOK.setPosition(donateStart.getX() + donateStart.getWidth()/2 - btnOK.getWidth()/2,
+            donateStart.getY() + donateStart.getHeight() - btnOK.getHeight() - 5);
+    btnOK.addToGroup(gAlertAdsDonateStart);
+
+    Image btnX = GUI.createImage(GMain.liengAtlas, "btn_x");
+    btnX.setPosition(donateStart.getX() + donateStart.getWidth() - btnX.getWidth()/2,
+            donateStart.getX() - btnX.getHeight()/2);
+    gAlertAdsDonateStart.addActor(btnX);
+
+    gAlertAdsDonateStart.setScale(0);
+
+    //label: click
+    btnOK.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        super.clicked(event, x, y);
+
+        Runnable run = () -> {
+
+          btnOK.setTouchable(Touchable.enabled);
+          if (plf.isVideoRewardReady())
+            plf.ShowVideoReward((boolean success) -> {
+
+              if (success) {
+
+                long money = GMain.pref.getLong("money") + Config.ADS_DONATE_START;
+                Logic.getInstance().saveMoney(money);
+
+                effect.zoomOut(gAlertAdsDonateStart, 2f, 2f, () -> {
+                  blackDonateStart.remove();
+                  gAlertAdsDonateStart.remove();
+                });
+
+              }
+              else
+                game.gamePlayUI.showAlertFailNetwork();
+
+            });
+          else
+            game.gamePlayUI.showAlertFailNetwork();
+
+        };
+
+        SoundEffects.startSound("btn_click");
+
+        btnOK.setTouchable(Touchable.disabled);
+        effect.click(btnOK, run);
+
+      }
+    });
+
+    btnX.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        super.clicked(event, x, y);
+
+        SoundEffects.startSound("btn_click");
+
+        btnX.setTouchable(Touchable.disabled);
+        effect.zoomOut(gAlertAdsDonateStart, 2f, 2f, () -> {
+          btnX.setTouchable(Touchable.enabled);
+          blackDonateStart.remove();
+          gAlertAdsDonateStart.remove();
+        });
+
+      }
+    });
+
+  }
+
   private void initRank() {
 
     blackRank = GUI.createImage(GMain.liengAtlas, "bg_black");
@@ -143,7 +240,7 @@ public class StartScene {
     Image bgRank = GUI.createImage(GMain.startSceneAtlas, "bg_rank");
     gRank.setSize(bgRank.getWidth(), bgRank.getHeight());
     gRank.setOrigin(Align.center);
-    gRank.setPosition(Config.CENTER_X - gRank.getWidth()/2, Config.CENTER_Y - gRank.getHeight()/2);
+    gRank.setPosition(GStage.getWorldWidth()/2 - gRank.getWidth()/2, GStage.getWorldHeight()/2 - gRank.getHeight()/2);
     gRank.addActor(bgRank);
 
     btnXRank = GUI.createImage(GMain.startSceneAtlas, "icon_exit");
@@ -239,6 +336,8 @@ public class StartScene {
 
         };
 
+        SoundEffects.startSound("btn_click");
+
         btnXRank.setTouchable(Touchable.disabled);
         btnXRank.remove();
         effect.zoomOut(gRank, 2f, 2f, run);
@@ -268,6 +367,8 @@ public class StartScene {
         datas.add(new WheelData(region, id, qty, qtyText, percent));
       }
 
+      System.out.println("JSON " + datas.size());
+
       WheelMiniGame wheel = WheelMiniGame.getInstance(datas);
       wheel.setScale(.8f, .8f);
       wheel.setPosition(GStage.getWorldWidth()/2 - wheel.getWidth()/2, GStage.getWorldHeight()/2 - wheel.getHeight()/2 + 30);
@@ -284,7 +385,7 @@ public class StartScene {
       Label lbRemain = new Label(C.lang.remain + " " + countSpin, new Label.LabelStyle(Config.ALERT_FONT, null));
       lbRemain.setAlignment(Align.center);
       lbRemain.setFontScale(.7f);
-      lbRemain.setPosition(Config.CENTER_X - lbRemain.getWidth()/2,
+      lbRemain.setPosition(GStage.getWorldWidth()/2 - lbRemain.getWidth()/2,
                               GStage.getWorldHeight() - lbRemain.getHeight() - 50);
       gMiniGame.addActor(lbRemain);
 
@@ -300,7 +401,7 @@ public class StartScene {
       Image panel = GUI.createImage(GMain.liengAtlas, "panel_ads");
       gAdsSpin.setSize(panel.getWidth(), panel.getHeight());
       gAdsSpin.setOrigin(Align.center);
-      gAdsSpin.setPosition(Config.CENTER_X - gAdsSpin.getWidth()/2, Config.CENTER_Y - gAdsSpin.getHeight()/2);
+      gAdsSpin.setPosition(GStage.getWorldWidth()/2 - gAdsSpin.getWidth()/2, GStage.getWorldHeight()/2 - gAdsSpin.getHeight()/2);
       gAdsSpin.addActor(panel);
 
       Label lbAds = new Label(C.lang.timeSpinWheelAds, new Label.LabelStyle(Config.ALERT_FONT, null));
@@ -357,6 +458,8 @@ public class StartScene {
 
           };
 
+          SoundEffects.startSound("btn_click");
+
           btnGet.setTouchable(Touchable.disabled);
           effect.click(btnGet, run);
 
@@ -367,6 +470,8 @@ public class StartScene {
         @Override
         public void clicked(InputEvent event, float x, float y) {
           super.clicked(event, x, y);
+
+          SoundEffects.startSound("btn_click");
 
           lbTitle.setVisible(true);
           lbRemain.setVisible(true);
@@ -411,7 +516,7 @@ public class StartScene {
           Logic.getInstance().saveSpin(countSpin);
 
           effect.sclMinToMax(gLbMoneyWheel);
-          game.gamePlayUI.pMoneyWheel.start(Config.CENTER_X, Config.CENTER_Y, .8f);
+          game.gamePlayUI.pMoneyWheel.start(GStage.getWorldWidth()/2, GStage.getWorldHeight()/2, .8f);
 
           //save money
           long moneyy = GMain.pref.getLong("money");
@@ -478,6 +583,8 @@ public class StartScene {
       public void clicked(InputEvent event, float x, float y) {
         super.clicked(event, x, y);
 
+        SoundEffects.startSound("btn_click");
+
         game.gamePlayUI.pMoneyWheel.remove(); //remove particle
         effect.zoomOut(gMiniGame, 2f, 2f, () -> {
           blackMiniGame.remove();
@@ -498,7 +605,7 @@ public class StartScene {
     Image bgPanelSetting = GUI.createImage(GMain.startSceneAtlas, "panel_setting");
     gPanelSetting.setSize(bgPanelSetting.getWidth(), bgPanelSetting.getHeight());
     gPanelSetting.setOrigin(Align.center);
-    gPanelSetting.setPosition(Config.CENTER_X - gPanelSetting.getWidth()/2, Config.CENTER_Y - gPanelSetting.getHeight()/2);
+    gPanelSetting.setPosition(GStage.getWorldWidth()/2 - gPanelSetting.getWidth()/2, GStage.getWorldHeight()/2 - gPanelSetting.getHeight()/2);
     gPanelSetting.addActor(bgPanelSetting);
     gPanelSetting.setScale(0f);
 
@@ -551,6 +658,9 @@ public class StartScene {
           iconMusic.setDrawable(new TextureRegionDrawable(GMain.startSceneAtlas.findRegion("music_on")));
         }
 
+        SoundEffects.startSound("btn_click");
+        SoundEffects.startMusic();
+
       }
     });
 
@@ -568,6 +678,8 @@ public class StartScene {
           iconSound.setDrawable(new TextureRegionDrawable(GMain.startSceneAtlas.findRegion("sound_on")));
         }
 
+        SoundEffects.startSound("btn_click");
+
       }
     });
 
@@ -575,6 +687,8 @@ public class StartScene {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         super.clicked(event, x, y);
+
+        SoundEffects.startSound("btn_click");
 
         btnX.setTouchable(Touchable.disabled);
         effect.sclMaxToMin(gPanelSetting, () -> {
@@ -597,7 +711,7 @@ public class StartScene {
     Image bgPanel = GUI.createImage(GMain.startSceneAtlas, "panel_bet");
     gPanelBet.setSize(bgPanel.getWidth(), bgPanel.getHeight());
     gPanelBet.setOrigin(bgPanel.getWidth()/2, bgPanel.getHeight()/2);
-    gPanelBet.setPosition(Config.CENTER_X - bgPanel.getWidth()/2, Config.CENTER_Y - bgPanel.getHeight()/2);
+    gPanelBet.setPosition(GStage.getWorldWidth()/2 - bgPanel.getWidth()/2, GStage.getWorldHeight()/2 - bgPanel.getHeight()/2);
     gPanelBet.addActor(bgPanel);
 
     //label: button start
@@ -675,8 +789,8 @@ public class StartScene {
 
     Label lbTxtBet = new Label(C.lang.bet, new Label.LabelStyle(Config.ALERT_FONT, null));
     lbTxtBet.setFontScale(.7f, .7f);
-    lbTxtBet.setAlignment(Align.center);
-    lbTxtBet.setPosition(lbTxtNumPlayer.getX(), bgChooseBet.getY() - lbTxtBet.getHeight()/2 + 20);
+    lbTxtBet.setAlignment(Align.left);
+    lbTxtBet.setPosition(lbTxtNumPlayer.getX() + 40, bgChooseBet.getY() - lbTxtBet.getHeight()/2 + 20);
     gPanelBet.addActor(lbTxtBet);
 
     flareChip = GUI.createImage(GMain.liengAtlas, "flare_chip");
@@ -715,6 +829,8 @@ public class StartScene {
       public void clicked(InputEvent event, float x, float y) {
         super.clicked(event, x, y);
 
+        SoundEffects.startSound("btn_click");
+
         moneyBet = Logic.getInstance().getMoneyBuyId(id);
         flareChip.setPosition(chip.getX() + chip.getWidth()*1.2f/2 - flareChip.getWidth()/2,
                 chip.getY() + chip.getHeight()*1.2f/2 - flareChip.getHeight()/2);
@@ -733,7 +849,7 @@ public class StartScene {
     gPanelTutorial = new Group();
     Image panelTutorial = GUI.createImage(GMain.liengAtlas, "panel_ads");
     gPanelTutorial.setSize(panelTutorial.getWidth(), panelTutorial.getHeight());
-    gPanelTutorial.setPosition(Config.CENTER_X - panelTutorial.getWidth()/2, Config.CENTER_Y - panelTutorial.getHeight()/2);
+    gPanelTutorial.setPosition(GStage.getWorldWidth()/2 - panelTutorial.getWidth()/2, GStage.getWorldHeight()/2 - panelTutorial.getHeight()/2);
     gPanelTutorial.setOrigin(Align.center);
     gPanelTutorial.addActor(panelTutorial);
 
@@ -976,6 +1092,8 @@ public class StartScene {
 
         };
 
+        SoundEffects.startSound("btn_click");
+
         gStartScene.addActor(blackTutorial);
         gStartScene.addActor(gPanelTutorial);
         iconTutorial.setTouchable(Touchable.disabled);
@@ -988,6 +1106,8 @@ public class StartScene {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         super.clicked(event, x, y);
+
+        SoundEffects.startSound("btn_click");
 
         btnXPanelTutorial.setTouchable(Touchable.disabled);
         effect.sclMaxToMinAndRotate(gPanelTutorial, () -> {
@@ -1015,6 +1135,8 @@ public class StartScene {
 
         };
 
+        SoundEffects.startSound("btn_click");
+
         arrLeft.setTouchable(Touchable.disabled);
         effect.click(arrLeft, run);
 
@@ -1037,6 +1159,8 @@ public class StartScene {
 
         };
 
+        SoundEffects.startSound("btn_click");
+
         arrRight.setTouchable(Touchable.disabled);
         effect.click(arrRight, run);
 
@@ -1047,6 +1171,8 @@ public class StartScene {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         super.clicked(event, x, y);
+
+        SoundEffects.startSound("btn_click");
 
         btnXPanelBet.setTouchable(Touchable.disabled);
         btnXPanelBet.remove();
@@ -1074,6 +1200,8 @@ public class StartScene {
           effect.sclMinToMax(gPanelSetting);
         };
 
+        SoundEffects.startSound("btn_click");
+
         iconSetting.setTouchable(Touchable.disabled);
         effect.click(iconSetting, run);
 
@@ -1092,10 +1220,34 @@ public class StartScene {
 
         };
 
+        SoundEffects.startSound("btn_click");
+
         iconMiniGame.setTouchable(Touchable.disabled);
         gStartScene.addActor(blackMiniGame);
         gStartScene.addActor(gMiniGame);
         effect.click(iconMiniGame, run);
+
+      }
+    });
+
+    iconGift.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        super.clicked(event, x, y);
+
+        Runnable run = () -> {
+
+          iconGift.setTouchable(Touchable.enabled);
+          effect.zoomIn(gAlertAdsDonateStart, 1f, 1f);
+
+        };
+
+        SoundEffects.startSound("btn_click");
+
+        iconGift.setTouchable(Touchable.disabled);
+        game.gAlert.addActor(blackDonateStart);
+        game.gAlert.addActor(gAlertAdsDonateStart);
+        effect.click(iconGift, run);
 
       }
     });
@@ -1119,6 +1271,8 @@ public class StartScene {
 
         };
 
+        SoundEffects.startSound("btn_click");
+
         lbMoneyPresent.setText(Logic.getInstance().convertMoneyBot(GMain.pref.getLong("money")));
         gBtnStart.setTouchable(Touchable.disabled);
         Effect.getInstance(game).click(gBtnStart, run);
@@ -1138,10 +1292,9 @@ public class StartScene {
 
         };
 
+        SoundEffects.startSound("btn_click");
+
         gBtnRank.setTouchable(Touchable.disabled);
-//        gStartScene.addActor(blackRank);
-//        gStartScene.addActor(btnXRank);
-//        gStartScene.addActor(gRank);
         effect.click(gBtnRank, run);
 
       }
@@ -1158,6 +1311,8 @@ public class StartScene {
           effect.zoomIn(gCrossPanel, 1f, 1f);
 
         };
+
+        SoundEffects.startSound("btn_click");
 
         gBtnOtherGame.setTouchable(Touchable.disabled);
         gStartScene.addActor(blackCrossPanel);
@@ -1188,6 +1343,8 @@ public class StartScene {
           });
 
         };
+
+        SoundEffects.startSound("btn_click");
 
         btnStartPanelBet.setTouchable(Touchable.disabled);
         game.gamePlayUI.addToScene();
@@ -1244,8 +1401,8 @@ public class StartScene {
     Image bgCross = GUI.createImage(GMain.startSceneAtlas, "bg_cross_panel");
     gCrossPanel.setSize(bgCross.getWidth(), bgCross.getHeight());
     gCrossPanel.setOrigin(Align.center);
-    gCrossPanel.setPosition(Config.CENTER_X - gCrossPanel.getWidth()/2,
-                            Config.CENTER_Y - gCrossPanel.getHeight()/2);
+    gCrossPanel.setPosition(GStage.getWorldWidth()/2 - gCrossPanel.getWidth()/2,
+                            GStage.getWorldHeight()/2 - gCrossPanel.getHeight()/2);
     gCrossPanel.addActor(bgCross);
 
     for (int i=0; i<4; i++) {
@@ -1321,6 +1478,8 @@ public class StartScene {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         super.clicked(event, x, y);
+
+        SoundEffects.startSound("btn_click");
 
         btnXCrossPanel.setTouchable(Touchable.disabled);
         btnXCrossPanel.remove();

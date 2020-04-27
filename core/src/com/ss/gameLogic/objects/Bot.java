@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.ss.GMain;
+import com.ss.core.effect.SoundEffects;
 import com.ss.core.util.GUI;
 import com.ss.gameLogic.Game;
 import com.ss.gameLogic.config.C;
@@ -124,6 +125,7 @@ public class Bot {
 
     if (id == 0) {
       lbMoneyBet.setFontScale(.5f);
+      lbMoneyChange.setFontScale(.7f);
       lbConditionBet.setPosition(pos.x - 30, pos.y - 70);
       bgBetCondition.setScale(1.2f);
       bgBetCondition.setPosition(lbConditionBet.getX() + lbConditionBet.getWidth() + 20,
@@ -162,6 +164,9 @@ public class Bot {
 
   public void changeAvatar(Game game) {
     //todo: sound change bot
+
+    SoundEffects.startSound("doorbell");
+
     reset();
     Effect.getInstance(game).changeAvatarBot(this);
   }
@@ -253,6 +258,7 @@ public class Bot {
 
     logic.getPosChipBuyBot(this);
     logic.calculateChip(lsChip, (moneyBet+moneyOwe), posChipOut);
+
   }
 
   public void AllIn() {

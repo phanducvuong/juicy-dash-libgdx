@@ -43,12 +43,17 @@ public class DesktopLauncher {
 
       @Override
       public int GetConfigIntValue(String name, int defaultValue) {
-        return 0;
+        return defaultValue;
+      }
+
+      @Override
+      public long GetConfigLongValue(String name, int defaultValue) {
+        return defaultValue;
       }
 
       @Override
       public String GetConfigStringValue(String name, String defaultValue) {
-        return name.equals("") ? defaultValue : name;
+        return defaultValue;
       }
 
       @Override

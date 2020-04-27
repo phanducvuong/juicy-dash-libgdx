@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.utils.Align;
 import com.platform.IPlatform;
 import com.ss.GMain;
+import com.ss.core.effect.SoundEffects;
 import com.ss.core.util.GClipGroup;
 import com.ss.core.util.GStage;
 import com.ss.core.util.GUI;
@@ -144,7 +145,8 @@ public class GamePlayUI implements IClickCard {
     flare.setOrigin(Align.center);
     gBigWin.setSize(flare.getWidth(), flare.getHeight());
     gBigWin.setOrigin(Align.center);
-    gBigWin.setPosition(Config.CENTER_X - gBigWin.getWidth()/2, Config.CENTER_Y - gBigWin.getHeight()/2);
+    gBigWin.setPosition(GStage.getWorldWidth()/2 - gBigWin.getWidth()/2,
+            GStage.getWorldHeight()/2 - gBigWin.getHeight()/2);
     gBigWin.addActor(flare);
 
     Image bgBigWin = GUI.createImage(GMain.liengAtlas, "bg_big_win");
@@ -163,7 +165,7 @@ public class GamePlayUI implements IClickCard {
     gBigWin.addActor(bigWin);
 
     lbMoneyBigWin = new Label("$1,000,000", new Label.LabelStyle(Config.PLUS_MONEY_FONT, null));
-    lbMoneyBigWin.setAlignment(Align.center);
+    lbMoneyBigWin.setAlignment(Align.left);
     lbMoneyBigWin.setPosition(bgBigWin.getX() + bgBigWin.getWidth()/2 - lbMoneyBigWin.getWidth()/2,
                               bgBigWin.getY() + bgBigWin.getHeight()/2 - lbMoneyBigWin.getHeight()/2);
     gBigWin.addActor(lbMoneyBigWin);
@@ -196,6 +198,8 @@ public class GamePlayUI implements IClickCard {
       public void clicked(InputEvent event, float x, float y) {
         super.clicked(event, x, y);
 
+        SoundEffects.startSound("btn_click");
+
         if (plf.isVideoRewardReady())
           plf.ShowVideoReward((boolean success) -> {
 
@@ -209,8 +213,12 @@ public class GamePlayUI implements IClickCard {
               hideBigWin();
 
             }
+            else
+              showAlertFailNetwork();
 
           });
+        else
+          showAlertFailNetwork();
 
       }
     });
@@ -219,6 +227,8 @@ public class GamePlayUI implements IClickCard {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         super.clicked(event, x, y);
+
+        SoundEffects.startSound("btn_click");
 
         hideBigWin();
 
@@ -262,7 +272,8 @@ public class GamePlayUI implements IClickCard {
     Image panelInGame = GUI.createImage(GMain.liengAtlas, "panel_ads");
     gPanelInGame.setSize(panelInGame.getWidth(), panelInGame.getHeight());
     gPanelInGame.setOrigin(Align.center);
-    gPanelInGame.setPosition(Config.CENTER_X - gPanelInGame.getWidth()/2, Config.CENTER_Y - gPanelInGame.getHeight()/2);
+    gPanelInGame.setPosition(GStage.getWorldWidth()/2 - gPanelInGame.getWidth()/2,
+            GStage.getWorldHeight()/2 - gPanelInGame.getHeight()/2);
     gPanelInGame.addActor(panelInGame);
 
     Label lbTxt = new Label(C.lang.notifyExitGame, new Label.LabelStyle(Config.ALERT_FONT, null));
@@ -301,6 +312,8 @@ public class GamePlayUI implements IClickCard {
 
         };
 
+        SoundEffects.startSound("btn_click");
+
         btnOK.setTouchable(Touchable.disabled);
         effect.click(btnOK, run);
 
@@ -322,6 +335,8 @@ public class GamePlayUI implements IClickCard {
 
 
         };
+
+        SoundEffects.startSound("btn_click");
 
         btnNo.setTouchable(Touchable.disabled);
         effect.click(btnNo, run);
@@ -357,6 +372,8 @@ public class GamePlayUI implements IClickCard {
           effect.sclMinToMax(game.startScene.gPanelSetting);
         };
 
+        SoundEffects.startSound("btn_click");
+
         iconSetting.setTouchable(Touchable.disabled);
         effect.click(iconSetting, run);
 
@@ -383,6 +400,8 @@ public class GamePlayUI implements IClickCard {
           }
 
         };
+
+        SoundEffects.startSound("btn_click");
 
         iconExit.setTouchable(Touchable.disabled);
         effect.click(iconExit, run);
@@ -510,8 +529,8 @@ public class GamePlayUI implements IClickCard {
     donate.setScale(.8f);
     gAlertDonate.setSize(donate.getWidth()*.8f, donate.getHeight()*.8f);
     gAlertDonate.setOrigin(Align.center);
-    gAlertDonate.setPosition(Config.CENTER_X - gAlertDonate.getWidth()/2,
-            Config.CENTER_Y - gAlertDonate.getHeight()/2);
+    gAlertDonate.setPosition(GStage.getWorldWidth()/2 - gAlertDonate.getWidth()/2,
+            GStage.getWorldHeight()/2 - gAlertDonate.getHeight()/2);
     gAlertDonate.addActor(donate);
 
     Label lbDonate = new Label(C.lang.donate, new Label.LabelStyle(Config.ALERT_FONT, null));
@@ -533,6 +552,8 @@ public class GamePlayUI implements IClickCard {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         super.clicked(event, x, y);
+
+        SoundEffects.startSound("btn_click");
 
         long money = GMain.pref.getLong("money") + Config.MONEY_DONATE;
         logic.saveMoney(money);
@@ -561,8 +582,8 @@ public class GamePlayUI implements IClickCard {
     netWork.setScale(.8f);
     gAlertFailNetwork.setSize(netWork.getWidth()*.8f, netWork.getHeight()*.8f);
     gAlertFailNetwork.setOrigin(Align.center);
-    gAlertFailNetwork.setPosition(Config.CENTER_X - gAlertFailNetwork.getWidth()/2,
-            Config.CENTER_Y - gAlertFailNetwork.getHeight()/2);
+    gAlertFailNetwork.setPosition(GStage.getWorldWidth()/2 - gAlertFailNetwork.getWidth()/2,
+            GStage.getWorldHeight()/2 - gAlertFailNetwork.getHeight()/2);
     gAlertFailNetwork.addActor(netWork);
 
     Label lbFailNetwork = new Label(C.lang.failNetwork, new Label.LabelStyle(Config.ALERT_FONT, null));
@@ -584,6 +605,8 @@ public class GamePlayUI implements IClickCard {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         super.clicked(event, x, y);
+
+        SoundEffects.startSound("btn_click");
 
         effect.sclMaxToMin(gAlertFailNetwork, () -> {
           blackNetwork.remove();
@@ -628,8 +651,8 @@ public class GamePlayUI implements IClickCard {
 
           if (moneyBet < game.moneyBet) {
             btnTo.setTouchable(Touchable.enabled);
-            lbMinBet.setPosition(Config.CENTER_X - lbMinBet.getWidth()/2,
-                                    Config.CENTER_Y - lbMinBet.getHeight()/2);
+            lbMinBet.setPosition(GStage.getWorldWidth()/2 - lbMinBet.getWidth()/2,
+                                    GStage.getWorldHeight()/2 - lbMinBet.getHeight()/2);
             lbMinBet.setText(C.lang.minBet + " " + logic.convertMoneyBet(game.moneyBet));
             game.gEffect.addActor(lbMinBet);
             effect.alphaLabel(lbMinBet);
@@ -694,6 +717,8 @@ public class GamePlayUI implements IClickCard {
 
         };
 
+        SoundEffects.startSound("aww");
+
         hideBtnBet();
         effect.click(btnUp, run);
 
@@ -704,6 +729,8 @@ public class GamePlayUI implements IClickCard {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         super.clicked(event, x, y);
+
+        SoundEffects.startSound("btn_click");
 
         btnNewRound.remove();
         game.newRound();
@@ -752,6 +779,8 @@ public class GamePlayUI implements IClickCard {
 
         };
 
+        SoundEffects.startSound("btn_click");
+
         btnAlertAds.setTouchable(Touchable.disabled);
         effect.click(btnAlertAds, run);
 
@@ -762,6 +791,8 @@ public class GamePlayUI implements IClickCard {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         super.clicked(event, x, y);
+
+        SoundEffects.startSound("btn_click");
 
         btnNewRound.addToGroup(game.gBtn);
         effect.sclMaxToMin(gAlertAds, () -> {
@@ -782,8 +813,8 @@ public class GamePlayUI implements IClickCard {
     bgTable.setSize(GStage.getWorldWidth(), GStage.getWorldHeight());
 
     bgTotalMoneyBet = GUI.createImage(GMain.liengAtlas, "bg_money_bet");
-    bgTotalMoneyBet.setPosition(Config.CENTER_X - bgTotalMoneyBet.getWidth()/2,
-                                Config.CENTER_Y - bgTotalMoneyBet.getHeight()/2 - 100);
+    bgTotalMoneyBet.setPosition(GStage.getWorldWidth()/2 - bgTotalMoneyBet.getWidth()/2,
+                                GStage.getWorldHeight()/2 - bgTotalMoneyBet.getHeight()/2 - 100);
 
     bgMoneyBetInGame = GUI.createImage(GMain.liengAtlas, "bg_money_bet_in_game");
     bgMoneyBetInGame.setPosition(10, 10);
@@ -818,7 +849,7 @@ public class GamePlayUI implements IClickCard {
     lbMinBet = new Label(C.lang.minBet + " $10,000", new Label.LabelStyle(Config.BUTTON_FONT, null));
     lbMinBet.setFontScale(.6f);
     lbMinBet.setAlignment(Align.center);
-    lbMinBet.setPosition(Config.CENTER_X - lbMinBet.getWidth()/2, Config.CENTER_Y - lbMinBet.getHeight()/2);
+    lbMinBet.setPosition(GStage.getWorldWidth()/2 - lbMinBet.getWidth()/2, GStage.getWorldHeight()/2 - lbMinBet.getHeight()/2);
     lbMinBet.getColor().a = 0;
 
     //label: alert ads
@@ -830,7 +861,7 @@ public class GamePlayUI implements IClickCard {
     gAlertAds.setSize(bgAlert.getWidth(), bgAlert.getHeight());
 
     gAlertAds.setOrigin(bgAlert.getWidth()/2, bgAlert.getHeight()/2);
-    gAlertAds.setPosition(Config.CENTER_X - bgAlert.getWidth()/2, Config.CENTER_Y - bgAlert.getHeight()/2);
+    gAlertAds.setPosition(GStage.getWorldWidth()/2 - bgAlert.getWidth()/2, GStage.getWorldHeight()/2 - bgAlert.getHeight()/2);
     gAlertAds.addActor(bgAlert);
 
     Label lbAertAds = new Label(C.lang.adsOutOfMoney, new Label.LabelStyle(Config.ALERT_FONT, null));
@@ -855,10 +886,13 @@ public class GamePlayUI implements IClickCard {
 
     //label: button new round
     btnNewRound = new Button(GMain.liengAtlas, "btn_divide", C.lang.divideCard, Config.ALERT_FONT);
-    btnNewRound.setPosition(Config.CENTER_X - btnNewRound.getWidth()/2,
-                            Config.CENTER_Y - btnNewRound.getHeight()/2);
+    btnNewRound.setPosition(GStage.getWorldWidth()/2 - btnNewRound.getWidth()/2,
+                            GStage.getWorldHeight()/2 - btnNewRound.getHeight()/2);
     btnNewRound.moveByLb(0, -10);
-    btnNewRound.setFontScale(.8f, .8f);
+    if (C.lang.idCountry.equals("vn"))
+      btnNewRound.setFontScale(.8f, .8f);
+    else
+      btnNewRound.setFontScale(.6f, .6f);
 //    btnNewRound.addToGroup(game.gBtn);
 
   }
@@ -908,6 +942,8 @@ public class GamePlayUI implements IClickCard {
 
 //    System.out.println("TOTAL MONEY: " + game.bet.totalMoney);
 
+    SoundEffects.startSound("show_all_card");
+
     for (Bot bot : lsBot) {
       if (bot.id != 0) {
         for (int j=0; j<bot.lsCardDown.size(); j++) {
@@ -932,7 +968,10 @@ public class GamePlayUI implements IClickCard {
       effect.winnerIsBot(winner);
     }
     else {
-      pWin.start(Config.CENTER_X, Config.CENTER_Y - 100, Config.SCL_EFFECT_WIN); //particle
+
+      SoundEffects.startSound("win");
+
+      pWin.start(GStage.getWorldWidth()/2, GStage.getWorldHeight()/2 - 100, Config.SCL_EFFECT_WIN); //particle
       winner.eftMoneyWinner(game, game.bet.totalMoney);
       logic.chkMoneyBotIsZero(game.lsBotActive, game.moneyBet, game.lsBot.get(0).getTotalMoney());
 
@@ -953,7 +992,10 @@ public class GamePlayUI implements IClickCard {
       effect.winnerIsBot(winner);
     }
     else {
-      pWin.start(Config.CENTER_X, Config.CENTER_Y - 100, Config.SCL_EFFECT_WIN); //particle
+
+      SoundEffects.startSound("win");
+
+      pWin.start(GStage.getWorldWidth()/2, GStage.getWorldHeight()/2 - 100, Config.SCL_EFFECT_WIN); //particle
       winner.eftMoneyWinner(game, game.bet.totalMoney);
       logic.chkMoneyBotIsZero(game.lsBotActive, game.moneyBet, game.lsBot.get(0).getTotalMoney());
 
@@ -963,7 +1005,8 @@ public class GamePlayUI implements IClickCard {
 
   private void showBigWin() {
 
-    if (game.bet.totalMoney >= (game.moneyBet * Config.MULTI_MONEY_BET_BIG_WIN)) {
+    long moneyBetPlayer = game.lsBot.get(0).getTotalMoneyBet();
+    if (moneyBetPlayer >= (game.moneyBet * Config.TIME_TO_SHOW_BIG_WIN_IN_GAME)) {
       game.gAlert.addActor(blackBigWin);
       game.gAlert.addActor(gBigWin);
       lbMoneyBigWin.setText(logic.convertMoneyBet(game.bet.totalMoney));
@@ -1004,6 +1047,10 @@ public class GamePlayUI implements IClickCard {
     btnTheo.setColor(Color.GRAY);
     btnUp.setColor(Color.GRAY);
 
+  }
+
+  public void showAdsFullscreen() {
+    plf.ShowFullscreen();
   }
 
   public void showBtnBet() {

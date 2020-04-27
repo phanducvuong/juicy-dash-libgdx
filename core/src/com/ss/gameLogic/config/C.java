@@ -3,6 +3,7 @@ package com.ss.gameLogic.config;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.I18NBundle;
+import com.ss.GMain;
 
 import java.util.Locale;
 import java.util.MissingResourceException;
@@ -17,6 +18,7 @@ public class C {
         public static long spinAdsTime = Config.SPIN_TIME_ADS;
         public static long moneyBigWin = Config.REWARD_BIG_WIN;
         public static long donate = Config.MONEY_DONATE;
+        public static long adsDonateStart = Config.ADS_DONATE_START;
 
         static void initRemoteConfig() {
 
@@ -59,9 +61,11 @@ public class C {
       public static String moneyBigWin = "";
       public static String donate = "";
       public static String failNetwork = "";
+      public static String adsDonateStart = "";
 
       static void initLocalize() {
-        FileHandle specFilehandle = Gdx.files.internal("i18n/lang_" + "id");
+        String deviceLang = GMain.platform.GetDefaultLanguage();
+        FileHandle specFilehandle = Gdx.files.internal("i18n/lang_" + deviceLang);
         FileHandle baseFileHandle = Gdx.files.internal("i18n/lang");
 
         try {
@@ -100,6 +104,7 @@ public class C {
         titleMiniGame = locale.get("title_mini_game");
         remain = locale.get("remain");
         failNetwork = locale.get("fail_network");
+        adsDonateStart = locale.get("ads_donate_start");
 
         if (idCountry.equals("vn"))
           tutorial = Strings.tutorialVN;

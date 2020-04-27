@@ -9,6 +9,7 @@ import com.ss.core.util.GStage;
 import com.ss.gameLogic.card.Number;
 import com.ss.gameLogic.card.Type;
 import com.ss.gameLogic.config.C;
+import com.ss.gameLogic.config.Config;
 import com.ss.gameLogic.effects.Effect;
 import com.ss.gameLogic.logic.Bet;
 import com.ss.gameLogic.logic.DivideCard;
@@ -44,7 +45,7 @@ public class Game {
   public List<Bot> lsBot, lsBotActive; //reset lsBotActive when change numOfPlayer
   public List<Card> lsCardDown, lsCardUp;
   public Bot winner; //set null when player go out startScene screen
-  public int numOfPlayer = 2;
+  public int numOfPlayer = 2, countShowFullscreen = 0;
   public long moneyBet = 10000;
   private long tempMoneyPlayer = 20000;
   public boolean isInGame = false;
@@ -198,6 +199,12 @@ public class Game {
   }
 
   public void newRound() {
+
+    countShowFullscreen += 1;
+    if (countShowFullscreen == Config.SHOW_FULL_SCREEN) {
+      gamePlayUI.showAdsFullscreen();
+      countShowFullscreen = 0;
+    }
 
     if (lsBotActive.get(0).getTotalMoney() < moneyBet)
       gamePlayUI.showAlertAds();

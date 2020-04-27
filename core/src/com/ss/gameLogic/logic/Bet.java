@@ -2,6 +2,7 @@ package com.ss.gameLogic.logic;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.ss.core.action.exAction.GSimpleAction;
+import com.ss.core.util.GStage;
 import com.ss.gameLogic.Game;
 import com.ss.gameLogic.config.Config;
 import com.ss.gameLogic.effects.Effect;
@@ -117,8 +118,8 @@ public class Bet {
       totalMoney += bot.getTotalMoney();
       game.gamePlayUI.eftLbTotalMoney(bot.getTotalMoney());
 
-      game.gamePlayUI.pAllIn.start(Config.CENTER_X,
-                                Config.CENTER_Y - 50,
+      game.gamePlayUI.pAllIn.start(GStage.getWorldWidth()/2,
+                                GStage.getWorldHeight()/2 - 50,
                                    Config.SCL_EFFECT_ALL_IN);
       bot.AllIn();
 
@@ -160,8 +161,8 @@ public class Bet {
     totalMoney = totalMoney + moneyBet + moneyOwe;
 
     if (moneyBet == (player.getTotalMoney() - moneyOwe)) {
-      game.gamePlayUI.pAllIn.start(Config.CENTER_X,
-                                Config.CENTER_Y - 50,
+      game.gamePlayUI.pAllIn.start(GStage.getWorldWidth()/2,
+                                GStage.getWorldHeight()/2 - 50,
                                    Config.SCL_EFFECT_ALL_IN);
       player.AllIn();
     }
@@ -190,8 +191,8 @@ public class Bet {
       if (bot.getTotalMoney() == 0)
         bot.THEO(0);
       else {
-        game.gamePlayUI.pAllIn.start(Config.CENTER_X,
-                                  Config.CENTER_Y - 50,
+        game.gamePlayUI.pAllIn.start(GStage.getWorldWidth()/2,
+                                  GStage.getWorldHeight()/2 - 50,
                                      Config.SCL_EFFECT_ALL_IN);
         bot.AllIn();
       }

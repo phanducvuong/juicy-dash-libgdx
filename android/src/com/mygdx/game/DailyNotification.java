@@ -46,9 +46,9 @@ public class DailyNotification {
     private static Calendar GetCalendar(int addDay, int hour) {
         Calendar calendar = Calendar.getInstance();
         int minute = 1;
-        hour = 15;
-        minute = 50;
-        addDay = 0;
+//        hour = 14;
+//        minute = 40;
+//        addDay = 0;
         calendar.set(Calendar.HOUR_OF_DAY, hour);
         calendar.set(Calendar.MINUTE, minute);
         calendar.set(Calendar.SECOND, 10);

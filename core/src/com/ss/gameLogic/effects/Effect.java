@@ -8,6 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.ss.core.action.exAction.GTemporalAction;
+import com.ss.core.effect.SoundEffects;
+import com.ss.core.util.GStage;
 import com.ss.gameLogic.Game;
 import com.ss.gameLogic.logic.Logic;
 import com.ss.gameLogic.objects.Bot;
@@ -17,6 +19,7 @@ import com.ss.gameLogic.objects.Chip;
 
 import static com.ss.gameLogic.config.Config.*;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -345,9 +348,14 @@ public class Effect {
 
       chip.addToScene(game.gChip);
       chip.addAction(
-              moveTo(CENTER_X + rndX, CENTER_Y + rndY - 30, .5f, smooth)
+              moveTo(GStage.getWorldWidth()/2 + rndX, GStage.getWorldHeight()/2 + rndY - 30, .5f, smooth)
       );
     }
+
+    if (lsChip.size() > 0)
+      SoundEffects.startSound("chip_out");
+    else
+      SoundEffects.startSound("theo");
 
     game.gamePlayUI.lsAllChip.addAll(lsChip);
     lsChip.clear();
@@ -356,13 +364,25 @@ public class Effect {
 
   public void arrangeLsChip(List<Chip> lsChip, Bot winner) {
 
+    try {
+      if (lsChip.size() > 20) {
+        int size = lsChip.size() - 20;
+        for (int i=0; i<size; i++) {
+          Chip chip = lsChip.get(i);
+          lsChip.remove(chip);
+          chip.remove();
+        }
+      }
+    }
+    catch (Exception ex) {}
+
     Collections.sort(lsChip, (c1, c2) -> c1.idChip - c2.idChip);
     for (Chip chip : lsChip) {
       int index = lsChip.indexOf(chip);
       chip.setZindex(1000);
       chip.addAction(
               sequence(
-                      moveTo(CENTER_X, CENTER_Y - index*5, .75f, fastSlow),
+                      moveTo(GStage.getWorldWidth()/2, GStage.getWorldHeight()/2 - index*5, .75f, fastSlow),
                       run(() -> {
                         if (index == lsChip.size()-1)
                           moveChipToWinner(lsChip, winner, 0);
