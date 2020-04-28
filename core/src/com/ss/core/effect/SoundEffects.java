@@ -22,7 +22,7 @@ public class SoundEffects {
   private static FileHandle theo = Gdx.files.internal("sound/theo.mp3");
 
   public static boolean isMuteSound = false;
-  public static boolean isMuteMusic = false;
+  public static boolean isMuteMusic = true;
 
   private static Music music;
 

@@ -134,6 +134,8 @@ public class StartScene {
 //            bitmap.getRegion().getRegionHeight());
 //
 //    Image i = new Image(s);
+//    i.setPosition(500,500);
+//    i.setRotation(-30);
 //
 //    game.gTest.addActor(i);
 
@@ -366,8 +368,6 @@ public class StartScene {
 
         datas.add(new WheelData(region, id, qty, qtyText, percent));
       }
-
-      System.out.println("JSON " + datas.size());
 
       WheelMiniGame wheel = WheelMiniGame.getInstance(datas);
       wheel.setScale(.8f, .8f);

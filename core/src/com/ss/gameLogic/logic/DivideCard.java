@@ -1,17 +1,25 @@
 package com.ss.gameLogic.logic;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
 import com.ss.core.action.exAction.GSimpleAction;
 import com.ss.core.effect.SoundEffects;
 import com.ss.core.util.GStage;
 import com.ss.gameLogic.Game;
+import com.ss.gameLogic.config.Config;
 import com.ss.gameLogic.effects.Effect;
 import com.ss.gameLogic.objects.Bot;
 import com.ss.gameLogic.objects.Card;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.delay;
@@ -25,13 +33,33 @@ public class DivideCard {
   private Rule rule = Rule.getInstance();
   private Effect effect;
 
+  private HashMap<String, List<List<Card>>> hmSpecialCardBot, hmSpecialCardPlayer;
+
   private int turn = 0, turnCardDown = -1, countTurn = -1; //reset when new game
   private Bot botPresent;
 
   public DivideCard(Game game) {
 
     this.game = game;
+    this.hmSpecialCardBot = new HashMap<>();
+    this.hmSpecialCardPlayer = new HashMap<>();
     effect = Effect.getInstance(game);
+
+    loadSpecialCard();
+
+  }
+
+  private void loadSpecialCard() {
+
+    FileHandle fhSpecialCardBot = Gdx.files.internal("special_deck_bot.json");
+    FileHandle fhSpecialCardPlayer = Gdx.files.internal("special_deck_player.json");
+
+    initLsSpecialDesk(hmSpecialCardBot, fhSpecialCardBot);
+    initLsSpecialDesk(hmSpecialCardPlayer, fhSpecialCardPlayer);
+
+    //label: test
+//    Card card = hmSpecialCardPlayer.get("sap").get(0).get(0);
+//    System.out.println(card.getName());
 
   }
 
@@ -42,8 +70,8 @@ public class DivideCard {
       botPresent.lsCardDown.add(cardDown);
 
       cardDown.setActive(true);
-      Card cardUp = game.lsCardUp.get(turnCardDown);
-      botPresent.lsCardUp.add(cardUp);
+//      Card cardUp = game.lsCardUp.get(turnCardDown);
+//      botPresent.lsCardUp.add(cardUp);
 
       cardDown.getCard().addAction(GSimpleAction.simpleAction(this::divide));
     }
@@ -80,6 +108,63 @@ public class DivideCard {
     ));
 
     return true;
+  }
+
+  public void chkTimePlayerWinInGame(List<Card> lsCardUp) {
+
+    if (game.countPlayWinInGame >= Config.TIME_PLAYER_WIN_IN_GAME) {
+
+      String key = logic.getKeySpecialDeck(hmSpecialCardBot);
+      int indexOfLsCard = logic.getIndexOfSpecialDeck(hmSpecialCardBot.get(key));
+
+      Bot bot = logic.getBotRnd(game.lsBot);
+      bot.lsCardUp.addAll(hmSpecialCardBot.get(key).get(indexOfLsCard));
+
+      Bot player = game.lsBotActive.get(0);
+      player.lsCardUp.addAll(hmSpecialCardPlayer.get(key).get(indexOfLsCard));
+
+      game.countPlayWinInGame = 0;
+    }
+    else
+      setCardUpForBot(lsCardUp);
+
+  }
+
+  private void initLsSpecialDesk(HashMap<String, List<List<Card>>> hmDeck, FileHandle fileHandle) {
+
+    JsonReader jsonReader = new JsonReader();
+    JsonValue jsonValue = jsonReader.parse(fileHandle.readString());
+
+    for (JsonValue value : jsonValue) {
+
+      List<List<Card>> lsTemp = new ArrayList<>();
+      for (JsonValue j : value) {
+
+        List<Card> temp = new ArrayList<>();
+        for (int i=0; i<j.size; i++)
+          temp.add(logic.getCardByName(j.get(0).asString(), game.lsCardUp));
+        lsTemp.add(temp);
+
+      }
+
+      hmDeck.put(value.name, lsTemp);
+
+    }
+
+  }
+
+  private void setCardUpForBot(List<Card> lsCard) {
+
+    Collections.shuffle(lsCard, new Random());
+    int count = 0;
+    for (Bot bot : game.lsBotActive) {
+      bot.lsCardUp.add(lsCard.get(count));
+      bot.lsCardUp.add(lsCard.get(count+1));
+      bot.lsCardUp.add(lsCard.get(count+2));
+
+      count += 3;
+    }
+
   }
 
   public void nextTurn() {
@@ -134,7 +219,7 @@ public class DivideCard {
     }
 
     resetDesk();
-    shuffleLsCardUp();
+//    shuffleLsCardUp();
 
   }
 

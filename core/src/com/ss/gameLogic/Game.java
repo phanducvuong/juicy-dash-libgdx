@@ -45,7 +45,7 @@ public class Game {
   public List<Bot> lsBot, lsBotActive; //reset lsBotActive when change numOfPlayer
   public List<Card> lsCardDown, lsCardUp;
   public Bot winner; //set null when player go out startScene screen
-  public int numOfPlayer = 2, countShowFullscreen = 0;
+  public int numOfPlayer = 2, countShowFullscreen = 0, countPlayWinInGame = 0;
   public long moneyBet = 10000;
   private long tempMoneyPlayer = 20000;
   public boolean isInGame = false;
@@ -226,7 +226,11 @@ public class Game {
       logic.saveMoney(lsBotActive.get(0).getTotalMoney());
 
       logMoneyBot();
+
+      //nếu player thắng trên số ván quy định => can thiệp vài bài của player => thua
+      divideCard.chkTimePlayerWinInGame(lsCardUp);
       divideCard.nextTurn();
+
       isInGame = true;
     }
 

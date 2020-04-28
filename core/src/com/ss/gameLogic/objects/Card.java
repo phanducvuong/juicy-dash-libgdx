@@ -24,6 +24,7 @@ public class Card {
   private int idBot = -1; //save idBot to get bot winner when check all cards in bot
   private IClickCard iClickCard;
   private boolean isActive = false; //check card to move Card Residual
+  private String name;
 
   private Image card;
 
@@ -32,6 +33,7 @@ public class Card {
     if (type != null && number != null) {
       this.type = type;
       this.number = number;
+      this.name = number + "_" + type;
     }
 
     if (isCardDown)
@@ -120,6 +122,10 @@ public class Card {
 
   public float getHeight() {
     return card.getHeight();
+  }
+
+  public String getName() {
+    return name;
   }
 
   public Image getCard() {

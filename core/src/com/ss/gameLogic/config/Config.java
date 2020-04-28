@@ -29,6 +29,7 @@ public class Config {
   public static final long ADS_DONATE_START = GMain.platform.GetConfigLongValue("ADS_DONATE_START", 2000000); //todo: remote config to give 2000000 (default 2000000)
   public static final int SHOW_FULL_SCREEN = GMain.platform.GetConfigIntValue("SHOW_FULL_SCREEN", 5); //todo: remote config show ads fullscreen (default 3)
   public static final long MONEY_NOTIFY = GMain.platform.GetConfigLongValue("MONEY_NOTIFY", 2000000); //todo: remote config money notifycation app (default 2000000)
+  public static final long TIME_PLAYER_WIN_IN_GAME = GMain.platform.GetConfigIntValue("TIME_PLAYER_WIN_IN_GAME", 3); //todo: remote config play win in game (default 3)
 
   public static float SCL_EFFECT_WIN = 3f;
   public static float SCL_EFFECT_ALL_IN = 3f;

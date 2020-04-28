@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class Logic {
@@ -287,7 +288,9 @@ public class Logic {
   public long rndMoneyTo(long moneyBot) {
 
     float rnd = Math.round(Math.random() * 1000);
-    return (long) ((rnd/1000 == 0) ? (rnd/1000 + 0.1) * moneyBot : (rnd/1000) * moneyBot);
+    return (long) ((rnd/1000 == 0) ? (rnd/1000 + 0.1) * moneyBot
+            : (rnd/1000 >= 0.7) ? 0.7 - (rnd/1000) * moneyBot
+            : (rnd/1000) * moneyBot);
 
   }
 
@@ -508,6 +511,36 @@ public class Logic {
             && calendar1.get(Calendar.MONTH) == calendar2.get(Calendar.MONTH)
             && calendar1.get(Calendar.DAY_OF_MONTH) == calendar2.get(Calendar.DAY_OF_MONTH);
 
+  }
+
+  public Card getCardByName(String name, List<Card> lsCard) {
+
+    for (Card card : lsCard)
+      if (card.getName().equals(name))
+        return card;
+    return null;
+  }
+
+  public Bot getBotRnd(List<Bot> lsBot) {
+    int rnd = (int) Math.round(Math.random() * 4 + 1);
+    return lsBot.get(rnd);
+  }
+
+  public String getKeySpecialDeck(HashMap<String, List<List<Card>>> hm) {
+    int rndIndex = (int) Math.round(Math.random() * hm.size());
+
+    if (rndIndex == 0)
+      return "sap";
+    else if (rndIndex == 1)
+      return "lieng";
+    else if (rndIndex == 2)
+      return "anh";
+    else
+      return "diem";
+  }
+
+  public int getIndexOfSpecialDeck(List<List<Card>> lsCard) {
+    return (int) Math.round(Math.random() * lsCard.size());
   }
 
   public long getMoneyBuyId(String id) {

@@ -256,7 +256,8 @@ public class GamePlayUI implements IClickCard {
 //      public void clicked(InputEvent event, float x, float y) {
 //        super.clicked(event, x, y);
 //
-//        pMoneyWheel.start(500, 500, 1f);
+//        float rnd = Math.round(Math.random() * 4 + 1);
+//        System.out.println(rnd);
 //
 //      }
 //    });
@@ -976,6 +977,7 @@ public class GamePlayUI implements IClickCard {
       logic.chkMoneyBotIsZero(game.lsBotActive, game.moneyBet, game.lsBot.get(0).getTotalMoney());
 
       showBigWin();
+      game.countPlayWinInGame += 1;
     }
 
   }
@@ -986,6 +988,7 @@ public class GamePlayUI implements IClickCard {
 
   public void showCardWinner(Bot winner) {
     effect.arrangeLsChip(lsAllChip, winner);
+
     if (winner.id != 0) {
       pMoneyWheel.start(winner.avatar.getX() + winner.avatar.getWidth()/2,
               winner.avatar.getY() + winner.avatar.getHeight()/2, .5f);
@@ -1000,6 +1003,7 @@ public class GamePlayUI implements IClickCard {
       logic.chkMoneyBotIsZero(game.lsBotActive, game.moneyBet, game.lsBot.get(0).getTotalMoney());
 
       showBigWin();
+      game.countPlayWinInGame += 1;
     }
   }
 
