@@ -278,10 +278,10 @@ public class Logic {
 
   public long initMoneyBot(long moneyPlayer, long moneyBet) {
     float rnd = (float) Math.round(Math.random() * 10000)/10000;
-    long tempMoney = (long) (moneyPlayer * 10 * rnd)/1000;
+    long tempMoney = (long) (moneyPlayer * Config.MULTI_INIT_MONEY_BOT * rnd)/1000;
     tempMoney = tempMoney*1000;
     return tempMoney <= moneyPlayer ?
-           moneyPlayer == 0 ? (moneyBet * 3) : (moneyPlayer*2 + moneyBet)
+           moneyPlayer == 0 ? (moneyBet * 3) : (moneyPlayer*Config.MULTI_INIT_MONEY_BOT)
            : (tempMoney + moneyBet);
   }
 

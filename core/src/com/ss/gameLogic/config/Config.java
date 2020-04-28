@@ -18,6 +18,7 @@ public class Config {
   private static final FileHandle fh2 = Gdx.files.internal("other_games.json");
   public static String otherGameData = GMain.platform.GetConfigStringValue("OTHER_GAMES_LINK", fh2.readString());
 
+  public static final int MULTI_INIT_MONEY_BOT = 5; //todo: remote config money bot equal money player * 5 (default 5)
   public static final long MONEY_NEWBIE = GMain.platform.GetConfigLongValue("MONEY_NEWBIE", 1000000); //todo: remote config money newbie (default 1000000)
   public static final long MONEY_DONATE = GMain.platform.GetConfigLongValue("MONEY_DONATE", 500000); //todo: remote config donate money when wrong network
   public static final int SPIN_TIME = GMain.platform.GetConfigIntValue("SPIN_TIME", 3); //todo: remote config in firebase (default 3)
