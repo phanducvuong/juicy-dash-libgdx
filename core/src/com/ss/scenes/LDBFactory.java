@@ -78,8 +78,8 @@ public class LDBFactory {
     }
 
     @Override
-    public int getCurrentScore(int rank) {
-      return 100000;
+    public long getCurrentScore(int rank) {
+      return GMain.pref.getLong("money");
     }
 
   }

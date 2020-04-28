@@ -64,7 +64,7 @@ public class Leaderboard extends GScreen {
 
   public interface RankingService {
     int getNRank();
-    int getCurrentScore(int rank);
+    long getCurrentScore(int rank);
   }
 
   private                   TextureAtlas                      lbAtlas;

@@ -35,6 +35,7 @@ import com.ss.gameLogic.logic.Logic;
 import com.ss.gameLogic.objects.Button;
 import com.ss.gameLogic.objects.WheelMiniGame;
 import com.ss.minigames.Wheel;
+import com.ss.repository.Leaderboard;
 import com.ss.scenes.LDBFactory;
 
 import java.text.ParseException;
@@ -98,6 +99,7 @@ public class StartScene {
     this.gStartScene.setOrigin(Align.center);
 
     SoundEffects.startMusic();
+    Leaderboard.PlayerData.init();
 
     initUI();
     initIcon();
@@ -1345,6 +1347,7 @@ public class StartScene {
         };
 
         SoundEffects.startSound("btn_click");
+        plf.ShowFullscreen();
 
         btnStartPanelBet.setTouchable(Touchable.disabled);
         game.gamePlayUI.addToScene();

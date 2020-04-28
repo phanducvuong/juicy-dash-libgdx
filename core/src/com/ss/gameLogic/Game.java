@@ -124,6 +124,8 @@ public class Game {
       bot.removeActor();
     }
 
+    countShowFullscreen = 0;
+
     gamePlayUI.lbMoneyBetInGame.setText(C.lang.bet + ": " + logic.convertMoneyBet(moneyBet));
     gamePlayUI.showBtnNewRound();
     getLsBotActive();

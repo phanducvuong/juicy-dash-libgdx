@@ -256,7 +256,7 @@ public class GamePlayUI implements IClickCard {
 //      public void clicked(InputEvent event, float x, float y) {
 //        super.clicked(event, x, y);
 //
-//        float rnd = Math.round(Math.random() * 4 + 1);
+//        float rnd = Math.round(Math.random() * 2);
 //        System.out.println(rnd);
 //
 //      }
@@ -1010,7 +1010,7 @@ public class GamePlayUI implements IClickCard {
   private void showBigWin() {
 
     long moneyBetPlayer = game.lsBot.get(0).getTotalMoneyBet();
-    if (moneyBetPlayer >= (game.moneyBet * Config.TIME_TO_SHOW_BIG_WIN_IN_GAME)) {
+    if (game.bet.totalMoney >= (game.moneyBet * Config.TIME_TO_SHOW_BIG_WIN_IN_GAME)) {
       game.gAlert.addActor(blackBigWin);
       game.gAlert.addActor(gBigWin);
       lbMoneyBigWin.setText(logic.convertMoneyBet(game.bet.totalMoney));

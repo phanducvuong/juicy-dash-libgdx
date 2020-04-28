@@ -18,7 +18,8 @@ public class Config {
   private static final FileHandle fh2 = Gdx.files.internal("other_games.json");
   public static String otherGameData = GMain.platform.GetConfigStringValue("OTHER_GAMES_LINK", fh2.readString());
 
-  public static final int MULTI_INIT_MONEY_BOT = 5; //todo: remote config money bot equal money player * 5 (default 5)
+  public static final int MULTI_RND_MONEY_BET = GMain.platform.GetConfigIntValue("MULTI_RND_MONEY_BET", 10);; //todo: remote config money bet
+  public static final int MULTI_INIT_MONEY_BOT = GMain.platform.GetConfigIntValue("MULTI_INIT_MONEY_BOT", 5); //todo: remote config money bot equal money player * 5 (default 5)
   public static final long MONEY_NEWBIE = GMain.platform.GetConfigLongValue("MONEY_NEWBIE", 1000000); //todo: remote config money newbie (default 1000000)
   public static final long MONEY_DONATE = GMain.platform.GetConfigLongValue("MONEY_DONATE", 500000); //todo: remote config donate money when wrong network
   public static final int SPIN_TIME = GMain.platform.GetConfigIntValue("SPIN_TIME", 3); //todo: remote config in firebase (default 3)
@@ -26,7 +27,7 @@ public class Config {
   public static final long MONEY_ADS = GMain.platform.GetConfigLongValue("MONEY_ADS", 1000000); //todo: remote config 1000000 (default 500000)
   public static final int MINUS_MONEY_EXIT_GAME = GMain.platform.GetConfigIntValue("MINUS_MONEY_EXIT_GAME", 2); //todo: remote config minus money when player exit game during game is playing (default 2)
   public static final int REWARD_BIG_WIN = GMain.platform.GetConfigIntValue("REWARD_BIG_WIN", 2); //todo: remote config reward big win (default x5)
-  public static final int TIME_TO_SHOW_BIG_WIN_IN_GAME = GMain.platform.GetConfigIntValue("TIME_TO_SHOW_BIG_WIN_IN_GAME", 15); //todo: remote config show big win (default 3)
+  public static final int TIME_TO_SHOW_BIG_WIN_IN_GAME = GMain.platform.GetConfigIntValue("TIME_TO_SHOW_BIG_WIN_IN_GAME", 10); //todo: remote config show big win (default 3)
   public static final long ADS_DONATE_START = GMain.platform.GetConfigLongValue("ADS_DONATE_START", 2000000); //todo: remote config to give 2000000 (default 2000000)
   public static final int SHOW_FULL_SCREEN = GMain.platform.GetConfigIntValue("SHOW_FULL_SCREEN", 5); //todo: remote config show ads fullscreen (default 3)
   public static final long MONEY_NOTIFY = GMain.platform.GetConfigLongValue("MONEY_NOTIFY", 2000000); //todo: remote config money notifycation app (default 2000000)

@@ -287,10 +287,8 @@ public class Logic {
 
   public long rndMoneyTo(long moneyBot) {
 
-    float rnd = Math.round(Math.random() * 1000);
-    return (long) ((rnd/1000 == 0) ? (rnd/1000 + 0.1) * moneyBot
-            : (rnd/1000 >= 0.7) ? 0.7 - (rnd/1000) * moneyBot
-            : (rnd/1000) * moneyBot);
+    int rnd = (int) Math.round(Math.random() * Config.MULTI_RND_MONEY_BET);
+    return rnd == 0 ? game.moneyBet : rnd * game.moneyBet;
 
   }
 
@@ -522,7 +520,9 @@ public class Logic {
   }
 
   public Bot getBotRnd(List<Bot> lsBot) {
-    int rnd = (int) Math.round(Math.random() * 4 + 1);
+    int rnd = (int) Math.round(Math.random() * lsBot.size());
+    if (rnd == 0 || rnd >= lsBot.size())
+      rnd = 1;
     return lsBot.get(rnd);
   }
 
@@ -540,7 +540,8 @@ public class Logic {
   }
 
   public int getIndexOfSpecialDeck(List<List<Card>> lsCard) {
-    return (int) Math.round(Math.random() * lsCard.size());
+    int t = lsCard.size() - 1;
+    return (int) Math.round(Math.random() * t);
   }
 
   public long getMoneyBuyId(String id) {

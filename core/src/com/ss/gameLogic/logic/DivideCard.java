@@ -17,9 +17,11 @@ import com.ss.gameLogic.objects.Bot;
 import com.ss.gameLogic.objects.Card;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.delay;
@@ -117,16 +119,25 @@ public class DivideCard {
       String key = logic.getKeySpecialDeck(hmSpecialCardBot);
       int indexOfLsCard = logic.getIndexOfSpecialDeck(hmSpecialCardBot.get(key));
 
-      Bot bot = logic.getBotRnd(game.lsBot);
+      List<Bot> lsBot = new ArrayList<>(game.lsBotActive);
+      List<Card> lsTmpCard = new ArrayList<>(lsCardUp);
+
+      Bot bot = logic.getBotRnd(game.lsBotActive);
       bot.lsCardUp.addAll(hmSpecialCardBot.get(key).get(indexOfLsCard));
+      removeCardIsAlive(lsTmpCard, hmSpecialCardBot.get(key).get(indexOfLsCard));
+      lsBot.remove(bot);
 
       Bot player = game.lsBotActive.get(0);
       player.lsCardUp.addAll(hmSpecialCardPlayer.get(key).get(indexOfLsCard));
+      removeCardIsAlive(lsTmpCard, hmSpecialCardPlayer.get(key).get(indexOfLsCard));
+      lsBot.remove(player);
 
+      setCardUpForBot(lsTmpCard, lsBot);
       game.countPlayWinInGame = 0;
+
     }
     else
-      setCardUpForBot(lsCardUp);
+      setCardUpForBot(lsCardUp, game.lsBotActive);
 
   }
 
@@ -141,8 +152,9 @@ public class DivideCard {
       for (JsonValue j : value) {
 
         List<Card> temp = new ArrayList<>();
-        for (int i=0; i<j.size; i++)
-          temp.add(logic.getCardByName(j.get(0).asString(), game.lsCardUp));
+        for (int i=0; i<j.size; i++) {
+          temp.add(logic.getCardByName(j.get(i).asString(), game.lsCardUp));
+        }
         lsTemp.add(temp);
 
       }
@@ -153,11 +165,11 @@ public class DivideCard {
 
   }
 
-  private void setCardUpForBot(List<Card> lsCard) {
+  private void setCardUpForBot(List<Card> lsCard, List<Bot> lslBot) {
 
     Collections.shuffle(lsCard, new Random());
     int count = 0;
-    for (Bot bot : game.lsBotActive) {
+    for (Bot bot : lslBot) {
       bot.lsCardUp.add(lsCard.get(count));
       bot.lsCardUp.add(lsCard.get(count+1));
       bot.lsCardUp.add(lsCard.get(count+2));
@@ -165,6 +177,11 @@ public class DivideCard {
       count += 3;
     }
 
+  }
+
+  private void removeCardIsAlive(List<Card> lsCardParent, List<Card> lsCardRm) {
+    for (Card card : lsCardRm)
+      lsCardParent.remove(card);
   }
 
   public void nextTurn() {
