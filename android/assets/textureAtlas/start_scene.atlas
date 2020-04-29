@@ -132,14 +132,14 @@ icon_mini_game
   index: -1
 icon_rank_1
   rotate: false
-  xy: 1823, 21
+  xy: 1883, 821
   size: 134, 134
   orig: 134, 134
   offset: 0, 0
   index: -1
-icon_rank_2
+icon_rank_3
   rotate: false
-  xy: 1883, 821
+  xy: 1823, 21
   size: 134, 134
   orig: 134, 134
   offset: 0, 0
@@ -199,6 +199,13 @@ bg_cross_panel
   orig: 902, 507
   offset: 0, 0
   index: -1
+btn_alert
+  rotate: false
+  xy: 906, 281
+  size: 255, 113
+  orig: 255, 113
+  offset: 0, 0
+  index: -1
 btn_get
   rotate: false
   xy: 906, 396
@@ -208,56 +215,56 @@ btn_get
   index: -1
 flare
   rotate: false
-  xy: 1337, 341
+  xy: 1511, 341
   size: 162, 168
   orig: 162, 168
   offset: 0, 0
   index: -1
 icon_btn_rank
   rotate: false
-  xy: 1773, 375
+  xy: 1080, 145
   size: 128, 134
   orig: 128, 134
   offset: 0, 0
   index: -1
-icon_rank_3
+icon_rank_2
   rotate: false
-  xy: 1501, 375
+  xy: 1675, 375
   size: 134, 134
   orig: 134, 134
   offset: 0, 0
   index: -1
 icon_rank_4
   rotate: false
-  xy: 1637, 375
+  xy: 1811, 375
   size: 134, 134
   orig: 134, 134
   offset: 0, 0
   index: -1
 icon_setting
   rotate: false
-  xy: 1903, 417
+  xy: 906, 13
   size: 92, 92
   orig: 92, 92
   offset: 0, 0
   index: -1
 music_off
   rotate: false
-  xy: 906, 48
+  xy: 1163, 337
   size: 172, 172
   orig: 172, 172
   offset: 0, 0
   index: -1
 music_on
   rotate: false
-  xy: 1163, 337
+  xy: 1337, 337
   size: 172, 172
   orig: 172, 172
   offset: 0, 0
   index: -1
 sound_off
   rotate: false
-  xy: 906, 222
+  xy: 906, 107
   size: 172, 172
   orig: 172, 172
   offset: 0, 0

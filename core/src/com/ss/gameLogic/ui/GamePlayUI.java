@@ -541,7 +541,7 @@ public class GamePlayUI implements IClickCard {
             donate.getY() + donate.getHeight()*donate.getScaleY()/2 - lbDonate.getHeight()/2 - 60);
     gAlertDonate.addActor(lbDonate);
 
-    Button btnOk = new Button(GMain.startSceneAtlas, "btn_get", C.lang.yes, Config.BUTTON_FONT);
+    Button btnOk = new Button(GMain.startSceneAtlas, "btn_alert", C.lang.yes, Config.BUTTON_FONT);
     btnOk.setPosition(donate.getX() + donate.getWidth()*donate.getScaleX()/2 - btnOk.getWidth()/2,
             donate.getY() + donate.getHeight()*donate.getScaleY() - btnOk.getHeight() - 5);
     btnOk.moveByLb(0, -5);
@@ -594,7 +594,7 @@ public class GamePlayUI implements IClickCard {
             netWork.getY() + netWork.getHeight()*netWork.getScaleY()/2 - lbFailNetwork.getHeight()/2 - 60);
     gAlertFailNetwork.addActor(lbFailNetwork);
 
-    Button btnOk = new Button(GMain.startSceneAtlas, "btn_get", C.lang.yes, Config.BUTTON_FONT);
+    Button btnOk = new Button(GMain.startSceneAtlas, "btn_alert", C.lang.yes, Config.BUTTON_FONT);
     btnOk.setPosition(netWork.getX() + netWork.getWidth()*netWork.getScaleX()/2 - btnOk.getWidth()/2,
             netWork.getY() + netWork.getHeight()*netWork.getScaleY() - btnOk.getHeight() - 5);
     btnOk.moveByLb(0, -5);
