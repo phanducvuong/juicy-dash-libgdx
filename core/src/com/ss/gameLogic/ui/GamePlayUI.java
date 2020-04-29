@@ -75,6 +75,8 @@ public class GamePlayUI implements IClickCard {
   private Group gAlertFailNetwork;
   private Image blackNetwork;
 
+  private Image hand;
+
   public GamePlayUI(Game game) {
 
     this.game = game;
@@ -90,6 +92,7 @@ public class GamePlayUI implements IClickCard {
     initIconBigWin();
     initPanelDonate();
     initPanelFailNetwork();
+    initHand();
     handleClickBtnBet();
     handleClickBtnAlert();
     hideBtnBet();
@@ -132,6 +135,16 @@ public class GamePlayUI implements IClickCard {
     lbMoneyRate.remove();
     iconSetting.remove();
     iconExit.remove();
+
+  }
+
+  private void initHand() {
+
+    hand = GUI.createImage(GMain.liengAtlas, "hand");
+    hand.setPosition(Config.POS_BOT_0.x + 70, Config.POS_BOT_0.y - 10);
+    hand.setRotation(-90);
+
+    effect.hand(hand);
 
   }
 
@@ -898,6 +911,14 @@ public class GamePlayUI implements IClickCard {
 
   }
 
+  public void showHand() {
+    game.gAlert.addActor(hand);
+  }
+
+  public void hideHand() {
+    hand.remove();
+  }
+
   public void showAlertAds() {
     game.gAlert.addActor(bgBlackAlertAds);
     game.gAlert.addActor(gAlertAds);
@@ -937,6 +958,7 @@ public class GamePlayUI implements IClickCard {
   @Override
   public void click(Card cardDown, Card cardUp) {
     effect.flipCard(cardDown, cardUp);
+    hideHand();
   }
 
   public void showAllWhenFindWinner(List<Bot> lsBot, Bot winner) {

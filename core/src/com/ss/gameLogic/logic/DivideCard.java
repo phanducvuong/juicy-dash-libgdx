@@ -87,7 +87,10 @@ public class DivideCard {
                 logic.findIdRuleOfLsBot(game.lsBotActive);
               }),
               delay(1f),
-              run(() -> game.startBet())
+              run(() -> {
+                game.startBet();
+                game.gamePlayUI.showHand();
+              })
       ));
 
     }

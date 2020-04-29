@@ -503,4 +503,14 @@ public class Effect {
     );
   }
 
+  public void hand(Image h) {
+    h.addAction(
+            sequence(
+                    moveBy(0, 20, .5f, fastSlow),
+                    moveBy(0, -20, .5f, fastSlow),
+                    run(() -> hand(h))
+            )
+    );
+  }
+
 }
