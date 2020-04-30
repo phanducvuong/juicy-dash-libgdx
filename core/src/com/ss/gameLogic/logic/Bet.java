@@ -224,6 +224,9 @@ public class Bet {
       else
         TO(bot);
     }
+    else if (!game.lsBotActive.get(0).isAlive()) {
+      THEO(bot);
+    }
     else {
       switch (bot.idRule) {
 

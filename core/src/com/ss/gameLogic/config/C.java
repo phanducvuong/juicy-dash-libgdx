@@ -65,7 +65,7 @@ public class C {
 
       static void initLocalize() {
         String deviceLang = GMain.platform.GetDefaultLanguage();
-        FileHandle specFilehandle = Gdx.files.internal("i18n/lang_" + "id");
+        FileHandle specFilehandle = Gdx.files.internal("i18n/lang_" + deviceLang);
         FileHandle baseFileHandle = Gdx.files.internal("i18n/lang");
 
         try {
@@ -105,11 +105,6 @@ public class C {
         remain = locale.get("remain");
         failNetwork = locale.get("fail_network");
         adsDonateStart = locale.get("ads_donate_start");
-
-        if (idCountry.equals("vn"))
-          tutorial = Strings.tutorialVN;
-        else
-          tutorial = Strings.tutorialEN;
 
         adsOutOfMoney = locale.format("out_of_money", remote.moneyAds);
         notifyExitGame = locale.format("notify_exit_game", remote.minusMoney);

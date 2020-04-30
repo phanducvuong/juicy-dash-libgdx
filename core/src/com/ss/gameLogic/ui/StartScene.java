@@ -865,14 +865,21 @@ public class StartScene {
     lbChkWidth.setAlignment(Align.center);
     lbChkWidth.setFontScale(.55f);
 
+    String[] sArr = {};
+
+    if (C.lang.idCountry.equals("vn"))
+      sArr = Strings.tutorialVN;
+    else
+      sArr = Strings.tutorialEN;
+
     StringBuffer sBuff = new StringBuffer();
     Table scroll = new Table();
-    for (int index=0; index<Strings.aaa.length; index++) {
+    for (int index=0; index<sArr.length; index++) {
 
-      String[] s = Strings.aaa[index].split(" ");
+      String[] s = sArr[index].split(" ");
 
       if (index == 0) {
-        Group g = createLb(gLb, Strings.aaa[index], scroll, 0);
+        Group g = createLb(gLb, sArr[index], scroll, 0);
         scroll.add(g).padBottom(80).padTop(30);
       }
       else {
