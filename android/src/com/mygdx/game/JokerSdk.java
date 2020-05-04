@@ -63,15 +63,15 @@ public class JokerSdk implements IPlatform {
 
   private static final String LEADERBOARD_ID = "12345";
 
-  private static final String ADMOB_APP_ID = "ca-app-pub-9108876944724815~2860612267";
-  private static final String ADMOB_BANNER_ID = "ca-app-pub-3940256099942544/6300978111";
-  private static final String ADMOB_FULLSCREEN_ID = "ca-app-pub-9108876944724815/4345084320";
-  private static final String ADMOB_VIDEO_ID = "ca-app-pub-9108876944724815/1718920981";
-
-//  private static final String ADMOB_APP_ID = "ca-app-pub-9108876944724815~8160462448";
+//  private static final String ADMOB_APP_ID = "ca-app-pub-9108876944724815~2860612267";
 //  private static final String ADMOB_BANNER_ID = "ca-app-pub-3940256099942544/6300978111";
-//  private static final String ADMOB_FULLSCREEN_ID = "ca-app-pub-3940256099942544/1033173712";
-//  private static final String ADMOB_VIDEO_ID = "ca-app-pub-3940256099942544/5224354917";
+//  private static final String ADMOB_FULLSCREEN_ID = "ca-app-pub-9108876944724815/4345084320";
+//  private static final String ADMOB_VIDEO_ID = "ca-app-pub-9108876944724815/1718920981";
+
+  private static final String ADMOB_APP_ID = "ca-app-pub-9108876944724815~8160462448";
+  private static final String ADMOB_BANNER_ID = "ca-app-pub-3940256099942544/6300978111";
+  private static final String ADMOB_FULLSCREEN_ID = "ca-app-pub-3940256099942544/1033173712";
+  private static final String ADMOB_VIDEO_ID = "ca-app-pub-3940256099942544/5224354917";
 
   private IPlatform.OnVideoRewardClosed videoRewardCallback = null;
   boolean bannerVisible = false;
