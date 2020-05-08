@@ -1,4 +1,4 @@
-package com.ss.gameLogic.config;
+package com.ss.config;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;

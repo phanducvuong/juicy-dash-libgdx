@@ -4,9 +4,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.ss.GMain;
+import com.ss.config.C;
 import com.ss.core.util.GAssetsManager;
 import com.ss.core.util.GScreen;
-import com.ss.gameLogic.config.C;
 import com.ss.repository.Leaderboard;
 
 public class LDBFactory {

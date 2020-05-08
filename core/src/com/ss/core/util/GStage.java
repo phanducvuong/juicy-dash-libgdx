@@ -175,7 +175,9 @@ public final class GStage {
       var4.end();
       return var2;
    }
+
    public static float getWorldWidth(){return stage.getViewport().getWorldWidth();}
+
    public static float getWorldHeight(){return stage.getViewport().getWorldHeight();}
 
    public static float getStageHeight() {

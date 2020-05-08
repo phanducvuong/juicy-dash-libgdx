@@ -14,11 +14,14 @@ public class Particle {
 
   public Particle(Group group, FileHandle fileHandle) {
 
-    ParticleEffect pe = new ParticleEffect();
-    pe.load(fileHandle, GMain.particleAtlas);
+    if (GMain.particleAtlas != null) {
+      ParticleEffect pe = new ParticleEffect();
+      pe.load(fileHandle, GMain.particleAtlas);
 
-    ParticleEffectPool pep = new ParticleEffectPool(pe, 0, 100);
-    particle = new ParticleEffects(group, pep, pe);
+      ParticleEffectPool pep = new ParticleEffectPool(pe, 0, 100);
+      particle = new ParticleEffects(group, pep, pe);
+    }
+
 
   }
 

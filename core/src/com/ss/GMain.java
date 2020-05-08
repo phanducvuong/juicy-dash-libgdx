@@ -3,7 +3,6 @@ package com.ss;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.platform.IPlatform;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.ss.core.effect.SoundEffects;
 import com.ss.core.exSprite.particle.GParticleSystem;
@@ -12,10 +11,8 @@ import com.ss.core.util.GDirectedGame;
 import com.ss.core.util.GScreen;
 import com.ss.core.util.GStage;
 import com.ss.core.util.GStage.StageBorder;
-import com.ss.gameLogic.config.C;
-import com.ss.gameLogic.config.Config;
 import com.ss.scenes.GameScene;
-
+import com.ss.config.C;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -24,7 +21,7 @@ public class GMain extends GDirectedGame {
 
   public static int screenHeight = 0;
   public static int screenWidth = 0;
-  public static TextureAtlas liengAtlas, cardAtlas, startSceneAtlas, wheelAtlas, particleAtlas;
+  public static TextureAtlas bgAtlas, itemAtlas, particleAtlas;
   public static Preferences pref;
   public static GameScene gameScene;
 
@@ -37,8 +34,10 @@ public class GMain extends GDirectedGame {
   }
 
   private void init() {
-    screenWidth = 1280;
-    screenHeight = 720;
+
+    screenWidth = 720;
+    screenHeight = 1280;
+
     GStage.init(screenWidth, screenHeight, 0, 0, new StageBorder() {
       @Override
       public void drawHorizontalBorder(Batch spriteBatch, float paramFloat1, float paramFloat2) {
@@ -50,6 +49,7 @@ public class GMain extends GDirectedGame {
 
       }
     });
+
   }
 
   private static GScreen menuScreen() {
@@ -72,8 +72,11 @@ public class GMain extends GDirectedGame {
 //    }
 
     initLocalNotification();
-
     SoundEffects.initSound();
+
+    bgAtlas = GAssetsManager.getTextureAtlas("bg.atlas");
+    itemAtlas = GAssetsManager.getTextureAtlas("item.atlas");
+    GAssetsManager.finishLoading();
 
     this.init();
 
@@ -93,7 +96,7 @@ public class GMain extends GDirectedGame {
       //binhthuong
     } else if(noId == 1) {
 //      long money = pref.getLong("money") + Config.MONEY_NOTIFY;
-//      Logic.getInstance().saveMoney(money);
+//      Util.getInstance().saveMoney(money);
     }
 
   }

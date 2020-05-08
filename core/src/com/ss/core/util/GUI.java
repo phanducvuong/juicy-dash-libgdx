@@ -98,7 +98,7 @@ public class GUI {
 
       TextureAtlas.AtlasRegion region = atlas.findRegion(localRegionName);
       if(region == null){
-         GMain.platform.log("atlas " + atlas.toString() + "find region localize " + regionName + " not found");
+         GMain.platform.log("atlas " + atlas.toString() + "find getRegion localize " + regionName + " not found");
          region = atlas.findRegion(regionName);
          return region;
       }
@@ -108,7 +108,7 @@ public class GUI {
    public static Button createButtonLocalize(TextureAtlas atlas, String regionName){
       TextureAtlas.AtlasRegion region = FindRegionLocalize(atlas, regionName);
       if(region == null){
-         GMain.platform.log("atlas " + atlas.toString() + "find region " + regionName + " not found");
+         GMain.platform.log("atlas " + atlas.toString() + "find getRegion " + regionName + " not found");
          return null;
       }
       return GUI.creatButton(new TextureRegion[]{region});
@@ -116,7 +116,7 @@ public class GUI {
    public static Image createImageLocalize(TextureAtlas atlas, String regionName){
       TextureAtlas.AtlasRegion region = FindRegionLocalize(atlas, regionName);
       if(region == null){
-         GMain.platform.log("atlas " + atlas.toString() + "find region " + regionName + " not found");
+         GMain.platform.log("atlas " + atlas.toString() + "find getRegion " + regionName + " not found");
          return null;
       }
       return new Image(region);
@@ -125,7 +125,7 @@ public class GUI {
    public static Image createImage(TextureAtlas atlas, String regionName){
       TextureAtlas.AtlasRegion region = atlas.findRegion(regionName);
       if(region == null){
-         GMain.platform.log("atlas " + atlas.toString() + "find region " + regionName + " not found");
+         GMain.platform.log("atlas " + atlas.toString() + "find getRegion " + regionName + " not found");
          return null;
       }
       return new Image(region);

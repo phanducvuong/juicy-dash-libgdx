@@ -1,0 +1,76 @@
+
+item.png
+size: 1024,128
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+item_apple
+  rotate: false
+  xy: 633, 8
+  size: 81, 90
+  orig: 81, 90
+  offset: 0, 0
+  index: -1
+item_banana
+  rotate: false
+  xy: 374, 9
+  size: 88, 89
+  orig: 88, 89
+  offset: 0, 0
+  index: -1
+item_clock
+  rotate: false
+  xy: 2, 6
+  size: 92, 92
+  orig: 92, 92
+  offset: 0, 0
+  index: -1
+item_glass_juice
+  rotate: false
+  xy: 799, 4
+  size: 70, 94
+  orig: 70, 94
+  offset: 0, 0
+  index: -1
+item_grape
+  rotate: false
+  xy: 96, 5
+  size: 87, 93
+  orig: 87, 93
+  offset: 0, 0
+  index: -1
+item_jam
+  rotate: false
+  xy: 185, 14
+  size: 95, 84
+  orig: 95, 84
+  offset: 0, 0
+  index: -1
+item_kiwi
+  rotate: false
+  xy: 464, 2
+  size: 84, 96
+  orig: 84, 96
+  offset: 0, 0
+  index: -1
+item_orange
+  rotate: false
+  xy: 550, 5
+  size: 81, 93
+  orig: 81, 93
+  offset: 0, 0
+  index: -1
+item_strawberry
+  rotate: false
+  xy: 716, 9
+  size: 81, 89
+  orig: 81, 89
+  offset: 0, 0
+  index: -1
+item_walnut
+  rotate: false
+  xy: 282, 11
+  size: 90, 87
+  orig: 90, 87
+  offset: 0, 0
+  index: -1
