@@ -39,6 +39,62 @@ dash
   orig: 467, 91
   offset: 0, 0
   index: -1
+icon_exit
+  rotate: false
+  xy: 1547, 275
+  size: 115, 115
+  orig: 115, 115
+  offset: 0, 0
+  index: -1
+icon_home
+  rotate: false
+  xy: 980, 62
+  size: 136, 140
+  orig: 136, 140
+  offset: 0, 0
+  index: -1
+icon_pause
+  rotate: false
+  xy: 1547, 161
+  size: 108, 112
+  orig: 108, 112
+  offset: 0, 0
+  index: -1
+icon_restart
+  rotate: false
+  xy: 704, 62
+  size: 136, 140
+  orig: 136, 140
+  offset: 0, 0
+  index: -1
+icon_sound_off
+  rotate: false
+  xy: 1409, 108
+  size: 136, 140
+  orig: 136, 140
+  offset: 0, 0
+  index: -1
+icon_sound_on
+  rotate: false
+  xy: 842, 62
+  size: 136, 140
+  orig: 136, 140
+  offset: 0, 0
+  index: -1
+icon_start
+  rotate: false
+  xy: 1173, 89
+  size: 234, 238
+  orig: 234, 238
+  offset: 0, 0
+  index: -1
+icon_tutorial
+  rotate: false
+  xy: 1409, 250
+  size: 136, 140
+  orig: 136, 140
+  offset: 0, 0
+  index: -1
 line_score
   rotate: false
   xy: 2, 44

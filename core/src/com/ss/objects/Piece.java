@@ -27,9 +27,9 @@ public class Piece {
     this.isEmpty = false;
   }
 
-  public void reset() {
-    this.item = null;
-    this.isEmpty = true;
+  public void clear() {
+    item = null;
+    isEmpty = true;
   }
 
 }

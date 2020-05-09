@@ -6,10 +6,8 @@ import com.ss.objects.Item;
 import com.ss.objects.Piece;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 import static com.ss.config.Config.*;
 
@@ -63,7 +61,7 @@ public class Util {
   public Piece inRange(Piece[][] arr, Vector2 pos) {
 
     for (int i=0; i<ROW; i++) {
-      for (int j=0; j<COLUMN; j++) {
+      for (int j = 0; j< COL; j++) {
         Vector2 p = arr[i][j].pos;
         if (pos.x >= p.x && pos.x <= p.x + WIDTH_PIECE
           && pos.y >= p.y && pos.y <= p.y + HEIGHT_PIECE)
@@ -78,7 +76,7 @@ public class Util {
     return piecess[row][col].isEmpty ? piecess[row][col] : null;
   }
 
-  public Item getItem(List<Item> items) {
+  private Item getItem(List<Item> items) {
     for (Item item : items) {
       if (!item.isAlive)
         return item;
@@ -86,8 +84,24 @@ public class Util {
     return null;
   }
 
-  public List<Item> getLsItem(HashMap<String, List<Item>> hmItem, Type ...types) {
-    int amount = (ROW*COLUMN) / types.length;
+  public Item getRndItem(HashMap<String, List<Item>> hm, List<Type> types) {
+
+    int rnd = (int) Math.floor(Math.random() * (types.size() - 1));
+    String key = "item_" + types.get(rnd).name();
+
+    List<Item> ls = hm.get(key);
+    for (Item item : ls) {
+      if (!item.isAlive) {
+        item.isAlive = true;
+        return item;
+      }
+    }
+    return null;
+
+  }
+
+  public List<Item> getLsItem(HashMap<String, List<Item>> hmItem, List<Type> types) {
+    int amount = (ROW* COL) / types.size();
     List<Item> lsTmp = new ArrayList<>();
 
     for (Type type : types) {
@@ -101,7 +115,7 @@ public class Util {
         }
     }
 
-    int remain = ROW * COLUMN - amount * types.length;
+    int remain = ROW * COL - amount * types.size();
     if (remain >= 1)
       for (int i=0; i<remain; i++) {
         String key = getRegion((int) Math.floor(Math.random() * 5));
@@ -113,10 +127,74 @@ public class Util {
     return lsTmp;
   }
 
+  public List<Piece> filterHorizontally(Piece[][] arrPiece, Piece pChk) {
+
+    List<Piece> tmpPieces = new ArrayList<>();
+    int row = pChk.row,
+        col = pChk.col;
+
+    row -= 1;
+    while (row >= 0) {
+      Piece tmp = arrPiece[row][col];
+      if (!tmp.isEmpty && !pChk.isEmpty && tmp.item.type == pChk.item.type) {
+        tmpPieces.add(tmp);
+        row -= 1;
+      }
+      else
+        break;
+    }
+
+    row = pChk.row + 1;
+    while (row < ROW) {
+      Piece tmp = arrPiece[row][col];
+      if (!tmp.isEmpty && !pChk.isEmpty && tmp.item.type == pChk.item.type) {
+        tmpPieces.add(tmp);
+        row += 1;
+      }
+      else
+        break;
+    }
+
+    tmpPieces.add(pChk);
+    return tmpPieces;
+  }
+
+  public List<Piece> filterVertically(Piece[][] arrPiece, Piece pChk) {
+
+    List<Piece> tmpPieces = new ArrayList<>();
+    int row = pChk.row,
+        col = pChk.col;
+
+    col -= 1;
+    while (col >= 0) {
+      Piece tmp = arrPiece[row][col];
+      if (!tmp.isEmpty && !pChk.isEmpty && tmp.item.type == pChk.item.type) {
+        tmpPieces.add(tmp);
+        col -= 1;
+      }
+      else
+        break;
+    }
+
+    col = pChk.col + 1;
+    while (col < COL) {
+      Piece tmp = arrPiece[row][col];
+      if (!tmp.isEmpty && !pChk.isEmpty && tmp.item.type == pChk.item.type) {
+        tmpPieces.add(tmp);
+        col += 1;
+      }
+      else
+        break;
+    }
+
+    tmpPieces.add(pChk);
+    return tmpPieces;
+  }
+
   public void log(Piece piece) {
     System.out.println("piece start: " + piece.pos + "ROW, COL: " + piece.row + "  " + piece.col);
-    System.out.println(piece.item.name);
-    System.out.println(piece.item.getPos());
+//    System.out.println(piece.item.name);
+//    System.out.println(piece.item.getPos());
   }
 
 }

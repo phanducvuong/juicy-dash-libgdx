@@ -9,7 +9,7 @@ public class Config {
   //label: game play ui
   public static final float   OFFSET_Y_BGTABLE            = 150;
 
-  public static final int     COLUMN                      = 7,
+  public static final int     COL                         = 7,
                               ROW                         = 7;
 
   public static final float   OFFSET_X_PIECE              = 10,

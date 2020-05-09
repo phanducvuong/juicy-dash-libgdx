@@ -52,4 +52,9 @@ public class Item extends Group {
     return new Vector2(this.getX(), this.getY());
   }
 
+  public void reset() {
+    this.remove();
+    isAlive = false;
+  }
+
 }

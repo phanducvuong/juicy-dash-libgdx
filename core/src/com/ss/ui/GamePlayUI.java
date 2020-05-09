@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.ss.GMain;
 import com.ss.config.Config;
+import com.ss.controller.GameUIController;
 import com.ss.core.util.GStage;
 import com.ss.core.util.GUI;
 import com.ss.objects.Item;
@@ -16,14 +17,19 @@ public class GamePlayUI extends Group {
   private final float CENTER_X = GStage.getWorldWidth()/2;
   private final float CENTER_Y = GStage.getWorldHeight()/2;
 
+  private GameUIController controller;
   private Group gBackground, gItem;
   public Image bgTable;
 
-  public GamePlayUI() {
+  public Image iStart;
+
+  public GamePlayUI(GameUIController controller) {
 
     //label: init layer
     this.gBackground = new Group();
     this.gItem = new Group();
+
+    this.controller = controller;
 
     this.addActor(gBackground);
     this.addActor(gItem);
@@ -32,6 +38,7 @@ public class GamePlayUI extends Group {
     setHeight(CENTER_Y*2);
 
     initBg();
+    initIcon();
 
   }
 
@@ -62,6 +69,22 @@ public class GamePlayUI extends Group {
     bgTable = GUI.createImage(GMain.bgAtlas, "bg_table");
     bgTable.setPosition(CENTER_X, CENTER_Y + Config.OFFSET_Y_BGTABLE, Align.center);
     gBackground.addActor(bgTable);
+
+  }
+
+  private void initIcon() {
+
+    iStart = GUI.createImage(GMain.bgAtlas, "icon_start");
+    gBackground.addActor(iStart);
+    iStart.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        super.clicked(event, x, y);
+
+        controller.filterAt(2, 1);
+
+      }
+    });
 
   }
 
