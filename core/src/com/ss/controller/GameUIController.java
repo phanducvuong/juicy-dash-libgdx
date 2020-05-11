@@ -10,7 +10,7 @@ import com.ss.objects.Item;
 import com.ss.objects.Piece;
 import com.ss.ui.GamePlayUI;
 import com.ss.utils.Util;
-
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -19,7 +19,7 @@ import java.util.Random;
 
 import static com.ss.config.Config.*;
 
-public class GameUIController {
+public class GameUIController implements Item.IFinishMove {
 
   private Util util = Util.inst();
   private Group gParent;
@@ -29,7 +29,7 @@ public class GameUIController {
   private HashMap<String, List<Item>> hmItem;
   private List<Type> lv;
 
-  private boolean isDragAndDrop = false, isWrap = false;
+  public boolean isDragAndDrop = false, isWrap = false;
   private Piece pieceStart;
 
   public GameUIController(Group gParent) {
@@ -56,7 +56,7 @@ public class GameUIController {
     lv.add(Type.strawberry);
     lv.add(Type.orange);
     lv.add(Type.grape);
-    lv.add(Type.banana);
+//    lv.add(Type.banana);
   }
 
   private void initPiece() {
@@ -82,10 +82,12 @@ public class GameUIController {
       List<Item> lsItem = new ArrayList<>();
 
       for (int j=0; j<AMOUNT_ITEM_CREATE; j++) {
+        Item item = new Item(region, type);
+        item.setiFinishMove(this);
         if (i < 6)
-          lsItem.add(new Item(region, type));
+          lsItem.add(item);
         else
-          lsItem.add(new Item(region, type));
+          lsItem.add(item);
       }
 
       hmItem.put(region, lsItem);
@@ -97,31 +99,33 @@ public class GameUIController {
   private void eventTouchScreen() {
 
     //label: drag and drop
-    gamePlayUI.addListener(new DragListener() {
+//    if (isDragAndDrop) {
+      gamePlayUI.addListener(new DragListener() {
 
-      @Override
-      public void dragStart(InputEvent event, float x, float y, int pointer) {
-        super.dragStart(event, x, y, pointer);
+        @Override
+        public void dragStart(InputEvent event, float x, float y, int pointer) {
+          super.dragStart(event, x, y, pointer);
 
-        isDragAndDrop = true;
-        pieceStart = util.inRange(arrPosPiece, new Vector2(x, y));
+          isDragAndDrop = true;
+          pieceStart = util.inRange(arrPosPiece, new Vector2(x, y));
 
-      }
-
-      @Override
-      public void drag(InputEvent event, float x, float y, int pointer) {
-        super.drag(event, x, y, pointer);
-
-        Piece pieceDrag = util.inRange(arrPosPiece, new Vector2(x, y));
-        if (pieceStart != null && pieceDrag != pieceStart) {
-          util.log(pieceStart);
-          util.log(pieceDrag);
-
-          pieceStart = null;
         }
 
-      }
-    });
+        @Override
+        public void drag(InputEvent event, float x, float y, int pointer) {
+          super.drag(event, x, y, pointer);
+
+          Piece pieceDrag = util.inRange(arrPosPiece, new Vector2(x, y));
+          if (pieceStart != null && pieceDrag != pieceStart) {
+            util.log("start: ", pieceStart);
+            util.log("end: ", pieceDrag);
+
+            pieceStart = null;
+          }
+
+        }
+      });
+//    }
 
     //label: click
     gamePlayUI.addListener(new ClickListener() {
@@ -150,7 +154,7 @@ public class GameUIController {
 
         Item item = lsItem.get(count);
         Piece piece = util.getPieceEmpty(arrPosPiece, i, j);
-        newItem(item, piece);
+        addNewItem(item, piece);
 
         count++;
 
@@ -159,7 +163,53 @@ public class GameUIController {
 
   }
 
-  public void filterAt(int row, int col) {
+  public void filterAll() {
+
+    List<Piece> lsVertical    = new ArrayList<>();
+    List<Piece> lsHorizontal  = new ArrayList<>();
+
+    for (int i=0; i<ROW; i++) {
+      for (int j=0; j<COL; j++) {
+
+        List<Piece> tmpV = util.filterVertically(arrPosPiece, arrPosPiece[i][j]);
+        List<Piece> tmpH = util.filterHorizontally(arrPosPiece, arrPosPiece[i][j]);
+
+        if (tmpV.size() >= 3)
+          util.chkContain(lsVertical, tmpV);
+        if (tmpH.size() >= 3)
+          util.chkContain(lsHorizontal, tmpH);
+
+      }
+    }
+
+    clrLsFilterPiece(lsVertical);
+    clrLsFilterPiece(lsHorizontal);
+
+    //update arrPosPiece
+    for (int col=0; col<COL; col++) {
+      for (int row=ROW-1; row>=0; row--) {
+        Piece piece = arrPosPiece[row][col];
+        if (piece.item == null) {
+          slideVer(piece.row, piece.col);
+        }
+      }
+    }
+
+    //add item at piece is null item
+    for (int col=0; col<COL; col++) {
+      List<Piece> tmp = new ArrayList<>(); //ls piece is null item
+      for (int row=ROW-1; row>=0; row--) {
+        Piece piece = arrPosPiece[row][col];
+        if (piece.item == null) {
+          Item item = util.getRndItem(hmItem, lv);
+          addNewItem(item, piece);
+        }
+      }
+    }
+
+  }
+
+  private void filterAt(int row, int col) {
 
     List<Piece> lsPieceHor = util.filterVertically(arrPosPiece, arrPosPiece[row][col]);
     List<Piece> lsPieceVer = util.filterHorizontally(arrPosPiece, arrPosPiece[row][col]);
@@ -168,14 +218,9 @@ public class GameUIController {
       clrLsFilterPiece(lsPieceVer);
 
       //label: slide
-      Piece pVer = lsPieceVer.get(0);
-      for (int i=0; i<ROW; i++) {
-        if (arrPosPiece[i][pVer.col].isEmpty) {
-          slideAt(i-1, pVer.col, lsPieceVer.size());
-          break;
-        }
-      }// check by vertical
-    }
+      Piece pMinRow = util.getPieceMinRow(lsPieceVer);
+      slideVer(pMinRow.row - 1, pMinRow.col);
+    }// check by vertical
 
     if (lsPieceHor.size() >= 3) {
       clrLsFilterPiece(lsPieceHor);
@@ -184,47 +229,51 @@ public class GameUIController {
       if (lsPieceVer.size() >= 3)
         lsPieceHor.remove(arrPosPiece[row][col]);
       for (Piece piece : lsPieceHor) //check by horizontal
-        slideAt(piece.row-1, piece.col, 1);
+        slideVer(piece.row-1, piece.col);
     }
 
   }
 
   //label: slide by vertical (up to down)
-  private void slideAt(int row, int col, int offset) {
+  private void slideVer(int row, int col) {
 
-    while (row >= 0) {
-      Item item = arrPosPiece[row][col].item;
-      arrPosPiece[row + offset][col].setItem(item);
-      arrPosPiece[row][col].clear();
-
-      item.moveToPos(arrPosPiece[row + offset][col].pos);
-      row -= 1;
-    }
-
-    for (int j = offset-1; j>=0; j--) {
-      Item item = util.getRndItem(hmItem, lv);
-      if (item != null)
-        newItem(item, arrPosPiece[j][col]);
-      else
-        System.out.println("NULL ITEM");
+    for (int r=row-1; r>=0; r--) {
+      Piece piece = arrPosPiece[r][col];
+      Item item = piece.item;
+      if (piece.item != null) {
+        arrPosPiece[row][col].setItem(piece.item);
+        piece.clear();
+        item.moveToPos(arrPosPiece[row][col].pos, .5f);
+        break;
+      }
     }
 
   }
 
   private void clrLsFilterPiece(List<Piece> filter) {
     for (Piece piece : filter) {
-      piece.item.reset();
+      if (piece.item != null)
+        piece.item.reset();
       piece.clear();
     }
 
     //todo: action new item in piece is empty
   }
 
-  private void newItem(Item item, Piece piece) {
+  private void addNewItem(Item item, Piece piece) {
     piece.setItem(item);
     gamePlayUI.addToGItem(item);
     item.setPosStart(piece.pos);
-    item.moveToPos(piece.pos);
+    item.moveToPos(piece.pos, .5f);
   }
 
+  @Override
+  public void finished() {
+//    filterAll();
+  }
+
+  @Override
+  public void blockInput() {
+    isDragAndDrop = false;
+  }
 }

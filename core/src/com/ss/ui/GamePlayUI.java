@@ -18,7 +18,7 @@ public class GamePlayUI extends Group {
   private final float CENTER_Y = GStage.getWorldHeight()/2;
 
   private GameUIController controller;
-  private Group gBackground, gItem;
+  public Group gBackground, gItem;
   public Image bgTable;
 
   public Image iStart;
@@ -81,7 +81,8 @@ public class GamePlayUI extends Group {
       public void clicked(InputEvent event, float x, float y) {
         super.clicked(event, x, y);
 
-        controller.filterAt(2, 1);
+//          System.out.println("CLICK!");
+          controller.filterAll();
 
       }
     });

@@ -86,7 +86,8 @@ public class Util {
 
   public Item getRndItem(HashMap<String, List<Item>> hm, List<Type> types) {
 
-    int rnd = (int) Math.floor(Math.random() * (types.size() - 1));
+    int d = types.size();
+    int rnd = (int) Math.floor(Math.random() * d);
     String key = "item_" + types.get(rnd).name();
 
     List<Item> ls = hm.get(key);
@@ -101,7 +102,7 @@ public class Util {
   }
 
   public List<Item> getLsItem(HashMap<String, List<Item>> hmItem, List<Type> types) {
-    int amount = (ROW* COL) / types.size();
+    int amount = (ROW * COL) / types.size();
     List<Item> lsTmp = new ArrayList<>();
 
     for (Type type : types) {
@@ -127,7 +128,7 @@ public class Util {
     return lsTmp;
   }
 
-  public List<Piece> filterHorizontally(Piece[][] arrPiece, Piece pChk) {
+  public List<Piece> filterVertically(Piece[][] arrPiece, Piece pChk) {
 
     List<Piece> tmpPieces = new ArrayList<>();
     int row = pChk.row,
@@ -159,7 +160,7 @@ public class Util {
     return tmpPieces;
   }
 
-  public List<Piece> filterVertically(Piece[][] arrPiece, Piece pChk) {
+  public List<Piece> filterHorizontally(Piece[][] arrPiece, Piece pChk) {
 
     List<Piece> tmpPieces = new ArrayList<>();
     int row = pChk.row,
@@ -191,9 +192,27 @@ public class Util {
     return tmpPieces;
   }
 
-  public void log(Piece piece) {
-    System.out.println("piece start: " + piece.pos + "ROW, COL: " + piece.row + "  " + piece.col);
-//    System.out.println(piece.item.name);
+  public void chkContain(List<Piece> parent, List<Piece> child) {
+    for (Piece piece : child)
+      if (!parent.contains(piece))
+        parent.add(piece);
+  }
+
+  public Piece getPieceMinRow(List<Piece> pieces) {
+    Piece pMinRow = pieces.get(0);
+    for (Piece p : pieces) {
+      if (pMinRow.row > p.row)
+        pMinRow = p;
+    }
+    return pMinRow;
+  }
+
+  public void log(String label, Piece piece) {
+    System.out.println(label + piece.pos + "ROW, COL: " + piece.row + "  " + piece.col);
+    if (piece.item != null)
+      System.out.println(piece.item.name);
+    else
+      System.out.println("EMPTY");
 //    System.out.println(piece.item.getPos());
   }
 

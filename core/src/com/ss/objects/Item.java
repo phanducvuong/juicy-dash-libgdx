@@ -13,10 +13,16 @@ import static com.ss.config.Config.*;
 
 public class Item extends Group {
 
+  public interface IFinishMove {
+    void finished();
+    void blockInput();
+  }
+
   private Image fruit;
   public Type type;
   public String name;
   public boolean isAlive = false;
+  public IFinishMove iFinishMove;
 
   public Item(String region, Type type) {
 
@@ -42,9 +48,15 @@ public class Item extends Group {
     this.setPosition(x, y, Align.center);
   }
 
-  public void moveToPos(Vector2 pos) {
+  public void moveToPos(Vector2 pos, float duration) {
     this.addAction(
-            moveTo(pos.x, pos.y, TIME_ADD_ITEM, linear)
+            sequence(
+                    parallel(
+                            moveTo(pos.x, pos.y, duration, linear),
+                            run(() -> iFinishMove.blockInput())
+                    ),
+                    run(() -> iFinishMove.finished())
+            )
     );
   }
 
@@ -55,6 +67,10 @@ public class Item extends Group {
   public void reset() {
     this.remove();
     isAlive = false;
+  }
+
+  public void setiFinishMove(IFinishMove iFinishMove) {
+    this.iFinishMove = iFinishMove;
   }
 
 }

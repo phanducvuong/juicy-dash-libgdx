@@ -3,7 +3,7 @@ package com.ss.config;
 public class Config {
 
   //label: amount item
-  public static final int     AMOUNT_ITEM_CREATE          = 25;
+  public static final int     AMOUNT_ITEM_CREATE          = 49;
   public static final int     AMOUNT_ITEM                 = 10;
 
   //label: game play ui
