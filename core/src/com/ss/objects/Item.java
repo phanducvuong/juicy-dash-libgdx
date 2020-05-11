@@ -52,7 +52,7 @@ public class Item extends Group {
     this.addAction(
             sequence(
                     parallel(
-                            moveTo(pos.x, pos.y, duration, linear),
+                            moveTo(pos.x, pos.y, duration, swingIn),
                             run(() -> iFinishMove.blockInput())
                     ),
                     run(() -> iFinishMove.finished())

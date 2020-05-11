@@ -1,5 +1,6 @@
 package com.ss.controller;
 
+import static com.badlogic.gdx.math.Interpolation.*;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -55,7 +56,7 @@ public class GameUIController implements Item.IFinishMove {
   private void initLv() {
     lv.add(Type.strawberry);
     lv.add(Type.orange);
-    lv.add(Type.grape);
+//    lv.add(Type.grape);
 //    lv.add(Type.banana);
   }
 
@@ -196,16 +197,18 @@ public class GameUIController implements Item.IFinishMove {
     }
 
     //add item at piece is null item
-    for (int col=0; col<COL; col++) {
-      List<Piece> tmp = new ArrayList<>(); //ls piece is null item
-      for (int row=ROW-1; row>=0; row--) {
+    List<Piece> tmp = new ArrayList<>(); //ls piece is null item
+    for (int row=ROW-1; row>=0; row--) {
+      for (int col=0; col<COL; col++) {
         Piece piece = arrPosPiece[row][col];
         if (piece.item == null) {
-          Item item = util.getRndItem(hmItem, lv);
-          addNewItem(item, piece);
+          piece.item = util.getRndItem(hmItem, lv);
+          tmp.add(piece);
         }
       }
     }
+
+    addItemSequen(tmp, ROW-1, .75f);
 
   }
 
@@ -243,7 +246,7 @@ public class GameUIController implements Item.IFinishMove {
       if (piece.item != null) {
         arrPosPiece[row][col].setItem(piece.item);
         piece.clear();
-        item.moveToPos(arrPosPiece[row][col].pos, .5f);
+        item.moveToPos(arrPosPiece[row][col].pos, .65f);
         break;
       }
     }
@@ -264,7 +267,46 @@ public class GameUIController implements Item.IFinishMove {
     piece.setItem(item);
     gamePlayUI.addToGItem(item);
     item.setPosStart(piece.pos);
-    item.moveToPos(piece.pos, .5f);
+    item.moveToPos(piece.pos, .75f);
+  }
+
+  private void addItemSequen(List<Piece> pieces, int turn, float duration) {
+
+    if (turn < 0)
+      return;
+
+    for (Piece piece : pieces) {
+      for (int col=0; col<COL; col++) {
+        if (arrPosPiece[turn][col] == piece)
+          addNewItem(piece.item, piece);
+      }
+    }
+
+    final int t = turn - 1;
+    gamePlayUI.gItem.addAction(
+            sequence(
+                    delay(.05f),
+                    run(() -> addItemSequen(pieces, t, duration))
+            )
+    );
+
+
+//    final int t = turn + 1;
+//    Piece piece = pieces.get(turn);
+//    gamePlayUI.gItem.addActor(piece.item);
+//    piece.isEmpty = false;
+//    piece.item.setPosStart(piece.pos);
+//
+//    gamePlayUI.gItem.addAction(
+//            parallel(
+//                    run(() -> piece.item.moveToPos(piece.pos, duration)),
+//                    sequence(
+//                            delay(.15f),
+//                            run(() -> addItemSequen(pieces, t, duration))
+//                    )
+//            )
+//    );
+
   }
 
   @Override
