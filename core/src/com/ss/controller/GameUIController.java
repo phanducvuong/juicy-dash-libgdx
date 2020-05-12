@@ -2,11 +2,13 @@ package com.ss.controller;
 
 import static com.badlogic.gdx.math.Interpolation.*;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.ss.config.Type;
+import com.ss.core.action.exAction.GSimpleAction;
 import com.ss.objects.Item;
 import com.ss.objects.Piece;
 import com.ss.ui.GamePlayUI;
@@ -20,7 +22,7 @@ import java.util.Random;
 
 import static com.ss.config.Config.*;
 
-public class GameUIController implements Item.IFinishMove {
+public class GameUIController {
 
   private Util util = Util.inst();
   private Group gParent;
@@ -28,10 +30,12 @@ public class GameUIController implements Item.IFinishMove {
 
   private Piece[][] arrPosPiece = new Piece[ROW][COL];
   private HashMap<String, List<Item>> hmItem;
+  private List<Piece> lsPieceNullItem = new ArrayList<>();
+  private int turn = ROW;
   private List<Type> lv;
 
-  public boolean isDragAndDrop = false, isWrap = false;
-  private Piece pieceStart;
+  public boolean isDragAndDrop = true, isWrap = false, isTheSame = false;
+  private Piece pieceStart, pieceEnd;
 
   public GameUIController(Group gParent) {
 
@@ -45,19 +49,17 @@ public class GameUIController implements Item.IFinishMove {
 
     initPiece();
     initItem();
-
     initLv();
 
     eventTouchScreen();
-
     addItem();
   }
 
   private void initLv() {
     lv.add(Type.strawberry);
     lv.add(Type.orange);
-//    lv.add(Type.grape);
-//    lv.add(Type.banana);
+    lv.add(Type.grape);
+    lv.add(Type.banana);
   }
 
   private void initPiece() {
@@ -84,7 +86,6 @@ public class GameUIController implements Item.IFinishMove {
 
       for (int j=0; j<AMOUNT_ITEM_CREATE; j++) {
         Item item = new Item(region, type);
-        item.setiFinishMove(this);
         if (i < 6)
           lsItem.add(item);
         else
@@ -100,33 +101,33 @@ public class GameUIController implements Item.IFinishMove {
   private void eventTouchScreen() {
 
     //label: drag and drop
-//    if (isDragAndDrop) {
-      gamePlayUI.addListener(new DragListener() {
+    gamePlayUI.addListener(new DragListener() {
 
-        @Override
-        public void dragStart(InputEvent event, float x, float y, int pointer) {
-          super.dragStart(event, x, y, pointer);
+      @Override
+      public void dragStart(InputEvent event, float x, float y, int pointer) {
+        super.dragStart(event, x, y, pointer);
 
-          isDragAndDrop = true;
-          pieceStart = util.inRange(arrPosPiece, new Vector2(x, y));
+        pieceStart = util.inRange(arrPosPiece, new Vector2(x, y));
 
+      }
+
+      @Override
+      public void drag(InputEvent event, float x, float y, int pointer) {
+        super.drag(event, x, y, pointer);
+
+        pieceEnd = util.inRange(arrPosPiece, new Vector2(x, y));
+        if (!isWrap && pieceStart != null && pieceEnd != pieceStart) {
+          util.log("start: ", pieceStart);
+          util.log("end: ", pieceEnd);
+
+          wrap(pieceStart, pieceEnd);
+
+          isWrap = true;
+//          pieceStart = null;
         }
 
-        @Override
-        public void drag(InputEvent event, float x, float y, int pointer) {
-          super.drag(event, x, y, pointer);
-
-          Piece pieceDrag = util.inRange(arrPosPiece, new Vector2(x, y));
-          if (pieceStart != null && pieceDrag != pieceStart) {
-            util.log("start: ", pieceStart);
-            util.log("end: ", pieceDrag);
-
-            pieceStart = null;
-          }
-
-        }
-      });
-//    }
+      }
+    });
 
     //label: click
     gamePlayUI.addListener(new ClickListener() {
@@ -169,22 +170,78 @@ public class GameUIController implements Item.IFinishMove {
     List<Piece> lsVertical    = new ArrayList<>();
     List<Piece> lsHorizontal  = new ArrayList<>();
 
+    List<HashMap<String, List<Piece>>> lsSpecialItem = new ArrayList<>();
+
     for (int i=0; i<ROW; i++) {
       for (int j=0; j<COL; j++) {
 
         List<Piece> tmpV = util.filterVertically(arrPosPiece, arrPosPiece[i][j]);
         List<Piece> tmpH = util.filterHorizontally(arrPosPiece, arrPosPiece[i][j]);
+        HashMap<String, List<Piece>> hmTmp = new HashMap<>();
 
-        if (tmpV.size() >= 3)
-          util.chkContain(lsVertical, tmpV);
-        if (tmpH.size() >= 3)
-          util.chkContain(lsHorizontal, tmpH);
+        if (tmpV.size() >= 3 && !util.chkContain(lsVertical, tmpV)) {
+          hmTmp.put("ver", tmpV);
+          lsVertical.addAll(tmpV);
+        }
 
+        if (tmpH.size() >= 3 && !util.chkContain(lsHorizontal, tmpH)) {
+          hmTmp.put("hor", tmpH);
+          lsHorizontal.addAll(tmpH);
+        }
+
+        if (hmTmp.size() > 0)
+          lsSpecialItem.add(hmTmp);
+
+      }
+    }
+
+    //todo: check lsSpecialItem and add special item
+    for (HashMap<String, List<Piece>> hh : lsSpecialItem) {
+      if (hh.get("ver") != null) {
+        System.out.print("VER: ");
+        util.log(hh.get("ver").get(0));
+      }
+      if (hh.get("hor") != null) {
+        System.out.print("HOR: ");
+        util.log(hh.get("hor").get(0));
       }
     }
 
     clrLsFilterPiece(lsVertical);
     clrLsFilterPiece(lsHorizontal);
+
+    updateArrPiece();
+
+  }
+
+  private void filterAt(int row, int col) {
+
+    List<Piece> lsPieceHor = util.filterVertically(arrPosPiece, arrPosPiece[row][col]);
+    List<Piece> lsPieceVer = util.filterHorizontally(arrPosPiece, arrPosPiece[row][col]);
+
+    int countItem = 0;
+    if (lsPieceVer.size() >= 3) {
+      countItem += lsPieceVer.size();
+      clrLsFilterPiece(lsPieceVer);
+      isTheSame = true;
+    }
+
+    if (lsPieceHor.size() >= 3) {
+      countItem += lsPieceVer.size();
+      clrLsFilterPiece(lsPieceHor);
+      isTheSame = true;
+    }
+
+    //todo: check count item to add special item
+
+    updateArrPiece();
+
+  }
+
+  //label: update array pos piece
+  private void updateArrPiece() {
+
+    lsPieceNullItem.clear();
 
     //update arrPosPiece
     for (int col=0; col<COL; col++) {
@@ -197,42 +254,20 @@ public class GameUIController implements Item.IFinishMove {
     }
 
     //add item at piece is null item
-    List<Piece> tmp = new ArrayList<>(); //ls piece is null item
     for (int row=ROW-1; row>=0; row--) {
       for (int col=0; col<COL; col++) {
         Piece piece = arrPosPiece[row][col];
         if (piece.item == null) {
           piece.item = util.getRndItem(hmItem, lv);
-          tmp.add(piece);
+          lsPieceNullItem.add(piece);
         }
       }
     }
 
-    addItemSequen(tmp, ROW-1, .75f);
-
-  }
-
-  private void filterAt(int row, int col) {
-
-    List<Piece> lsPieceHor = util.filterVertically(arrPosPiece, arrPosPiece[row][col]);
-    List<Piece> lsPieceVer = util.filterHorizontally(arrPosPiece, arrPosPiece[row][col]);
-
-    if (lsPieceVer.size() >= 3) {
-      clrLsFilterPiece(lsPieceVer);
-
-      //label: slide
-      Piece pMinRow = util.getPieceMinRow(lsPieceVer);
-      slideVer(pMinRow.row - 1, pMinRow.col);
-    }// check by vertical
-
-    if (lsPieceHor.size() >= 3) {
-      clrLsFilterPiece(lsPieceHor);
-
-      //label: slide
-      if (lsPieceVer.size() >= 3)
-        lsPieceHor.remove(arrPosPiece[row][col]);
-      for (Piece piece : lsPieceHor) //check by horizontal
-        slideVer(piece.row-1, piece.col);
+//    addItemSequence(lsPieceNullItem, ROW-1, .75f);
+    if (lsPieceNullItem.size() > 0) {
+      turn = ROW;
+      nextRow();
     }
 
   }
@@ -246,7 +281,7 @@ public class GameUIController implements Item.IFinishMove {
       if (piece.item != null) {
         arrPosPiece[row][col].setItem(piece.item);
         piece.clear();
-        item.moveToPos(arrPosPiece[row][col].pos, .65f);
+        item.moveToPos(arrPosPiece[row][col].pos, .35f);
         break;
       }
     }
@@ -263,59 +298,110 @@ public class GameUIController implements Item.IFinishMove {
     //todo: action new item in piece is empty
   }
 
-  private void addNewItem(Item item, Piece piece) {
-    piece.setItem(item);
-    gamePlayUI.addToGItem(item);
-    item.setPosStart(piece.pos);
-    item.moveToPos(piece.pos, .75f);
+  private void startNewItem(int row) {
+    if (row >= 0)
+      gamePlayUI.gBackground.addAction(GSimpleAction.simpleAction(this::action));
+    else {
+      //todo: fillAll
+      System.out.println("FINISHED!");
+      gamePlayUI.gBackground.addAction(
+              sequence(
+                      delay(TIME_DELAY_TO_CHECK_ALL),
+                      run(this::filterAll),
+                      run(() -> {
+                        if (lsPieceNullItem.size() <= 0)
+                          blockInput();
+                      })
+              )
+      );
+    }
   }
 
-  private void addItemSequen(List<Piece> pieces, int turn, float duration) {
+  private boolean action(float dt, Actor a) {
 
-    if (turn < 0)
-      return;
-
-    for (Piece piece : pieces) {
+    for (Piece piece : lsPieceNullItem) {
       for (int col=0; col<COL; col++) {
         if (arrPosPiece[turn][col] == piece)
           addNewItem(piece.item, piece);
       }
     }
 
-    final int t = turn - 1;
-    gamePlayUI.gItem.addAction(
+    gamePlayUI.gBackground.addAction(
             sequence(
                     delay(.05f),
-                    run(() -> addItemSequen(pieces, t, duration))
+                    run(this::nextRow)
             )
     );
 
+    return true;
+  }
 
-//    final int t = turn + 1;
-//    Piece piece = pieces.get(turn);
-//    gamePlayUI.gItem.addActor(piece.item);
-//    piece.isEmpty = false;
-//    piece.item.setPosStart(piece.pos);
-//
-//    gamePlayUI.gItem.addAction(
-//            parallel(
-//                    run(() -> piece.item.moveToPos(piece.pos, duration)),
-//                    sequence(
-//                            delay(.15f),
-//                            run(() -> addItemSequen(pieces, t, duration))
-//                    )
-//            )
-//    );
+  private void nextRow() {
+    turn--;
+    startNewItem(turn);
+  }
+
+  private void addNewItem(Item item, Piece piece) {
+    piece.setItem(item);
+    gamePlayUI.addToGItem(item);
+    item.setPosStart(piece.pos);
+    item.moveToPos(piece.pos, .2f);
+  }
+
+  private void wrap(Piece pStart, Piece pEnd) {
+
+    Item tmp = pStart.item;
+    pStart.item = pEnd.item;
+    pEnd.item = tmp;
+
+    isWrap = true;
+
+    pStart.item.addAction(
+            moveTo(pStart.pos.x, pStart.pos.y, WRAP_ITEM, fastSlow)
+    );
+
+    pEnd.item.addAction(
+            sequence(
+                    moveTo(pEnd.pos.x, pEnd.pos.y, WRAP_ITEM, fastSlow),
+                    run(this::filterAll),
+                    run(() -> {
+                      if (lsPieceNullItem.size() <= 0)
+                        reverse(pStart, pEnd);
+                    })
+            )
+    );
 
   }
 
-  @Override
-  public void finished() {
-//    filterAll();
+  private void reverse(Piece pStart, Piece pEnd) {
+
+    Item tmp = pStart.item;
+    pStart.item = pEnd.item;
+    pEnd.item = tmp;
+
+    pStart.item.addAction(
+            moveTo(pStart.pos.x, pStart.pos.y, WRAP_ITEM, fastSlow)
+    );
+
+    pEnd.item.addAction(
+            sequence(
+                    moveTo(pEnd.pos.x, pEnd.pos.y, WRAP_ITEM, fastSlow),
+                    run(this::blockInput)
+            )
+    );
+
   }
 
-  @Override
-  public void blockInput() {
-    isDragAndDrop = false;
+  private void addSpecialItem(List<Piece> lsVer, List<Piece> lsHor, Piece pSpecial) {
+
+
+
   }
+
+  private void blockInput() {
+    isWrap = false;
+    pieceStart = null;
+    pieceEnd = null;
+  }
+
 }

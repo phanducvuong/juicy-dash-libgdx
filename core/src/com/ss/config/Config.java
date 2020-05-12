@@ -19,5 +19,8 @@ public class Config {
 
   //label: time action item
   public static final float   TIME_ADD_ITEM               = .75f;
+  public static final float   WRAP_ITEM                   = .25f;
+  public static final float   TIME_DELAY_TO_CHECK_ALL     = .35f;
+  public static final float   TIME_SLIDE                  = .3f;
 
 }

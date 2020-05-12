@@ -192,10 +192,12 @@ public class Util {
     return tmpPieces;
   }
 
-  public void chkContain(List<Piece> parent, List<Piece> child) {
-    for (Piece piece : child)
-      if (!parent.contains(piece))
-        parent.add(piece);
+  public boolean chkContain(List<Piece> parent, List<Piece> child) {
+    for (Piece piece : child) {
+      if (parent.contains(piece))
+        return true;
+    }
+    return false;
   }
 
   public Piece getPieceMinRow(List<Piece> pieces) {
@@ -208,12 +210,17 @@ public class Util {
   }
 
   public void log(String label, Piece piece) {
-    System.out.println(label + piece.pos + "ROW, COL: " + piece.row + "  " + piece.col);
-    if (piece.item != null)
+    if (piece.item != null) {
+      System.out.println(label + piece.pos + "ROW, COL: " + piece.row + "  " + piece.col);
       System.out.println(piece.item.name);
+    }
     else
       System.out.println("EMPTY");
 //    System.out.println(piece.item.getPos());
+  }
+
+  public void log(Piece piece) {
+    System.out.println("ROW: " + piece.row + " COL: " + piece.col);
   }
 
 }

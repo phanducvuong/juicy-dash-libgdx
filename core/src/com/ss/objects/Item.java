@@ -3,6 +3,7 @@ package com.ss.objects;
 import static com.badlogic.gdx.math.Interpolation.*;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Align;
 import com.ss.GMain;
@@ -13,16 +14,10 @@ import static com.ss.config.Config.*;
 
 public class Item extends Group {
 
-  public interface IFinishMove {
-    void finished();
-    void blockInput();
-  }
-
   private Image fruit;
   public Type type;
   public String name;
   public boolean isAlive = false;
-  public IFinishMove iFinishMove;
 
   public Item(String region, Type type) {
 
@@ -51,11 +46,8 @@ public class Item extends Group {
   public void moveToPos(Vector2 pos, float duration) {
     this.addAction(
             sequence(
-                    parallel(
-                            moveTo(pos.x, pos.y, duration, swingIn),
-                            run(() -> iFinishMove.blockInput())
-                    ),
-                    run(() -> iFinishMove.finished())
+                    Actions.moveBy(0, -2, .1f, linear),
+                    moveTo(pos.x, pos.y, duration, linear)
             )
     );
   }
@@ -67,10 +59,6 @@ public class Item extends Group {
   public void reset() {
     this.remove();
     isAlive = false;
-  }
-
-  public void setiFinishMove(IFinishMove iFinishMove) {
-    this.iFinishMove = iFinishMove;
   }
 
 }
