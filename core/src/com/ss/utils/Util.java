@@ -39,6 +39,12 @@ public class Util {
 
   }
 
+  public boolean chkTypeFruit(Piece piece) {
+    return piece.item.type != Type.clock
+           && piece.item.type != Type.jam
+           && piece.item.type != Type.glass_fruit;
+  }
+
   public Type getType(int id) {
 
     Type t = Type.blank;
@@ -76,10 +82,21 @@ public class Util {
     return piecess[row][col].isEmpty ? piecess[row][col] : null;
   }
 
-  private Item getItem(List<Item> items) {
+  public Piece getPieceDifferenceWith(Piece[][] pieces, Piece pStart, Piece pEnd) {
+    for (Piece[] ps : pieces) {
+      for (Piece p : ps)
+        if (p != pStart && p != pEnd)
+          return p;
+    }
+    return null;
+  }
+
+  public Item getItem(List<Item> items) {
     for (Item item : items) {
-      if (!item.isAlive)
+      if (!item.isAlive) {
+        item.isAlive = true;
         return item;
+      }
     }
     return null;
   }
@@ -209,6 +226,37 @@ public class Util {
     return pMinRow;
   }
 
+  public Piece getPieceIntersectByVerAndHor(List<Piece> vers, List<Piece> hors) {
+    for (Piece pV : vers) {
+      for (Piece pH: hors) {
+        if (pV == pH)
+          return pV;
+      }
+    }
+    return null;
+  }
+
+  public List<Piece> getLsPieceIsMatch(Piece[][] arrs, Piece target) {
+
+    List<Piece> tmps = new ArrayList<>();
+    for (int i=0; i<ROW; i++) {
+      for (int j=0; j<COL; j++) {
+        if (arrs[i][j].item.type == target.item.type)
+          tmps.add(arrs[i][j]);
+      }
+    }
+    return tmps;
+  }
+
+  public void removeItemAt(Piece piece, List<Piece> pieces) {
+    List<Piece> tmp = new ArrayList<>();
+    for (Piece p : pieces) {
+      if (p == piece)
+        tmp.add(p);
+    }
+    pieces.removeAll(tmp);
+  }
+
   public void log(String label, Piece piece) {
     if (piece.item != null) {
       System.out.println(label + piece.pos + "ROW, COL: " + piece.row + "  " + piece.col);
@@ -221,6 +269,26 @@ public class Util {
 
   public void log(Piece piece) {
     System.out.println("ROW: " + piece.row + " COL: " + piece.col);
+  }
+
+//  public void log(List<HashMap<String, List<Piece>>> ls) {
+//
+//    for (HashMap<String, List<Piece>> hh : ls) {
+//      if (hh.get("ver") != null) {
+//        System.out.print("VER: ");
+//        log(hh.get("ver").get(0));
+//      }
+//      if (hh.get("hor") != null) {
+//        System.out.print("HOR: ");
+//        log(hh.get("hor").get(0));
+//      }
+//    }
+//
+//  }
+
+  public void log(List<Piece> l) {
+    for (Piece piece : l)
+      log(piece);
   }
 
 }

@@ -55,6 +55,7 @@ public class GameUIController {
     addItem();
   }
 
+  //------------------init ui---------------------------------------------
   private void initLv() {
     lv.add(Type.strawberry);
     lv.add(Type.orange);
@@ -97,7 +98,9 @@ public class GameUIController {
     }
 
   }
+  //------------------init ui---------------------------------------------
 
+  //------------------event click-----------------------------------------
   private void eventTouchScreen() {
 
     //label: drag and drop
@@ -116,11 +119,11 @@ public class GameUIController {
         super.drag(event, x, y, pointer);
 
         pieceEnd = util.inRange(arrPosPiece, new Vector2(x, y));
-        if (!isWrap && pieceStart != null && pieceEnd != pieceStart) {
-          util.log("start: ", pieceStart);
-          util.log("end: ", pieceEnd);
+        if (!isWrap && pieceStart != null && pieceEnd != null && pieceEnd != pieceStart) {
+//          util.log("start: ", pieceStart);
+//          util.log("end: ", pieceEnd);
 
-          wrap(pieceStart, pieceEnd);
+          swap(pieceStart, pieceEnd);
 
           isWrap = true;
 //          pieceStart = null;
@@ -143,7 +146,9 @@ public class GameUIController {
     });
 
   }
+  //------------------event click-----------------------------------------
 
+  //------------------new game--------------------------------------------
   private void addItem() {
 
     List<Item> lsItem = util.getLsItem(hmItem, lv);
@@ -163,9 +168,52 @@ public class GameUIController {
       }
     }
 
+    addItemAt(arrPosPiece[2][3], "item_glass_juice");
   }
 
+  private void addItemAt(Piece piece, String key) {
+    Item item = util.getItem(hmItem.get(key));
+    clrPiece(piece);
+    piece.setItem(item);
+    item.setPosition(piece.pos);
+    gamePlayUI.addToGItem(item);
+  }
+  //------------------new game--------------------------------------------
+
+  //-------------------update array pos piece------------------------------
   public void filterAll() {
+
+    List<Piece> lsPosIsMatch = new ArrayList<>();
+
+    for (int i=0; i<ROW; i++) {
+      for (int j=0; j<COL; j++) {
+
+        //loại bỏ các item đã được check qua và match với nhau
+        if (!lsPosIsMatch.contains(arrPosPiece[i][j])
+            && !lsPosIsMatch.contains(arrPosPiece[i][j])
+            && !arrPosPiece[i][j].isEmpty) {
+
+          List<Piece> tmpV = util.filterVertically(arrPosPiece, arrPosPiece[i][j]);
+          List<Piece> tmpH = util.filterHorizontally(arrPosPiece, arrPosPiece[i][j]);
+
+          if (tmpV.size() >= 3) {
+            lsPosIsMatch.addAll(tmpV);
+            chkItemIsMatchByHor(tmpV, lsPosIsMatch);
+          }
+          else if (tmpH.size() >= 3) {
+            lsPosIsMatch.addAll(tmpH);
+            chkItemIsMatchByVer(tmpH, lsPosIsMatch);
+          }
+
+        }
+
+      }
+    }
+
+    clrLsFilterPiece(lsPosIsMatch);
+  }
+
+  public void filterAll(int ii) {
 
     List<Piece> lsVertical    = new ArrayList<>();
     List<Piece> lsHorizontal  = new ArrayList<>();
@@ -175,71 +223,63 @@ public class GameUIController {
     for (int i=0; i<ROW; i++) {
       for (int j=0; j<COL; j++) {
 
-        List<Piece> tmpV = util.filterVertically(arrPosPiece, arrPosPiece[i][j]);
-        List<Piece> tmpH = util.filterHorizontally(arrPosPiece, arrPosPiece[i][j]);
-        HashMap<String, List<Piece>> hmTmp = new HashMap<>();
+        //loại bỏ các item đã được check qua và match với nhau
+        if (!lsVertical.contains(arrPosPiece[i][j]) && !lsHorizontal.contains(arrPosPiece[i][j])) {
 
-        if (tmpV.size() >= 3 && !util.chkContain(lsVertical, tmpV)) {
-          hmTmp.put("ver", tmpV);
-          lsVertical.addAll(tmpV);
+          List<Piece> tmpV = util.filterVertically(arrPosPiece, arrPosPiece[i][j]);
+          List<Piece> tmpH = util.filterHorizontally(arrPosPiece, arrPosPiece[i][j]);
+          HashMap<String, List<Piece>> hmTmp = new HashMap<>();
+
+          if (tmpV.size() >= 3) {
+            hmTmp.put("ver", tmpV);
+            lsVertical.addAll(tmpV);
+
+            List<Piece> tmpHH = new ArrayList<>();
+            for (Piece piece : tmpV) {
+              List<Piece> tmp = util.filterHorizontally(arrPosPiece, arrPosPiece[piece.row][piece.col]);
+              if (tmp.size() >= 3) {
+                tmpHH.addAll(tmp);
+              }
+            } //kiểm tra các item trong tmpV nếu có theo chiều ngang thì lưu lại.
+
+            hmTmp.put("hor", tmpHH);
+            lsHorizontal.addAll(tmpHH);
+            lsSpecialItem.add(hmTmp);
+          }// duyệt theo chiều dọc
+          else if (tmpH.size() >= 3){
+            hmTmp.put("hor", tmpH);
+            lsHorizontal.addAll(tmpH);
+
+            List<Piece> tmpVV = new ArrayList<>();
+            for (Piece piece : tmpH) {
+              List<Piece> tmp = util.filterVertically(arrPosPiece, arrPosPiece[piece.row][piece.col]);
+              if (tmp.size() >= 3) {
+                tmpVV.addAll(tmp);
+              }
+            } //kiểm tra các item trong tmp nếu có theo chiều dọc thì lưu lại.
+
+            hmTmp.put("ver", tmpVV);
+            lsVertical.addAll(tmpVV);
+            lsSpecialItem.add(hmTmp);
+          }//duyệt theo chiều ngang
         }
-
-        if (tmpH.size() >= 3 && !util.chkContain(lsHorizontal, tmpH)) {
-          hmTmp.put("hor", tmpH);
-          lsHorizontal.addAll(tmpH);
-        }
-
-        if (hmTmp.size() > 0)
-          lsSpecialItem.add(hmTmp);
 
       }
     }
 
-    //todo: check lsSpecialItem and add special item
-    for (HashMap<String, List<Piece>> hh : lsSpecialItem) {
-      if (hh.get("ver") != null) {
-        System.out.print("VER: ");
-        util.log(hh.get("ver").get(0));
-      }
-      if (hh.get("hor") != null) {
-        System.out.print("HOR: ");
-        util.log(hh.get("hor").get(0));
-      }
-    }
+//    clrLsFilterPiece(lsVertical);
+//    clrLsFilterPiece(lsHorizontal);
 
-    clrLsFilterPiece(lsVertical);
-    clrLsFilterPiece(lsHorizontal);
+    //label: check lsSpecialItem and add special item
+//    addSpecialItem(lsSpecialItem);
+//    util.log(lsSpecialItem);
 
     updateArrPiece();
 
   }
 
-  private void filterAt(int row, int col) {
-
-    List<Piece> lsPieceHor = util.filterVertically(arrPosPiece, arrPosPiece[row][col]);
-    List<Piece> lsPieceVer = util.filterHorizontally(arrPosPiece, arrPosPiece[row][col]);
-
-    int countItem = 0;
-    if (lsPieceVer.size() >= 3) {
-      countItem += lsPieceVer.size();
-      clrLsFilterPiece(lsPieceVer);
-      isTheSame = true;
-    }
-
-    if (lsPieceHor.size() >= 3) {
-      countItem += lsPieceVer.size();
-      clrLsFilterPiece(lsPieceHor);
-      isTheSame = true;
-    }
-
-    //todo: check count item to add special item
-
-    updateArrPiece();
-
-  }
-
-  //label: update array pos piece
-  private void updateArrPiece() {
+  //add new item at piece is null item after filter
+  public void updateArrPiece() {
 
     lsPieceNullItem.clear();
 
@@ -272,7 +312,6 @@ public class GameUIController {
 
   }
 
-  //label: slide by vertical (up to down)
   private void slideVer(int row, int col) {
 
     for (int r=row-1; r>=0; r--) {
@@ -290,27 +329,57 @@ public class GameUIController {
 
   private void clrLsFilterPiece(List<Piece> filter) {
     for (Piece piece : filter) {
-      if (piece.item != null)
-        piece.item.reset();
-      piece.clear();
+      clrPiece(piece);
     }
-
-    //todo: action new item in piece is empty
   }
 
+  private void clrPieceByVer(int col) {
+    for (int row=0; row<ROW; row++)
+      clrPiece(arrPosPiece[row][col]);
+  }
+
+  private void clrPieceByHor(int row) {
+    for (int col=0; col<COL; col++)
+      clrPiece(arrPosPiece[row][col]);
+  }
+
+  private void clrAll() {
+    for (Piece[] pieces : arrPosPiece)
+      for (Piece piece : pieces)
+        clrPiece(piece);
+  }
+
+  private void skillJam(Type type) {
+    for (Piece[] pieces : arrPosPiece)
+      for (Piece p : pieces)
+        if (p.item.type == type)
+          clrPiece(p);
+  }
+
+  private void clrPiece(Piece piece) {
+    if (piece.item != null)
+      piece.item.reset();
+    piece.clear();
+  }
+  //-------------------update array pos piece------------------------------
+
+  //-------------------action add new item---------------------------------
   private void startNewItem(int row) {
     if (row >= 0)
       gamePlayUI.gBackground.addAction(GSimpleAction.simpleAction(this::action));
     else {
       //todo: fillAll
-      System.out.println("FINISHED!");
+//      System.out.println("FINISHED!");
       gamePlayUI.gBackground.addAction(
               sequence(
                       delay(TIME_DELAY_TO_CHECK_ALL),
-                      run(this::filterAll),
+                      run(() -> {
+                        filterAll();
+                        updateArrPiece();
+                      }),
                       run(() -> {
                         if (lsPieceNullItem.size() <= 0)
-                          blockInput();
+                          unlockInput();
                       })
               )
       );
@@ -347,8 +416,10 @@ public class GameUIController {
     item.setPosStart(piece.pos);
     item.moveToPos(piece.pos, .2f);
   }
+  //-------------------action add new item---------------------------------
 
-  private void wrap(Piece pStart, Piece pEnd) {
+  //-------------------swap and reverse item-------------------------------
+  private void swap(Piece pStart, Piece pEnd) {
 
     Item tmp = pStart.item;
     pStart.item = pEnd.item;
@@ -363,7 +434,7 @@ public class GameUIController {
     pEnd.item.addAction(
             sequence(
                     moveTo(pEnd.pos.x, pEnd.pos.y, WRAP_ITEM, fastSlow),
-                    run(this::filterAll),
+                    run(() -> chkSpecialItemWhenSwap(pStart, pEnd)),
                     run(() -> {
                       if (lsPieceNullItem.size() <= 0)
                         reverse(pStart, pEnd);
@@ -386,19 +457,271 @@ public class GameUIController {
     pEnd.item.addAction(
             sequence(
                     moveTo(pEnd.pos.x, pEnd.pos.y, WRAP_ITEM, fastSlow),
-                    run(this::blockInput)
+                    run(this::unlockInput)
             )
     );
 
   }
+  //-------------------swap and reverse item-------------------------------
 
-  private void addSpecialItem(List<Piece> lsVer, List<Piece> lsHor, Piece pSpecial) {
+  //-------------------special item----------------------------------------
+  private void addSpecialItem(Piece piece, String key) {
+    System.out.println("Add special");
+    Item item = util.getItem(hmItem.get(key));
+    clrPiece(piece);
+    piece.setItem(item);
+    item.setPosition(piece.pos);
+    gamePlayUI.addToGItem(item);
+  }
 
+  private void addItemJamOrGlassFruit(List<Piece> ls, String key) {
+    Item item = util.getItem(hmItem.get(key));
+    if (pieceStart != null && pieceEnd != null) {
+      if (ls.contains(pieceStart)) {
+        clrPiece(pieceStart);
+        pieceStart.setItem(item);
+        item.setPosition(pieceStart.pos);
+        gamePlayUI.gItem.addActor(item);
+      }
+      else if (ls.contains(pieceEnd)) {
+        clrPiece(pieceEnd);
+        item.setPosition(pieceEnd.pos);
+        pieceEnd.setItem(item);
+        gamePlayUI.gItem.addActor(item);
+      }
+      else {
+        Piece tmpPiece = ls.get(0);
+        clrPiece(tmpPiece);
+        tmpPiece.setItem(item);
+        item.setPosition(tmpPiece.pos);
+        gamePlayUI.gItem.addActor(item);
+      }
 
+      pieceStart = null;
+      pieceEnd = null;
+    }
+    else {
+      Piece tmpPiece = ls.get(0);
+      clrPiece(tmpPiece);
+      tmpPiece.setItem(item);
+      item.setPosition(tmpPiece.pos);
+      gamePlayUI.gItem.addActor(item);
+    }
+  }
+  //-------------------special item----------------------------------------
+
+  //-------------------check logic-----------------------------------------
+  //swap item which is the special item
+  private void chkSpecialItemWhenSwap(Piece pStart, Piece pEnd) {
+
+    if (pStart.item.type == Type.clock && pEnd.item.type == Type.clock) {
+      System.out.println("x2 time");
+      //todo: x2 time
+      clrPiece(pStart);
+      clrPiece(pEnd);
+
+      updateArrPiece();
+    }
+    else if ((pStart.item.type == Type.clock || pEnd.item.type == Type.clock)
+            && (pStart.item.type == Type.jam || pEnd.item.type == Type.jam)) {
+      System.out.println("x1 time, jam");
+      skillJam(util.getPieceDifferenceWith(arrPosPiece, pStart, pEnd).item.type);
+      clrPiece(pStart);
+      clrPiece(pEnd);
+
+      updateArrPiece();
+      //todo: x1 time
+    }
+    else if ((pStart.item.type == Type.clock || pEnd.item.type == Type.clock)
+            && (pStart.item.type == Type.glass_fruit || pEnd.item.type == Type.glass_fruit)) {
+      System.out.println("x1 time, glass juice");
+      clrPiece(pStart);
+      clrPiece(pEnd);
+      //todo: x1 time
+
+      if (pStart.row == pEnd.row)
+        clrPieceByHor(pStart.row);
+      else
+        clrPieceByVer(pStart.col);
+
+      updateArrPiece();
+    }
+    else if (pStart.item.type == Type.clock && util.chkTypeFruit(pEnd)) {
+      System.out.println("x1 time, normal item");
+      clrPiece(pStart);
+      //todo: x1 time
+
+      filterAll();
+      clrPiece(pEnd);
+      updateArrPiece();
+    }
+    else if (pEnd.item.type == Type.clock && util.chkTypeFruit(pStart)) {
+      System.out.println("x1 time, normal item");
+      clrPiece(pEnd);
+      //todo: x1 time
+
+      filterAll();
+      clrPiece(pStart);
+      updateArrPiece();
+    }
+    else if (pStart.item.type == Type.jam && pEnd.item.type == Type.jam) {
+      System.out.println("jam + jam");
+      clrAll();
+      updateArrPiece();
+    }
+    else if ((pStart.item.type == Type.jam || pEnd.item.type == Type.jam)
+            && (pStart.item.type == Type.glass_fruit || pEnd.item.type == Type.glass_fruit)) {
+      System.out.println("jam + glass juice");
+      skillJam(util.getPieceDifferenceWith(arrPosPiece, pStart, pEnd).item.type);
+      clrPiece(pStart);
+      clrPiece(pEnd);
+
+      if (pStart.row == pEnd.row)
+        clrPieceByHor(pStart.row);
+      else
+        clrPieceByVer(pStart.col);
+
+      updateArrPiece();
+    }
+    else if (pStart.item.type == Type.jam && util.chkTypeFruit(pEnd)) {
+      System.out.println("jam + fruit");
+      skillJam(pEnd.item.type);
+      clrPiece(pStart);
+
+      updateArrPiece();
+    }
+    else if (pEnd.item.type == Type.jam && util.chkTypeFruit(pStart)) {
+      System.out.println("jam + fruit");
+      skillJam(pStart.item.type);
+      clrPiece(pEnd);
+
+      updateArrPiece();
+    }
+    else if (pStart.item.type == Type.glass_fruit && pEnd.item.type == Type.glass_fruit) {
+      System.out.println("glass juice + glass juice");
+      clrPieceByHor(pEnd.row);
+      clrPieceByVer(pEnd.col);
+
+      updateArrPiece();
+    }
+    else if (pStart.item.type == Type.glass_fruit && util.chkTypeFruit(pEnd)) {
+      System.out.println("glass juice + fruit");
+      if (pStart.row == pEnd.row)
+        clrPieceByHor(pStart.row);
+      else
+        clrPieceByVer(pStart.col);
+
+      updateArrPiece();
+    }
+    else if (pEnd.item.type == Type.glass_fruit && util.chkTypeFruit(pStart)) {
+      System.out.println("glass juice + fruit");
+      if (pStart.row == pEnd.row)
+        clrPieceByHor(pStart.row);
+      else
+        clrPieceByVer(pStart.col);
+
+      updateArrPiece();
+    }
+    else {
+      filterAll();
+      updateArrPiece();
+    }
 
   }
 
-  private void blockInput() {
+  private void chkItemIsMatchByHor(List<Piece> pieces, List<Piece> saves) {
+
+    boolean itemIsMatchHor = false;
+    for (Piece piece : pieces) {
+      List<Piece> tmpH = util.filterHorizontally(arrPosPiece, arrPosPiece[piece.row][piece.col]);
+      if (tmpH.size() >= 3) {
+        saves.addAll(tmpH);
+        System.out.println("BEFORE VER: " + saves.size());
+        util.removeItemAt(piece, saves);
+        addSpecialItem(piece, "item_clock");
+        itemIsMatchHor = true;
+      }
+    }
+
+    if (!itemIsMatchHor) {
+      if (pieceStart != null && pieces.contains(pieceStart) && pieces.size() >= 5) {
+        saves.remove(pieceStart);
+        addSpecialItem(pieceStart, "item_jam");
+      }
+      else if (pieceEnd != null && pieces.contains(pieceEnd) && pieces.size() >= 5) {
+        saves.remove(pieceEnd);
+        addSpecialItem(pieceEnd, "item_jam");
+      }
+      else if (pieceStart != null && pieces.contains(pieceStart) && pieces.size() == 4) {
+        saves.remove(pieceStart);
+        addSpecialItem(pieceStart, "item_glass_juice");
+      }
+      else if (pieceEnd != null && pieces.contains(pieceEnd) && pieces.size() == 4) {
+        saves.remove(pieceEnd);
+        addSpecialItem(pieceEnd, "item_glass_juice");
+      }
+      else {
+        if (pieces.size() >= 5) {
+          saves.remove(pieces.get(0));
+          addSpecialItem(pieces.get(0), "item_jam");
+        }
+        else if (pieces.size() == 4) {
+          saves.remove(pieces.get(0));
+          addSpecialItem(pieces.get(0), "item_glass_juice");
+        }
+      }
+    }
+
+  }
+
+  private void chkItemIsMatchByVer(List<Piece> pieces, List<Piece> saves) {
+
+    boolean itemIsMatchVer = false;
+    for (Piece piece : pieces) {
+      List<Piece> tmpV = util.filterVertically(arrPosPiece, arrPosPiece[piece.row][piece.col]);
+      if (tmpV.size() >= 3) {
+        saves.addAll(tmpV);
+        util.removeItemAt(piece, saves);
+        System.out.println("BEFORE HOR: " + saves.size());
+        addSpecialItem(piece, "item_clock");
+        itemIsMatchVer = true;
+      }
+    }
+
+    if (!itemIsMatchVer) {
+      if (pieceStart != null && pieces.contains(pieceStart) && pieces.size() >= 5) {
+        saves.remove(pieceStart);
+        addSpecialItem(pieceStart, "item_jam");
+      }
+      else if (pieceEnd != null && pieces.contains(pieceEnd) && pieces.size() >= 5) {
+        saves.remove(pieceEnd);
+        addSpecialItem(pieceEnd, "item_jam");
+      }
+      else if (pieceStart != null && pieces.contains(pieceStart) && pieces.size() == 4) {
+        saves.remove(pieceStart);
+        addSpecialItem(pieceStart, "item_glass_juice");
+      }
+      else if (pieceEnd != null && pieces.contains(pieceEnd) && pieces.size() == 4) {
+        saves.remove(pieceEnd);
+        addSpecialItem(pieceEnd, "item_glass_juice");
+      }
+      else {
+        if (pieces.size() >= 5) {
+          saves.remove(pieces.get(0));
+          addSpecialItem(pieces.get(0), "item_jam");
+        }
+        else if (pieces.size() == 4) {
+          saves.remove(pieces.get(0));
+          addSpecialItem(pieces.get(0), "item_glass_juice");
+        }
+      }
+    }
+
+  }
+
+  //-------------------check logic-----------------------------------------
+
+  private void unlockInput() {
     isWrap = false;
     pieceStart = null;
     pieceEnd = null;

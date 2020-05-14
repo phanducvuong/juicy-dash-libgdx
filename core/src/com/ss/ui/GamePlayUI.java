@@ -83,6 +83,7 @@ public class GamePlayUI extends Group {
 
 //          System.out.println("CLICK!");
           controller.filterAll();
+          controller.updateArrPiece();
 
       }
     });
