@@ -345,7 +345,6 @@ public class Wheel extends Group {
     batch.end();fbo.end();batch.dispose();
 
     wheelTex = new TextureRegion(fbo.getColorBufferTexture());
-
     wheelTex.flip(false, !Y_DOWN);
   }
 

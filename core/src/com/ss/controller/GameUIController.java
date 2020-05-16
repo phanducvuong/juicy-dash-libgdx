@@ -34,8 +34,11 @@ public class GameUIController {
   private int turn = ROW;
   private List<Type> lv;
 
-  public boolean isDragAndDrop = true, isWrap = false, isTheSame = false;
+  public boolean isWrap = false;
   private Piece pieceStart, pieceEnd;
+
+  private int timeExpired = 10;
+  private float sclTime;
 
   public GameUIController(Group gParent) {
 
@@ -53,6 +56,8 @@ public class GameUIController {
 
     eventTouchScreen();
     addItem();
+
+    sclTime = (float) sclTimeLine();
   }
 
   //------------------init ui---------------------------------------------
@@ -124,9 +129,7 @@ public class GameUIController {
 //          util.log("end: ", pieceEnd);
 
           swap(pieceStart, pieceEnd);
-
           isWrap = true;
-//          pieceStart = null;
         }
 
       }
@@ -211,71 +214,6 @@ public class GameUIController {
     }
 
     clrLsFilterPiece(lsPosIsMatch);
-  }
-
-  public void filterAll(int ii) {
-
-    List<Piece> lsVertical    = new ArrayList<>();
-    List<Piece> lsHorizontal  = new ArrayList<>();
-
-    List<HashMap<String, List<Piece>>> lsSpecialItem = new ArrayList<>();
-
-    for (int i=0; i<ROW; i++) {
-      for (int j=0; j<COL; j++) {
-
-        //loại bỏ các item đã được check qua và match với nhau
-        if (!lsVertical.contains(arrPosPiece[i][j]) && !lsHorizontal.contains(arrPosPiece[i][j])) {
-
-          List<Piece> tmpV = util.filterVertically(arrPosPiece, arrPosPiece[i][j]);
-          List<Piece> tmpH = util.filterHorizontally(arrPosPiece, arrPosPiece[i][j]);
-          HashMap<String, List<Piece>> hmTmp = new HashMap<>();
-
-          if (tmpV.size() >= 3) {
-            hmTmp.put("ver", tmpV);
-            lsVertical.addAll(tmpV);
-
-            List<Piece> tmpHH = new ArrayList<>();
-            for (Piece piece : tmpV) {
-              List<Piece> tmp = util.filterHorizontally(arrPosPiece, arrPosPiece[piece.row][piece.col]);
-              if (tmp.size() >= 3) {
-                tmpHH.addAll(tmp);
-              }
-            } //kiểm tra các item trong tmpV nếu có theo chiều ngang thì lưu lại.
-
-            hmTmp.put("hor", tmpHH);
-            lsHorizontal.addAll(tmpHH);
-            lsSpecialItem.add(hmTmp);
-          }// duyệt theo chiều dọc
-          else if (tmpH.size() >= 3){
-            hmTmp.put("hor", tmpH);
-            lsHorizontal.addAll(tmpH);
-
-            List<Piece> tmpVV = new ArrayList<>();
-            for (Piece piece : tmpH) {
-              List<Piece> tmp = util.filterVertically(arrPosPiece, arrPosPiece[piece.row][piece.col]);
-              if (tmp.size() >= 3) {
-                tmpVV.addAll(tmp);
-              }
-            } //kiểm tra các item trong tmp nếu có theo chiều dọc thì lưu lại.
-
-            hmTmp.put("ver", tmpVV);
-            lsVertical.addAll(tmpVV);
-            lsSpecialItem.add(hmTmp);
-          }//duyệt theo chiều ngang
-        }
-
-      }
-    }
-
-//    clrLsFilterPiece(lsVertical);
-//    clrLsFilterPiece(lsHorizontal);
-
-    //label: check lsSpecialItem and add special item
-//    addSpecialItem(lsSpecialItem);
-//    util.log(lsSpecialItem);
-
-    updateArrPiece();
-
   }
 
   //add new item at piece is null item after filter
@@ -623,6 +561,7 @@ public class GameUIController {
       updateArrPiece();
     }
     else {
+      System.out.println("normal + normal");
       filterAll();
       updateArrPiece();
     }
@@ -720,6 +659,27 @@ public class GameUIController {
   }
 
   //-------------------check logic-----------------------------------------
+
+  public void updateTime() {
+
+    if (timeExpired > 0) {
+      timeExpired -= 1f;
+      int minute = timeExpired%3600/60;
+      int second = timeExpired%60;
+
+      String time = minute + ":" + second;
+      gamePlayUI.lbTime.setText(time);
+      gamePlayUI.timeLine.clip(sclTime, 0f);
+
+    }
+    else
+      gamePlayUI.lbTime.setText("0:0");
+
+  }
+
+  private double sclTimeLine() {
+    return 1d/timeExpired;
+  }
 
   private void unlockInput() {
     isWrap = false;

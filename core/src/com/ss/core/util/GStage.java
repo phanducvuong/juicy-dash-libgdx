@@ -2,6 +2,7 @@ package com.ss.core.util;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -305,6 +306,7 @@ public final class GStage {
       float var3 = clearColor.a;
       Gdx.gl.glClearColor(var0, var1, var2, var3);
       Gdx.gl.glClear(16384);
+//     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling?GL20.GL_COVERAGE_BUFFER_BIT_NV:0));
       delta = Gdx.graphics.getDeltaTime();
       sortLayers();
       updateServices(delta);

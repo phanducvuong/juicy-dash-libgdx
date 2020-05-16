@@ -10,6 +10,7 @@ public class DesktopLauncher {
     LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
     config.width = 720/2;
     config.height = 1280/2;
+    config.samples = 2;
     GMain game = new GMain(new IPlatform() {
       @Override
       public void log(String str) {

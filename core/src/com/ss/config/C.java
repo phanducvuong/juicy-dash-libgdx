@@ -31,7 +31,8 @@ public class C {
 
       static void initLocalize() {
         String deviceLang = GMain.platform.GetDefaultLanguage();
-        FileHandle specFilehandle = Gdx.files.internal("i18n/lang_" + deviceLang);
+//        FileHandle specFilehandle = Gdx.files.internal("i18n/lang_" + deviceLang);
+        FileHandle specFilehandle = Gdx.files.internal("i18n/lang_" + "id");
         FileHandle baseFileHandle = Gdx.files.internal("i18n/lang");
 
         try {

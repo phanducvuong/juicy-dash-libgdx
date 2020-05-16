@@ -1,6 +1,14 @@
 package com.ss.config;
 
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.ss.core.util.GAssetsManager;
+
 public class Config {
+
+  //label: init font
+  public static final BitmapFont whiteFont                = GAssetsManager.getBitmapFont("white_font.fnt");
+  public static final BitmapFont redFont                  = GAssetsManager.getBitmapFont("red_font.fnt");
+  public static final BitmapFont greenFont                = GAssetsManager.getBitmapFont("green_font.fnt");
 
   //label: amount item
   public static final int     AMOUNT_ITEM_CREATE          = 49;
