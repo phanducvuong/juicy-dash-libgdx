@@ -42,9 +42,21 @@ public class Clipping extends Group {
 
   }
 
-  public void clip(float clipX, float clipY) {
+  public void clipBy(float clipX, float clipY) {
     this.clipX -= clipX;
     this.clipY -= clipY;
+    clipBounds.set(x, y, w*this.clipX, h*this.clipY);
+  }
+
+  public void clipTo(float clipX, float clipY) {
+    this.clipX = clipX;
+    this.clipY = clipY;
+    clipBounds.set(x, y, w*clipX, h*clipY);
+  }
+
+  public void reset(float clipX, float clipY) {
+    this.clipX = clipX;
+    this.clipY = clipY;
     clipBounds.set(x, y, w*this.clipX, h*this.clipY);
   }
 

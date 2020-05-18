@@ -14,6 +14,7 @@ import com.ss.objects.Piece;
 import com.ss.ui.GamePlayUI;
 import com.ss.utils.Util;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -34,11 +35,13 @@ public class GameUIController {
   private int turn = ROW;
   private List<Type> lv;
 
-  public boolean isWrap = false;
+  public boolean isWrap = false, isGameOver = false;
   private Piece pieceStart, pieceEnd;
 
-  private int timeExpired = 10;
+  private int timeOut = 160, timeExpired = 160, round = 0;
   private float sclTime;
+  private long target, scorePre = 0;
+  private boolean isCompleteRound = false;
 
   public GameUIController(Group gParent) {
 
@@ -46,6 +49,7 @@ public class GameUIController {
     this.gamePlayUI = new GamePlayUI(this);
     this.hmItem = new HashMap<>();
     this.lv = new ArrayList<>();
+    this.target = TARGET;
 
     //label add ui to scene
     gParent.addActor(gamePlayUI);
@@ -55,9 +59,12 @@ public class GameUIController {
     initLv();
 
     eventTouchScreen();
-    addItem();
+//    addItem();
 
-    sclTime = (float) sclTimeLine();
+    //next level
+    nextLevel();
+    startNewItem(ROW-1);
+
   }
 
   //------------------init ui---------------------------------------------
@@ -66,6 +73,7 @@ public class GameUIController {
     lv.add(Type.orange);
     lv.add(Type.grape);
     lv.add(Type.banana);
+    lv.add(Type.apple);
   }
 
   private void initPiece() {
@@ -115,7 +123,8 @@ public class GameUIController {
       public void dragStart(InputEvent event, float x, float y, int pointer) {
         super.dragStart(event, x, y, pointer);
 
-        pieceStart = util.inRange(arrPosPiece, new Vector2(x, y));
+        if (!isGameOver)
+          pieceStart = util.inRange(arrPosPiece, new Vector2(x, y));
 
       }
 
@@ -123,13 +132,15 @@ public class GameUIController {
       public void drag(InputEvent event, float x, float y, int pointer) {
         super.drag(event, x, y, pointer);
 
-        pieceEnd = util.inRange(arrPosPiece, new Vector2(x, y));
-        if (!isWrap && pieceStart != null && pieceEnd != null && pieceEnd != pieceStart) {
+        if (!isGameOver && !gamePlayUI.isPause) {
+          pieceEnd = util.inRange(arrPosPiece, new Vector2(x, y));
+          if (!isWrap && pieceStart != null && pieceEnd != null && pieceEnd != pieceStart) {
 //          util.log("start: ", pieceStart);
 //          util.log("end: ", pieceEnd);
 
-          swap(pieceStart, pieceEnd);
-          isWrap = true;
+            swap(pieceStart, pieceEnd);
+            isWrap = true;
+          }
         }
 
       }
@@ -141,9 +152,11 @@ public class GameUIController {
       public void clicked(InputEvent event, float x, float y) {
         super.clicked(event, x, y);
 
-        Vector2 pos = new Vector2(x, y);
-        Piece pieceClick = util.inRange(arrPosPiece, pos);
+        if (!isGameOver) {
+          Vector2 pos = new Vector2(x, y);
+          Piece pieceClick = util.inRange(arrPosPiece, pos);
 //        System.out.println("CLICK: " + pieceClick.pos);
+        }
 
       }
     });
@@ -171,7 +184,7 @@ public class GameUIController {
       }
     }
 
-    addItemAt(arrPosPiece[2][3], "item_glass_juice");
+//    addItemAt(arrPosPiece[2][3], "item_glass_juice");
   }
 
   private void addItemAt(Piece piece, String key) {
@@ -244,6 +257,7 @@ public class GameUIController {
 
 //    addItemSequence(lsPieceNullItem, ROW-1, .75f);
     if (lsPieceNullItem.size() > 0) {
+      updateScore();
       turn = ROW;
       nextRow();
     }
@@ -312,8 +326,15 @@ public class GameUIController {
               sequence(
                       delay(TIME_DELAY_TO_CHECK_ALL),
                       run(() -> {
-                        filterAll();
-                        updateArrPiece();
+                        if (scorePre >= target) {
+                          isCompleteRound = true;
+                          nextLevel();
+                          //todo: next level
+                        }
+                        else {
+                          filterAll();
+                          updateArrPiece();
+                        }
                       }),
                       run(() -> {
                         if (lsPieceNullItem.size() <= 0)
@@ -412,40 +433,6 @@ public class GameUIController {
     gamePlayUI.addToGItem(item);
   }
 
-  private void addItemJamOrGlassFruit(List<Piece> ls, String key) {
-    Item item = util.getItem(hmItem.get(key));
-    if (pieceStart != null && pieceEnd != null) {
-      if (ls.contains(pieceStart)) {
-        clrPiece(pieceStart);
-        pieceStart.setItem(item);
-        item.setPosition(pieceStart.pos);
-        gamePlayUI.gItem.addActor(item);
-      }
-      else if (ls.contains(pieceEnd)) {
-        clrPiece(pieceEnd);
-        item.setPosition(pieceEnd.pos);
-        pieceEnd.setItem(item);
-        gamePlayUI.gItem.addActor(item);
-      }
-      else {
-        Piece tmpPiece = ls.get(0);
-        clrPiece(tmpPiece);
-        tmpPiece.setItem(item);
-        item.setPosition(tmpPiece.pos);
-        gamePlayUI.gItem.addActor(item);
-      }
-
-      pieceStart = null;
-      pieceEnd = null;
-    }
-    else {
-      Piece tmpPiece = ls.get(0);
-      clrPiece(tmpPiece);
-      tmpPiece.setItem(item);
-      item.setPosition(tmpPiece.pos);
-      gamePlayUI.gItem.addActor(item);
-    }
-  }
   //-------------------special item----------------------------------------
 
   //-------------------check logic-----------------------------------------
@@ -662,23 +649,71 @@ public class GameUIController {
 
   public void updateTime() {
 
-    if (timeExpired > 0) {
-      timeExpired -= 1f;
-      int minute = timeExpired%3600/60;
-      int second = timeExpired%60;
+    if (!isCompleteRound) {
+      if (timeOut > 0) {
+        timeOut -= 1f;
+        int minute = timeOut %3600/60;
+        int second = timeOut %60;
 
-      String time = minute + ":" + second;
-      gamePlayUI.lbTime.setText(time);
-      gamePlayUI.timeLine.clip(sclTime, 0f);
-
+        String time = minute + ":" + second;
+        gamePlayUI.lbTime.setText(time);
+        gamePlayUI.timeLine.clipBy(sclTime, 0f);
+      }
+      else {
+        gameOver();
+        gamePlayUI.lbTime.setText("0:0");
+      }
     }
-    else
-      gamePlayUI.lbTime.setText("0:0");
 
   }
 
-  private double sclTimeLine() {
-    return 1d/timeExpired;
+  private void updateScore() {
+
+    scorePre += (lsPieceNullItem.size() * SCORE_FRUIT);
+    float sclTo = (float) scorePre / target;
+    gamePlayUI.scoreLine.clipTo(sclTo, 1f);
+    gamePlayUI.updateScore(scorePre);
+
+  }
+
+  public void addTimeLine(int second) {
+    int temp = timeOut + second;
+    if (temp > timeExpired) {
+      timeOut = timeExpired;
+      gamePlayUI.timeLine.reset(1f, 1f);
+      updateTime();
+    }
+    else {
+      timeOut = temp;
+      gamePlayUI.addTimeLine(second*sclTime);
+      updateTime();
+    }
+  }
+
+  private double sclTime(float scl) {
+    return 1d/scl;
+  }
+
+  private void nextLevel() {
+    round += 1;
+    timeOut = timeExpired = 160;
+    sclTime = (float) sclTime(timeOut);
+
+    gamePlayUI.updateRound(round);
+    gamePlayUI.timeLine.reset(1f, 1f);
+    isCompleteRound = false;
+
+    target *= 2;
+    gamePlayUI.updateGoal(target);
+    updateScore();
+
+    //todo: unlock input
+    unlockInput();
+  }
+
+  private void gameOver() {
+    isGameOver = true;
+    //todo: show popup game over
   }
 
   private void unlockInput() {

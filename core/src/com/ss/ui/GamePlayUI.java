@@ -1,5 +1,6 @@
 package com.ss.ui;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -14,6 +15,7 @@ import com.ss.core.util.GStage;
 import com.ss.core.util.GUI;
 import com.ss.objects.Item;
 import com.ss.utils.Clipping;
+import com.ss.utils.Pause;
 
 public class GamePlayUI extends Group {
 
@@ -23,19 +25,21 @@ public class GamePlayUI extends Group {
   private GameUIController controller;
   public Group gBackground, gItem;
   public Image bgTable;
+  private Label lbRound;
 
-  public Image iStart;
+  public Image iStart, iPause;
+  public boolean isPause = false;
 
   private Group gTime;
   public Clipping timeLine;
   private Image bgBar;
   public Label lbTime;
-  private float sclXTime = 1f;
   private float count = 0f;
 
   private Group gScore;
-  private Image bgScore, scoreBar;
+  private Image bgScore;
   private Label lbScore, lbGoal;
+  public Clipping scoreLine;
 
   public GamePlayUI(GameUIController controller) {
 
@@ -52,9 +56,9 @@ public class GamePlayUI extends Group {
     setHeight(CENTER_Y*2);
 
     initBg();
-    initIcon();
     initTime();
     initScore();
+    initIcon();
 
   }
 
@@ -101,31 +105,31 @@ public class GamePlayUI extends Group {
     gScore.setPosition(gTime.getX(), gTime.getY() - gScore.getHeight() - 50);
     gScore.addActor(bgScore);
 
-    scoreBar = GUI.createImage(GMain.bgAtlas, "line_score");
-    scoreBar.setPosition(bgScore.getX() + 6,bgScore.getY() + 4);
-    gScore.addActor(scoreBar);
+    scoreLine = new Clipping(bgScore.getX() + 6,bgScore.getY() + 4, GMain.bgAtlas, "line_score");
+    scoreLine.clipBy(1f, 0f);
+    gScore.addActor(scoreLine);
 
     Label lbTxtScore = new Label(C.lang.locale.get("txt_score"),
             new Label.LabelStyle(Config.whiteFont, null));
-    lbTxtScore.setPosition(scoreBar.getX(), scoreBar.getY() - lbTxtScore.getHeight() - 15);
+    lbTxtScore.setPosition(bgScore.getX(), bgScore.getY() - lbTxtScore.getHeight() - 10);
     gScore.addActor(lbTxtScore);
 
-    lbScore = new Label("00092", new Label.LabelStyle(Config.whiteFont, null));
+    lbScore = new Label("0", new Label.LabelStyle(Config.whiteFont, null));
     lbScore.setAlignment(Align.left);
-    lbScore.setPosition(scoreBar.getX(),
-            scoreBar.getY() + scoreBar.getHeight()/2 - lbScore.getHeight()/2 - 5);
+    lbScore.setPosition(bgScore.getX() + 5,
+            bgScore.getY() + bgScore.getHeight()/2 - lbScore.getHeight()/2 - 8);
     gScore.addActor(lbScore);
 
     Label lbTxtGoal = new Label(C.lang.locale.get("txt_goal"),
             new Label.LabelStyle(Config.whiteFont, null));
-    lbTxtGoal.setPosition(scoreBar.getX() + scoreBar.getWidth() - lbTxtGoal.getWidth(),
-            scoreBar.getY() - lbTxtGoal.getHeight() - 15);
+    lbTxtGoal.setPosition(bgScore.getX() + bgScore.getWidth() - lbTxtGoal.getWidth(),
+            bgScore.getY() - lbTxtGoal.getHeight() - 10);
     gScore.addActor(lbTxtGoal);
 
     lbGoal = new Label("3000", new Label.LabelStyle(Config.whiteFont, null));
     lbGoal.setAlignment(Align.right);
-    lbGoal.setPosition(scoreBar.getX() + scoreBar.getWidth() - lbGoal.getWidth(),
-            scoreBar.getY() + scoreBar.getHeight()/2 - lbGoal.getHeight()/2 - 5);
+    lbGoal.setPosition(bgScore.getX() + bgScore.getWidth() - lbGoal.getWidth() - 8,
+            bgScore.getY() + bgScore.getHeight()/2 - lbGoal.getHeight()/2 - 8);
     gScore.addActor(lbGoal);
 
     gBackground.addActor(gScore);
@@ -160,6 +164,11 @@ public class GamePlayUI extends Group {
     bgTable.setPosition(CENTER_X, CENTER_Y + Config.OFFSET_Y_BGTABLE, Align.center);
     gBackground.addActor(bgTable);
 
+    lbRound = new Label(C.lang.locale.get("txt_round"), new Label.LabelStyle(Config.whiteFont, null));
+    lbRound.setFontScale(1.2f);
+    lbRound.setPosition(bgTable.getX(), bgTable.getY() - lbRound.getHeight() - 35);
+    gBackground.addActor(lbRound);
+
   }
 
   private void initIcon() {
@@ -172,14 +181,21 @@ public class GamePlayUI extends Group {
         super.clicked(event, x, y);
 
 //          System.out.println("CLICK!");
-          controller.filterAll();
-          controller.updateArrPiece();
+//          controller.filterAll();
+//          controller.updateArrPiece();
 
-          sclXTime -= 0.01;
-          timeLine.clip(sclXTime, 1f);
+//        controller.addTimeLine(15);
+        isPause = !isPause;
+
+        Pause pause = new Pause(new Color(128/255f, 213/255f, 181/255f, .3f));
+        GamePlayUI.this.addActor(pause);
 
       }
     });
+
+    iPause = GUI.createImage(GMain.bgAtlas, "icon_pause");
+    iPause.setPosition(bgTable.getX() + 10, bgTable.getY() - iPause.getHeight() - 80);
+    gBackground.addActor(iPause);
 
   }
 
@@ -187,14 +203,33 @@ public class GamePlayUI extends Group {
     gItem.addActor(item);
   }
 
+  public void updateScore(long score) {
+    lbScore.setText(score+"");
+  }
+
+  public void updateGoal(long target) {
+    lbGoal.setText(target+"");
+  }
+
+  public void updateRound(int round) {
+    String s = C.lang.locale.get("txt_round");
+    lbRound.setText(s + " " + round);
+  }
+
+  public void addTimeLine(float time) {
+    timeLine.clipBy(-time, 0f);
+  }
+
   @Override
   public void act(float delta) {
     super.act(delta);
 
-    count += delta;
-    if (count >= 1f) {
-      controller.updateTime();
-      count = 0f;
+    if (!isPause) {
+      count += delta;
+      if (count >= 1f) {
+        controller.updateTime();
+        count = 0f;
+      }
     }
 
   }
