@@ -1,5 +1,6 @@
 package com.mygdx.game.desktop;
 
+import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.platform.IPlatform;
@@ -11,6 +12,7 @@ public class DesktopLauncher {
     config.width = 720/2;
     config.height = 1280/2;
     config.samples = 2;
+    config.x = 1000;
     GMain game = new GMain(new IPlatform() {
       @Override
       public void log(String str) {

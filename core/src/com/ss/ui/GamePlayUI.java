@@ -1,6 +1,5 @@
 package com.ss.ui;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -15,7 +14,6 @@ import com.ss.core.util.GStage;
 import com.ss.core.util.GUI;
 import com.ss.objects.Item;
 import com.ss.utils.Clipping;
-import com.ss.utils.Pause;
 
 public class GamePlayUI extends Group {
 
@@ -23,7 +21,7 @@ public class GamePlayUI extends Group {
   private final float CENTER_Y = GStage.getWorldHeight()/2;
 
   private GameUIController controller;
-  public Group gBackground, gItem;
+  public Group gBackground, gItem, gAnim;
   public Image bgTable;
   private Label lbRound;
 
@@ -46,11 +44,13 @@ public class GamePlayUI extends Group {
     //label: init layer
     this.gBackground = new Group();
     this.gItem = new Group();
+    this.gAnim = new Group();
 
     this.controller = controller;
 
     this.addActor(gBackground);
     this.addActor(gItem);
+    this.addActor(gAnim);
 
     setWidth(CENTER_X*2);
     setHeight(CENTER_Y*2);
@@ -185,10 +185,10 @@ public class GamePlayUI extends Group {
 //          controller.updateArrPiece();
 
 //        controller.addTimeLine(15);
-        isPause = !isPause;
-
-        Pause pause = new Pause(new Color(128/255f, 213/255f, 181/255f, .3f));
-        GamePlayUI.this.addActor(pause);
+//        isPause = !isPause;
+//
+//        Pause pause = new Pause(new Color(128/255f, 213/255f, 181/255f, .3f));
+//        GamePlayUI.this.addActor(pause);
 
       }
     });

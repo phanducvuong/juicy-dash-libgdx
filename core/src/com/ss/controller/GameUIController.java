@@ -5,10 +5,14 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
+import com.ss.GMain;
+import com.ss.config.Config;
 import com.ss.config.Type;
 import com.ss.core.action.exAction.GSimpleAction;
+import com.ss.core.util.GUI;
 import com.ss.objects.Item;
 import com.ss.objects.Piece;
 import com.ss.ui.GamePlayUI;
@@ -64,6 +68,28 @@ public class GameUIController {
     //next level
     nextLevel();
     startNewItem(ROW-1);
+
+    //label: test animation
+    Item test = new Item("item_glass_juice", Type.glass_fruit);
+    test.setPosition(arrPosPiece[3][3].pos);
+    gParent.addActor(test);
+
+    test.addAnimGlassToScene();
+    test.setPosAnimGlassJuice(true);
+
+    Image icon = GUI.createImage(GMain.bgAtlas, "icon_pause");
+    icon.setPosition(500, 20);
+    gParent.addActor(icon);
+
+    icon.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        super.clicked(event, x, y);
+
+        test.animGlassJuice(true, 3, 3);
+
+      }
+    });
 
   }
 
@@ -410,13 +436,19 @@ public class GameUIController {
     pEnd.item = tmp;
 
     pStart.item.addAction(
-            moveTo(pStart.pos.x, pStart.pos.y, WRAP_ITEM, fastSlow)
+            sequence(
+                    moveTo(pStart.pos.x, pStart.pos.y, WRAP_ITEM, fastSlow),
+                    run(() -> pStart.item.anim0())
+            )
     );
 
     pEnd.item.addAction(
             sequence(
                     moveTo(pEnd.pos.x, pEnd.pos.y, WRAP_ITEM, fastSlow),
-                    run(this::unlockInput)
+                    run(() -> {
+                      pEnd.item.anim0();
+                      unlockInput();
+                    })
             )
     );
 
@@ -442,6 +474,7 @@ public class GameUIController {
     if (pStart.item.type == Type.clock && pEnd.item.type == Type.clock) {
       System.out.println("x2 time");
       //todo: x2 time
+      addTimeLine(ADD_SECOND*2);
       clrPiece(pStart);
       clrPiece(pEnd);
 
@@ -450,19 +483,23 @@ public class GameUIController {
     else if ((pStart.item.type == Type.clock || pEnd.item.type == Type.clock)
             && (pStart.item.type == Type.jam || pEnd.item.type == Type.jam)) {
       System.out.println("x1 time, jam");
+      //todo: x1 time
+      addTimeLine(ADD_SECOND);
+
       skillJam(util.getPieceDifferenceWith(arrPosPiece, pStart, pEnd).item.type);
       clrPiece(pStart);
       clrPiece(pEnd);
 
       updateArrPiece();
-      //todo: x1 time
     }
     else if ((pStart.item.type == Type.clock || pEnd.item.type == Type.clock)
             && (pStart.item.type == Type.glass_fruit || pEnd.item.type == Type.glass_fruit)) {
       System.out.println("x1 time, glass juice");
+      //todo: x1 time
+      addTimeLine(ADD_SECOND);
+
       clrPiece(pStart);
       clrPiece(pEnd);
-      //todo: x1 time
 
       if (pStart.row == pEnd.row)
         clrPieceByHor(pStart.row);
@@ -473,8 +510,10 @@ public class GameUIController {
     }
     else if (pStart.item.type == Type.clock && util.chkTypeFruit(pEnd)) {
       System.out.println("x1 time, normal item");
-      clrPiece(pStart);
       //todo: x1 time
+      addTimeLine(ADD_SECOND);
+
+      clrPiece(pStart);
 
       filterAll();
       clrPiece(pEnd);
@@ -482,8 +521,10 @@ public class GameUIController {
     }
     else if (pEnd.item.type == Type.clock && util.chkTypeFruit(pStart)) {
       System.out.println("x1 time, normal item");
-      clrPiece(pEnd);
       //todo: x1 time
+      addTimeLine(ADD_SECOND);
+
+      clrPiece(pEnd);
 
       filterAll();
       clrPiece(pStart);
@@ -676,7 +717,8 @@ public class GameUIController {
 
   }
 
-  public void addTimeLine(int second) {
+  //label: add time for clock
+  private void addTimeLine(int second) {
     int temp = timeOut + second;
     if (temp > timeExpired) {
       timeOut = timeExpired;
@@ -703,7 +745,7 @@ public class GameUIController {
     gamePlayUI.timeLine.reset(1f, 1f);
     isCompleteRound = false;
 
-    target *= 2;
+    target *= 10;
     gamePlayUI.updateGoal(target);
     updateScore();
 

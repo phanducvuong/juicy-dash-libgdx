@@ -16,7 +16,7 @@ public class Config {
   public static final int     SCORE_FRUIT                 = 40;
   public static final int     NEXT_LEVEL                  = 2;
   public static final long    TARGET                      = 3000;
-  public static final long    ADD_SECOND                  = 15;
+  public static final int     ADD_SECOND                  = 15;
 
   //label: game play ui
   public static final float   OFFSET_Y_BGTABLE            = 150;
