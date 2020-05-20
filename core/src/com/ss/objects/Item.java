@@ -4,24 +4,29 @@ import static com.badlogic.gdx.math.Interpolation.*;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Align;
 import com.ss.GMain;
 import com.ss.config.Type;
 import com.ss.core.util.GUI;
+import com.ss.ui.GamePlayUI;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 import static com.ss.config.Config.*;
 
 public class Item extends Group {
 
   private Image fruit, animL, animR;
-  private Image flare, glassL, glassR;
+  private Image flare, glassL1, glassL2, glassR1, glassR2;
   private Group gAnim;
   public Type type;
   public String name;
   public boolean isAlive = false;
+  private List<Image> lsRayAnimJam;
 
   public Item(String region, Type type) {
 
@@ -62,15 +67,29 @@ public class Item extends Group {
 
   private void createAnimSpecialItem() {
 
-    flare = GUI.createImage(GMain.bgAtlas, "flare");
+    flare = GUI.createImage(GMain.itemAtlas, "flare");
+    flare.setPosition(fruit.getX() + fruit.getWidth()/2 - flare.getWidth()/2,
+            fruit.getY() + fruit.getHeight()/2 - flare.getHeight()/2);
+    flare.setOrigin(Align.center);
+    animFlare();
 
     switch (type) {
       case glass_fruit:
-        glassL = GUI.createImage(GMain.itemAtlas, "anim_glass_juice");
-        glassR = GUI.createImage(GMain.itemAtlas, "anim_glass_juice");
+        glassL1 = GUI.createImage(GMain.itemAtlas, "anim_glass_juice");
+        glassR1 = GUI.createImage(GMain.itemAtlas, "anim_glass_juice");
 
-        glassL.setOrigin(Align.center);
-        glassR.setOrigin(Align.center);
+        glassL2 = GUI.createImage(GMain.itemAtlas, "anim_glass_juice");
+        glassR2 = GUI.createImage(GMain.itemAtlas, "anim_glass_juice");
+
+        glassL1.setOrigin(Align.center);
+        glassR1.setOrigin(Align.center);
+        glassL2.setOrigin(Align.center);
+        glassR2.setOrigin(Align.center);
+        break;
+      case jam:
+        lsRayAnimJam = new ArrayList<>();
+        for (int i=0; i<ROW*COL; i++)
+          lsRayAnimJam.add(GUI.createImage(GMain.itemAtlas, "anim_jam"));
         break;
     }
   }
@@ -102,6 +121,8 @@ public class Item extends Group {
   }
 
   public void reset() {
+    if (flare != null)
+      flare.remove();
     startAnim();
   }
 
@@ -132,10 +153,18 @@ public class Item extends Group {
             type != Type.walnut;
   }
 
+  //---------------------------------------add to scene---------------------------------------------
+  //anim normal item
   public void addGAnimToScene() {
     this.addActor(gAnim);
     fruit.setVisible(false);
   }
+
+  public void addFlare() {
+    this.addActor(flare);
+    fruit.setZIndex(1000);
+  }
+  //---------------------------------------add to scene---------------------------------------------
 
   private void setPosAnim() {
     switch (name) {
@@ -168,7 +197,7 @@ public class Item extends Group {
     }
   }
 
-  //label: anim fruit
+  //label: anim normal item
   public void anim0() {
     fruit.setOrigin(Align.topLeft);
     fruit.addAction(
@@ -353,44 +382,117 @@ public class Item extends Group {
 
   }
 
+  private void animFlare() {
+    flare.addAction(
+            sequence(
+                    Actions.rotateBy(-10, .25f, linear),
+                    run(this::animFlare)
+            )
+    );
+  }
+
   //label: anim glass juice
-  public void animGlassJuice(boolean hor, int row, int col) {
+  public void animGlassJuice(boolean hor) {
+
+    flare.remove();
     if (hor) {
-      float mToX = this.getX() + col*WIDTH_PIECE - 120;
-      glassL.addAction(moveTo(-mToX, glassL.getY(), .25f, slowFast));
-      glassR.addAction(moveTo(mToX, glassR.getY(), .25f, slowFast));
+      float moveLeft = this.getX() - GamePlayUI.bgTable.getX();
+      float moveRight   = GamePlayUI.bgTable.getX() + GamePlayUI.bgTable.getWidth() - this.getX() - glassR1.getWidth();
+      glassL1.addAction(moveTo(-moveLeft, glassL1.getY(), .25f, slowFast));
+      glassR1.addAction(
+              sequence(
+                      moveTo(moveRight, glassR1.getY(), .25f, slowFast),
+                      run(this::remove)
+              )
+      );
+
+      float moveDown = this.getY() - GamePlayUI.bgTable.getY();
+      float moveUp   = GamePlayUI.bgTable.getY() + GamePlayUI.bgTable.getHeight() - this.getY() - glassR2.getHeight();
+      glassL2.addAction(moveTo(glassL2.getX(), -moveDown, .25f, slowFast));
+      glassR2.addAction(
+              sequence(
+                      moveTo(glassR2.getX(), moveUp, .25f, slowFast),
+                      run(this::remove)
+              )
+      );
     }
     else {
+      float moveDown = this.getY() - GamePlayUI.bgTable.getY();
+      float moveUp   = GamePlayUI.bgTable.getY() + GamePlayUI.bgTable.getHeight() - this.getY() - glassR1.getHeight();
+      glassL1.addAction(moveTo(glassL1.getX(), -moveDown, .25f, slowFast));
+      glassR1.addAction(
+              sequence(
+                      moveTo(glassR1.getX(), moveUp, .25f, slowFast),
+                      run(this::remove)
+              )
+      );
 
-      float mToY = this.getY() - row*HEIGHT_PIECE - 120;
-      glassL.addAction(moveTo(glassL.getX(), -mToY, .25f, slowFast));
-      glassR.addAction(moveTo(glassR.getX(), mToY, .25f, slowFast));
+      float moveLeft = this.getX() - GamePlayUI.bgTable.getX();
+      float moveRight   = GamePlayUI.bgTable.getX() + GamePlayUI.bgTable.getWidth() - this.getX() - glassR2.getWidth();
+      glassL2.addAction(moveTo(-moveLeft, glassL2.getY(), .25f, slowFast));
+      glassR2.addAction(
+              sequence(
+                      moveTo(moveRight, glassR2.getY(), .25f, slowFast),
+                      run(this::remove)
+              )
+      );
     }
   }
 
   public void setPosAnimGlassJuice(boolean hor) {
     if (hor) {
-      glassL.setRotation(180);
+      glassL1.setRotation(180);
 
-      glassL.setPosition(fruit.getX() + fruit.getWidth()/2 - glassL.getWidth()/2 - 20,
-              fruit.getY() + fruit.getHeight()/2 - glassL.getHeight()/2);
-      glassR.setPosition(fruit.getX() + fruit.getWidth()/2 - glassL.getWidth()/2 + 20,
-              fruit.getY() + fruit.getHeight()/2 - glassL.getHeight()/2);
+      glassL1.setPosition(fruit.getX() + fruit.getWidth()/2 - glassL1.getWidth()/2 - 20,
+              fruit.getY() + fruit.getHeight()/2 - glassL1.getHeight()/2);
+      glassR1.setPosition(fruit.getX() + fruit.getWidth()/2 - glassL1.getWidth()/2 + 20,
+              fruit.getY() + fruit.getHeight()/2 - glassL1.getHeight()/2);
+
+      glassL2.setRotation(-90);
+      glassR2.setRotation(90);
+
+      glassL2.setPosition(fruit.getX() + fruit.getWidth()/2 - glassL2.getWidth()/2,
+              fruit.getY() + fruit.getHeight()/2 - glassL2.getHeight()/2 - 20);
+      glassR2.setPosition(fruit.getX() + fruit.getWidth()/2 - glassL2.getWidth()/2,
+              fruit.getY() + fruit.getHeight()/2 - glassL2.getHeight()/2 + 20);
     }
     else {
-      glassL.setRotation(-90);
-      glassR.setRotation(90);
+      glassL1.setRotation(-90);
+      glassR1.setRotation(90);
 
-      glassL.setPosition(fruit.getX() + fruit.getWidth()/2 - glassL.getWidth()/2,
-              fruit.getY() + fruit.getHeight()/2 - glassL.getHeight()/2 - 20);
-      glassR.setPosition(fruit.getX() + fruit.getWidth()/2 - glassL.getWidth()/2,
-              fruit.getY() + fruit.getHeight()/2 - glassL.getHeight()/2 + 20);
+      glassL1.setPosition(fruit.getX() + fruit.getWidth()/2 - glassL1.getWidth()/2,
+              fruit.getY() + fruit.getHeight()/2 - glassL1.getHeight()/2 - 20);
+      glassR1.setPosition(fruit.getX() + fruit.getWidth()/2 - glassL1.getWidth()/2,
+              fruit.getY() + fruit.getHeight()/2 - glassL1.getHeight()/2 + 20);
+
+      glassL2.setRotation(180);
+      glassL2.setPosition(fruit.getX() + fruit.getWidth()/2 - glassL2.getWidth()/2 - 20,
+              fruit.getY() + fruit.getHeight()/2 - glassL2.getHeight()/2);
+      glassR2.setPosition(fruit.getX() + fruit.getWidth()/2 - glassL2.getWidth()/2 + 20,
+              fruit.getY() + fruit.getHeight()/2 - glassL2.getHeight()/2);
     }
   }
 
-  public void addAnimGlassToScene() {
-    this.addActor(glassL);
-    this.addActor(glassR);
+  public void addAnimGlassToScene(boolean isBoth) {
+    if (isBoth) {
+      this.addActor(glassL1);
+      this.addActor(glassR1);
+      this.addActor(glassL2);
+      this.addActor(glassR2);
+    }
+    else {
+      this.addActor(glassL1);
+      this.addActor(glassR1);
+    }
+  }
+
+  //label: anim jam
+  public void animJam() {
+
+  }
+
+  public void addAnimJamToScene() {
+
   }
 
 }

@@ -32,4 +32,10 @@ public class Piece {
     isEmpty = true;
   }
 
+  public void animGlassJuice(boolean hor, boolean isBoth) {
+    item.addAnimGlassToScene(isBoth);
+    item.setPosAnimGlassJuice(hor);
+    item.animGlassJuice(hor);
+  }
+
 }

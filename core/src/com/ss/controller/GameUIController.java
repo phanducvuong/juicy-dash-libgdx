@@ -70,12 +70,10 @@ public class GameUIController {
     startNewItem(ROW-1);
 
     //label: test animation
-    Item test = new Item("item_glass_juice", Type.glass_fruit);
-    test.setPosition(arrPosPiece[3][3].pos);
-    gParent.addActor(test);
 
-    test.addAnimGlassToScene();
-    test.setPosAnimGlassJuice(true);
+    Image animJam = GUI.createImage(GMain.itemAtlas, "anim_jam");
+    animJam.setOrigin(0, animJam.getHeight()/2);
+    gParent.addActor(animJam);
 
     Image icon = GUI.createImage(GMain.bgAtlas, "icon_pause");
     icon.setPosition(500, 20);
@@ -85,8 +83,29 @@ public class GameUIController {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         super.clicked(event, x, y);
+        Piece piece = arrPosPiece[2][2];
+        Piece target = arrPosPiece[0][6];
 
-        test.animGlassJuice(true, 3, 3);
+        addSpecialItem(piece, "item_jam");
+        animJam.setPosition(piece.pos.x + piece.item.getWidth()/2,
+                piece.pos.y + piece.item.getHeight()/2 - animJam.getHeight()/2);
+
+        System.out.println("DEGREE: " + util.calDegreeBy(piece, target));
+        animJam.setRotation(util.calDegreeBy(piece, target));
+
+        animJam.addAction(moveTo(target.item.getX() + target.item.getWidth()/2,
+                target.item.getY() + target.item.getHeight()/2 - animJam.getHeight(), .15f, linear));
+      }
+    });
+
+    Image addItem = GUI.createImage(GMain.bgAtlas, "icon_pause");
+    icon.setPosition(400, 20);
+    gParent.addActor(addItem);
+
+    addItem.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        super.clicked(event, x, y);
 
       }
     });
@@ -218,12 +237,12 @@ public class GameUIController {
     clrPiece(piece);
     piece.setItem(item);
     item.setPosition(piece.pos);
-    gamePlayUI.addToGItem(item);
+    addToGroup(item, gamePlayUI.gItem);
   }
   //------------------new game--------------------------------------------
 
   //-------------------update array pos piece------------------------------
-  public void filterAll() {
+  private void filterAll() {
 
     List<Piece> lsPosIsMatch = new ArrayList<>();
 
@@ -256,7 +275,7 @@ public class GameUIController {
   }
 
   //add new item at piece is null item after filter
-  public void updateArrPiece() {
+  private void updateArrPiece() {
 
     lsPieceNullItem.clear();
 
@@ -311,14 +330,31 @@ public class GameUIController {
     }
   }
 
-  private void clrPieceByVer(int col) {
+  private void clrPieceByVer(Piece piece) {
+    //label: anim glass juice
+    piece.animGlassJuice(false, false);
+
     for (int row=0; row<ROW; row++)
-      clrPiece(arrPosPiece[row][col]);
+      clrPiece(arrPosPiece[row][piece.col]);
   }
 
-  private void clrPieceByHor(int row) {
+  private void clrPieceByHor(Piece piece) {
+    //label: anim glass juice
+    piece.animGlassJuice(true, false);
+
     for (int col=0; col<COL; col++)
-      clrPiece(arrPosPiece[row][col]);
+      clrPiece(arrPosPiece[piece.row][col]);
+  }
+
+  private void clrPieceByHorAndVer(Piece piece) {
+    //label: anim glass juice
+    piece.animGlassJuice(true, true);
+
+    for (int col=0; col<COL; col++)
+      clrPiece(arrPosPiece[piece.row][col]);
+
+    for (int row=0; row<ROW; row++)
+      clrPiece(arrPosPiece[row][piece.col]);
   }
 
   private void clrAll() {
@@ -397,7 +433,7 @@ public class GameUIController {
 
   private void addNewItem(Item item, Piece piece) {
     piece.setItem(item);
-    gamePlayUI.addToGItem(item);
+    addToGroup(item, gamePlayUI.gItem);
     item.setPosStart(piece.pos);
     item.moveToPos(piece.pos, .2f);
   }
@@ -462,9 +498,9 @@ public class GameUIController {
     clrPiece(piece);
     piece.setItem(item);
     item.setPosition(piece.pos);
-    gamePlayUI.addToGItem(item);
+    item.addFlare();
+    addToGroup(item, gamePlayUI.gItem);
   }
-
   //-------------------special item----------------------------------------
 
   //-------------------check logic-----------------------------------------
@@ -498,13 +534,21 @@ public class GameUIController {
       //todo: x1 time
       addTimeLine(ADD_SECOND);
 
+      if (pStart.row == pEnd.row) {
+        if (pStart.item.type == Type.glass_fruit)
+          clrPieceByHor(pStart);
+        else
+          clrPieceByHor(pEnd);
+      }
+      else {
+        if (pStart.item.type == Type.glass_fruit)
+          clrPieceByVer(pStart);
+        else
+          clrPieceByVer(pEnd);
+      }
+
       clrPiece(pStart);
       clrPiece(pEnd);
-
-      if (pStart.row == pEnd.row)
-        clrPieceByHor(pStart.row);
-      else
-        clrPieceByVer(pStart.col);
 
       updateArrPiece();
     }
@@ -539,13 +583,22 @@ public class GameUIController {
             && (pStart.item.type == Type.glass_fruit || pEnd.item.type == Type.glass_fruit)) {
       System.out.println("jam + glass juice");
       skillJam(util.getPieceDifferenceWith(arrPosPiece, pStart, pEnd).item.type);
+
+      if (pStart.row == pEnd.row) {
+        if (pStart.item.type == Type.glass_fruit)
+          clrPieceByHor(pStart);
+        else
+          clrPieceByHor(pEnd);
+      }
+      else {
+        if (pStart.item.type == Type.glass_fruit)
+          clrPieceByVer(pStart);
+        else
+          clrPieceByVer(pEnd);
+      }
+
       clrPiece(pStart);
       clrPiece(pEnd);
-
-      if (pStart.row == pEnd.row)
-        clrPieceByHor(pStart.row);
-      else
-        clrPieceByVer(pStart.col);
 
       updateArrPiece();
     }
@@ -565,26 +618,25 @@ public class GameUIController {
     }
     else if (pStart.item.type == Type.glass_fruit && pEnd.item.type == Type.glass_fruit) {
       System.out.println("glass juice + glass juice");
-      clrPieceByHor(pEnd.row);
-      clrPieceByVer(pEnd.col);
+      clrPieceByHorAndVer(pEnd);
 
       updateArrPiece();
     }
     else if (pStart.item.type == Type.glass_fruit && util.chkTypeFruit(pEnd)) {
       System.out.println("glass juice + fruit");
       if (pStart.row == pEnd.row)
-        clrPieceByHor(pStart.row);
+        clrPieceByHor(pStart);
       else
-        clrPieceByVer(pStart.col);
+        clrPieceByVer(pStart);
 
       updateArrPiece();
     }
     else if (pEnd.item.type == Type.glass_fruit && util.chkTypeFruit(pStart)) {
       System.out.println("glass juice + fruit");
       if (pStart.row == pEnd.row)
-        clrPieceByHor(pStart.row);
+        clrPieceByHor(pEnd);
       else
-        clrPieceByVer(pStart.col);
+        clrPieceByVer(pEnd);
 
       updateArrPiece();
     }
@@ -762,6 +814,10 @@ public class GameUIController {
     isWrap = false;
     pieceStart = null;
     pieceEnd = null;
+  }
+
+  private void addToGroup(Item item, Group group) {
+    group.addActor(item);
   }
 
 }

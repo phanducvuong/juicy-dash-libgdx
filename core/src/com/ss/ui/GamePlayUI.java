@@ -22,7 +22,7 @@ public class GamePlayUI extends Group {
 
   private GameUIController controller;
   public Group gBackground, gItem, gAnim;
-  public Image bgTable;
+  public static Image bgTable;
   private Label lbRound;
 
   public Image iStart, iPause;
@@ -197,10 +197,6 @@ public class GamePlayUI extends Group {
     iPause.setPosition(bgTable.getX() + 10, bgTable.getY() - iPause.getHeight() - 80);
     gBackground.addActor(iPause);
 
-  }
-
-  public void addToGItem(Item item) {
-    gItem.addActor(item);
   }
 
   public void updateScore(long score) {

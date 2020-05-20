@@ -257,6 +257,19 @@ public class Util {
     pieces.removeAll(tmp);
   }
 
+  public float calDegreeBy(Piece point, Piece target) {
+    float x = target.pos.x - point.pos.x;
+    float y = target.pos.y - point.pos.y;
+    float degree = (float) Math.toDegrees(Math.atan(y/x));
+
+    System.out.println("D: " + degree);
+
+    if (x < 0)
+      degree -= 180;
+
+    return degree;
+  }
+
   public void log(String label, Piece piece) {
     if (piece.item != null) {
       System.out.println(label + piece.pos + "ROW, COL: " + piece.row + "  " + piece.col);
