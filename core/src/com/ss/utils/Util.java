@@ -45,6 +45,12 @@ public class Util {
            && piece.item.type != Type.glass_fruit;
   }
 
+  public boolean chkSpecialItem(Type type) {
+    return type == Type.clock ||
+           type == Type.jam ||
+           type == Type.glass_fruit;
+  }
+
   public Type getType(int id) {
 
     Type t = Type.blank;
@@ -82,13 +88,19 @@ public class Util {
     return piecess[row][col].isEmpty ? piecess[row][col] : null;
   }
 
-  public Piece getPieceDifferenceWith(Piece[][] pieces, Piece pStart, Piece pEnd) {
+  public Piece getPieceTheSameType(Piece[][] pieces, Piece pStart, Piece pEnd) {
     for (Piece[] ps : pieces) {
       for (Piece p : ps)
         if (p != pStart && p != pEnd)
           return p;
     }
     return null;
+  }
+
+  public float distTwoPoint(Vector2 p1, Vector2 p2) {
+    float dx = p2.x - p1.x;
+    float dy = p2.y - p1.y;
+    return (float) Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
   }
 
   public Item getItem(List<Item> items) {
@@ -258,11 +270,9 @@ public class Util {
   }
 
   public float calDegreeBy(Piece point, Piece target) {
-    float x = target.pos.x - point.pos.x;
-    float y = target.pos.y - point.pos.y;
+    float x = (target.pos.x + WIDTH_PIECE/2) - (point.pos.x + WIDTH_PIECE/2);
+    float y = (target.pos.y + HEIGHT_PIECE/2) - (point.pos.y + HEIGHT_PIECE/2);
     float degree = (float) Math.toDegrees(Math.atan(y/x));
-
-    System.out.println("D: " + degree);
 
     if (x < 0)
       degree -= 180;

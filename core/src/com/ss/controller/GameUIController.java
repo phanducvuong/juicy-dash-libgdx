@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.ss.GMain;
-import com.ss.config.Config;
 import com.ss.config.Type;
 import com.ss.core.action.exAction.GSimpleAction;
 import com.ss.core.util.GUI;
@@ -42,10 +41,12 @@ public class GameUIController {
   public boolean isWrap = false, isGameOver = false;
   private Piece pieceStart, pieceEnd;
 
-  private int timeOut = 160, timeExpired = 160, round = 0;
+  private int timeOut = 160, timeExpired = 36000, round = 0;
   private float sclTime;
   private long target, scorePre = 0;
   private boolean isCompleteRound = false;
+
+  private List<Image> lsRayJam;
 
   public GameUIController(Group gParent) {
 
@@ -53,6 +54,7 @@ public class GameUIController {
     this.gamePlayUI = new GamePlayUI(this);
     this.hmItem = new HashMap<>();
     this.lv = new ArrayList<>();
+    this.lsRayJam = new ArrayList<>();
     this.target = TARGET;
 
     //label add ui to scene
@@ -61,6 +63,7 @@ public class GameUIController {
     initPiece();
     initItem();
     initLv();
+    initRayJam();
 
     eventTouchScreen();
 //    addItem();
@@ -84,17 +87,10 @@ public class GameUIController {
       public void clicked(InputEvent event, float x, float y) {
         super.clicked(event, x, y);
         Piece piece = arrPosPiece[2][2];
-        Piece target = arrPosPiece[0][6];
+        Piece target = arrPosPiece[2][3];
 
-        addSpecialItem(piece, "item_jam");
-        animJam.setPosition(piece.pos.x + piece.item.getWidth()/2,
-                piece.pos.y + piece.item.getHeight()/2 - animJam.getHeight()/2);
-
-        System.out.println("DEGREE: " + util.calDegreeBy(piece, target));
-        animJam.setRotation(util.calDegreeBy(piece, target));
-
-        animJam.addAction(moveTo(target.item.getX() + target.item.getWidth()/2,
-                target.item.getY() + target.item.getHeight()/2 - animJam.getHeight(), .15f, linear));
+        addItemAt(piece, "item_glass_juice");
+        addItemAt(target, "item_jam");
       }
     });
 
@@ -113,6 +109,11 @@ public class GameUIController {
   }
 
   //------------------init ui---------------------------------------------
+  private void initRayJam() {
+    for (int i=0; i<ROW*COL; i++)
+      lsRayJam.add(GUI.createImage(GMain.itemAtlas, "anim_jam"));
+  }
+
   private void initLv() {
     lv.add(Type.strawberry);
     lv.add(Type.orange);
@@ -145,9 +146,9 @@ public class GameUIController {
 
       for (int j=0; j<AMOUNT_ITEM_CREATE; j++) {
         Item item = new Item(region, type);
-        if (i < 6)
-          lsItem.add(item);
-        else
+//        if (i < 6)
+//          lsItem.add(item);
+//        else
           lsItem.add(item);
       }
 
@@ -363,11 +364,25 @@ public class GameUIController {
         clrPiece(piece);
   }
 
-  private void skillJam(Type type) {
-    for (Piece[] pieces : arrPosPiece)
-      for (Piece p : pieces)
-        if (p.item.type == type)
-          clrPiece(p);
+  private void skillJam(Piece pCheck, Piece point, Runnable onComplete) {
+    List<Piece> targets = new ArrayList<>();
+    for (Piece[] pieces : arrPosPiece) {
+      for (Piece target : pieces)
+        if (target.item.type == pCheck.item.type) {
+          targets.add(target);
+        }
+    }//find the same type
+
+    int indexRay = 0;
+    for (int i=0; i<targets.size(); i++) {
+      if (i == targets.size()-1) {
+        addAnimJam(point, targets.get(i), lsRayJam.get(indexRay), onComplete);
+      }
+      else
+        addAnimJam(point, targets.get(i), lsRayJam.get(indexRay), () -> {});
+      indexRay++;
+    }
+
   }
 
   private void clrPiece(Piece piece) {
@@ -376,6 +391,61 @@ public class GameUIController {
     piece.clear();
   }
   //-------------------update array pos piece------------------------------
+
+  //-------------------animation || particle-------------------------------
+  private void addAnimJam(Piece point, Piece target, Image ray, Runnable onComplete) {
+    float degree    = Util.inst().calDegreeBy(point, target);
+    Vector2 movePos = new Vector2();
+
+    if (point.row == target.row && point.col > target.col) {
+      movePos.x = target.item.getX() + target.item.getWidth()/2 + ray.getWidth();
+      movePos.y = target.item.getY() + target.item.getHeight()/2 - ray.getHeight()/2;
+    }
+    else if (point.row == target.row && point.col < target.col) {
+      movePos.x = target.item.getX() + target.item.getWidth()/2 - ray.getWidth();
+      movePos.y = target.item.getY() + target.item.getHeight()/2 - ray.getHeight()/2;
+    }
+    else if (point.col == target.col && point.row > target.row) {
+      movePos.x = target.item.getX() + target.item.getWidth()/2;
+      movePos.y = target.item.getY() + target.item.getHeight()/2 + ray.getHeight();
+    }
+    else if (point.col == target.col && point.row < target.row) {
+      movePos.x = target.item.getX() + target.item.getWidth()/2;
+      movePos.y = target.item.getY() + target.item.getHeight()/2 - ray.getWidth();
+    }
+    else if (point.col > target.col && point.row > target.row) {
+      movePos.x = target.item.getX() + target.item.getWidth();
+      movePos.y = target.item.getY() + target.item.getHeight();
+    }
+    else if (point.col > target.col && point.row < target.row) {
+      movePos.x = target.item.getX() + target.item.getWidth();
+      movePos.y = target.item.getY();
+    }
+    else if (point.col < target.col && point.row > target.row) {
+      movePos.x = target.item.getX();
+      movePos.y = target.item.getY() + target.item.getHeight();
+    }
+    else {
+      movePos.x = target.item.getX();
+      movePos.y = target.item.getY();
+    }
+
+    ray.setRotation(0);
+    ray.setPosition(point.pos.x + point.item.getWidth()/2,
+            point.pos.y + point.item.getHeight()/2 - ray.getHeight()/2);
+    ray.addAction(
+            sequence(
+                    rotateTo(degree, .35f, fastSlow),
+                    delay(.35f),
+                    moveTo(movePos.x, movePos.y,.15f, linear),
+                    run(() -> clrPiece(target)),
+                    run(onComplete),
+                    run(ray::remove)
+            )
+    );
+    gamePlayUI.gAnim.addActor(ray);
+  }
+  //-------------------animation || particle-------------------------------
 
   //-------------------action add new item---------------------------------
   private void startNewItem(int row) {
@@ -467,26 +537,28 @@ public class GameUIController {
 
   private void reverse(Piece pStart, Piece pEnd) {
 
-    Item tmp = pStart.item;
-    pStart.item = pEnd.item;
-    pEnd.item = tmp;
+    if (pStart.item != null && pEnd.item != null) {
+      Item tmp = pStart.item;
+      pStart.item = pEnd.item;
+      pEnd.item = tmp;
 
-    pStart.item.addAction(
-            sequence(
-                    moveTo(pStart.pos.x, pStart.pos.y, WRAP_ITEM, fastSlow),
-                    run(() -> pStart.item.anim0())
-            )
-    );
+      pStart.item.addAction(
+              sequence(
+                      moveTo(pStart.pos.x, pStart.pos.y, WRAP_ITEM, fastSlow),
+                      run(() -> pStart.item.anim0())
+              )
+      );
 
-    pEnd.item.addAction(
-            sequence(
-                    moveTo(pEnd.pos.x, pEnd.pos.y, WRAP_ITEM, fastSlow),
-                    run(() -> {
-                      pEnd.item.anim0();
-                      unlockInput();
-                    })
-            )
-    );
+      pEnd.item.addAction(
+              sequence(
+                      moveTo(pEnd.pos.x, pEnd.pos.y, WRAP_ITEM, fastSlow),
+                      run(() -> {
+                        pEnd.item.anim0();
+                        unlockInput();
+                      })
+              )
+      );
+    }
 
   }
   //-------------------swap and reverse item-------------------------------
@@ -511,6 +583,7 @@ public class GameUIController {
       System.out.println("x2 time");
       //todo: x2 time
       addTimeLine(ADD_SECOND*2);
+
       clrPiece(pStart);
       clrPiece(pEnd);
 
@@ -522,11 +595,19 @@ public class GameUIController {
       //todo: x1 time
       addTimeLine(ADD_SECOND);
 
-      skillJam(util.getPieceDifferenceWith(arrPosPiece, pStart, pEnd).item.type);
+      Piece point;
+      if (pStart.item.type == Type.jam)
+        point = pStart;
+      else
+        point = pEnd;
+
+      skillJam(util.getPieceTheSameType(arrPosPiece, pStart, pEnd),
+              point,
+              () -> {
+                updateArrPiece();
+              });
       clrPiece(pStart);
       clrPiece(pEnd);
-
-      updateArrPiece();
     }
     else if ((pStart.item.type == Type.clock || pEnd.item.type == Type.clock)
             && (pStart.item.type == Type.glass_fruit || pEnd.item.type == Type.glass_fruit)) {
@@ -576,13 +657,21 @@ public class GameUIController {
     }
     else if (pStart.item.type == Type.jam && pEnd.item.type == Type.jam) {
       System.out.println("jam + jam");
+      //todo: effect clear all
       clrAll();
       updateArrPiece();
     }
     else if ((pStart.item.type == Type.jam || pEnd.item.type == Type.jam)
             && (pStart.item.type == Type.glass_fruit || pEnd.item.type == Type.glass_fruit)) {
       System.out.println("jam + glass juice");
-      skillJam(util.getPieceDifferenceWith(arrPosPiece, pStart, pEnd).item.type);
+
+      Piece point;
+      if (pStart.item.type == Type.jam)
+        point = pStart;
+      else
+        point = pEnd;
+      skillJam(util.getPieceTheSameType(arrPosPiece, pStart, pEnd), point,
+              () -> updateArrPiece()); //todo: effect jam + glass juice
 
       if (pStart.row == pEnd.row) {
         if (pStart.item.type == Type.glass_fruit)
@@ -600,21 +689,20 @@ public class GameUIController {
       clrPiece(pStart);
       clrPiece(pEnd);
 
-      updateArrPiece();
     }
     else if (pStart.item.type == Type.jam && util.chkTypeFruit(pEnd)) {
       System.out.println("jam + fruit");
-      skillJam(pEnd.item.type);
+      skillJam(pEnd, pStart, () -> {
+        updateArrPiece();
+      });
       clrPiece(pStart);
-
-      updateArrPiece();
     }
     else if (pEnd.item.type == Type.jam && util.chkTypeFruit(pStart)) {
       System.out.println("jam + fruit");
-      skillJam(pStart.item.type);
+      skillJam(pStart, pEnd, () -> {
+        updateArrPiece();
+      });
       clrPiece(pEnd);
-
-      updateArrPiece();
     }
     else if (pStart.item.type == Type.glass_fruit && pEnd.item.type == Type.glass_fruit) {
       System.out.println("glass juice + glass juice");
@@ -790,7 +878,7 @@ public class GameUIController {
 
   private void nextLevel() {
     round += 1;
-    timeOut = timeExpired = 160;
+    timeOut = timeExpired;
     sclTime = (float) sclTime(timeOut);
 
     gamePlayUI.updateRound(round);

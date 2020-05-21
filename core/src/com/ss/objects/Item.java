@@ -11,6 +11,7 @@ import com.ss.GMain;
 import com.ss.config.Type;
 import com.ss.core.util.GUI;
 import com.ss.ui.GamePlayUI;
+import com.ss.utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,6 @@ public class Item extends Group {
   public Type type;
   public String name;
   public boolean isAlive = false;
-  private List<Image> lsRayAnimJam;
 
   public Item(String region, Type type) {
 
@@ -85,11 +85,6 @@ public class Item extends Group {
         glassR1.setOrigin(Align.center);
         glassL2.setOrigin(Align.center);
         glassR2.setOrigin(Align.center);
-        break;
-      case jam:
-        lsRayAnimJam = new ArrayList<>();
-        for (int i=0; i<ROW*COL; i++)
-          lsRayAnimJam.add(GUI.createImage(GMain.itemAtlas, "anim_jam"));
         break;
     }
   }
@@ -394,6 +389,11 @@ public class Item extends Group {
   //label: anim glass juice
   public void animGlassJuice(boolean hor) {
 
+    Runnable reset = () -> {
+      isAlive = false;
+      this.remove();
+    };
+
     flare.remove();
     if (hor) {
       float moveLeft = this.getX() - GamePlayUI.bgTable.getX();
@@ -402,7 +402,7 @@ public class Item extends Group {
       glassR1.addAction(
               sequence(
                       moveTo(moveRight, glassR1.getY(), .25f, slowFast),
-                      run(this::remove)
+                      run(reset)
               )
       );
 
@@ -412,7 +412,7 @@ public class Item extends Group {
       glassR2.addAction(
               sequence(
                       moveTo(glassR2.getX(), moveUp, .25f, slowFast),
-                      run(this::remove)
+                      run(reset)
               )
       );
     }
@@ -423,7 +423,7 @@ public class Item extends Group {
       glassR1.addAction(
               sequence(
                       moveTo(glassR1.getX(), moveUp, .25f, slowFast),
-                      run(this::remove)
+                      run(reset)
               )
       );
 
@@ -433,7 +433,7 @@ public class Item extends Group {
       glassR2.addAction(
               sequence(
                       moveTo(moveRight, glassR2.getY(), .25f, slowFast),
-                      run(this::remove)
+                      run(reset)
               )
       );
     }
@@ -484,15 +484,6 @@ public class Item extends Group {
       this.addActor(glassL1);
       this.addActor(glassR1);
     }
-  }
-
-  //label: anim jam
-  public void animJam() {
-
-  }
-
-  public void addAnimJamToScene() {
-
   }
 
 }
