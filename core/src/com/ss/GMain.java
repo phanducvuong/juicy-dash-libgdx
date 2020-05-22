@@ -61,7 +61,7 @@ public class GMain extends GDirectedGame {
 //    if (!pref.getBoolean("isNewbie")) {
 
       SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.US);
-      String day = formatter.format(Calendar.getInstance().getTime());
+      String day                 = formatter.format(Calendar.getInstance().getTime());
 
 //      pref.putBoolean("isNewbie", true);
 //      pref.putLong("money", Config.MONEY_NEWBIE);
@@ -74,8 +74,9 @@ public class GMain extends GDirectedGame {
     initLocalNotification();
     SoundEffects.initSound();
 
-    bgAtlas = GAssetsManager.getTextureAtlas("bg.atlas");
-    itemAtlas = GAssetsManager.getTextureAtlas("item.atlas");
+    bgAtlas       = GAssetsManager.getTextureAtlas("bg.atlas");
+    itemAtlas     = GAssetsManager.getTextureAtlas("item.atlas");
+    particleAtlas = GAssetsManager.getTextureAtlas("particle.atlas");
     GAssetsManager.finishLoading();
 
     this.init();

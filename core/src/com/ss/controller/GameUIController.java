@@ -12,6 +12,7 @@ import com.ss.GMain;
 import com.ss.config.Type;
 import com.ss.core.action.exAction.GSimpleAction;
 import com.ss.core.util.GUI;
+import com.ss.gameLogic.effects.Particle;
 import com.ss.objects.Item;
 import com.ss.objects.Piece;
 import com.ss.ui.GamePlayUI;
@@ -82,12 +83,19 @@ public class GameUIController {
     icon.setPosition(500, 20);
     gParent.addActor(icon);
 
+    Particle iceP = new Particle(gParent, ICE_PARTICLE, GMain.particleAtlas);
+
     icon.addListener(new ClickListener() {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         super.clicked(event, x, y);
         Piece piece = arrPosPiece[2][2];
         Piece target = arrPosPiece[2][3];
+
+        addItemAt(target, "item_jam");
+        addItemAt(arrPosPiece[2][0], "item_glass_juice");
+
+        iceP.start(piece.pos.x + piece.item.getWidth()/2, piece.pos.y + piece.item.getHeight()/2, .85f);
 
         piece.animIce();
       }

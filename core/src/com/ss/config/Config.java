@@ -1,5 +1,7 @@
 package com.ss.config;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.ss.core.util.GAssetsManager;
 
@@ -9,6 +11,10 @@ public class Config {
   public static final BitmapFont whiteFont                = GAssetsManager.getBitmapFont("white_font.fnt");
   public static final BitmapFont redFont                  = GAssetsManager.getBitmapFont("red_font.fnt");
   public static final BitmapFont greenFont                = GAssetsManager.getBitmapFont("green_font.fnt");
+
+  //label: file particle
+  public static final FileHandle ICE_PARTICLE             = Gdx.files.internal("particles/ice.p");
+  public static final FileHandle JAM_PARTICLE             = Gdx.files.internal("particles/jam.p");
 
   //label: amount item
   public static final int     AMOUNT_ITEM_CREATE          = 49;

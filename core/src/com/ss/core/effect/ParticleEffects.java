@@ -1,6 +1,5 @@
 package com.ss.core.effect;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
@@ -23,8 +22,7 @@ public class ParticleEffects extends Actor {
   @Override
   public boolean remove() {
     if (poolEffect != null)
-        poolEffect.free();
-//    listener.finished();
+      poolEffect.free();
     return super.remove();
   }
 
@@ -33,6 +31,8 @@ public class ParticleEffects extends Actor {
     super.act(delta);
     pe.setPosition(getX(), getY());
     pe.update(delta);
+
+    System.out.println("AAA");
 
     if (pe.isComplete())
       remove();
