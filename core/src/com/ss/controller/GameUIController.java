@@ -76,7 +76,7 @@ public class GameUIController {
 
     Image animJam = GUI.createImage(GMain.itemAtlas, "anim_jam");
     animJam.setOrigin(0, animJam.getHeight()/2);
-    gParent.addActor(animJam);
+//    gParent.addActor(animJam);
 
     Image icon = GUI.createImage(GMain.bgAtlas, "icon_pause");
     icon.setPosition(500, 20);
@@ -89,14 +89,13 @@ public class GameUIController {
         Piece piece = arrPosPiece[2][2];
         Piece target = arrPosPiece[2][3];
 
-        addItemAt(piece, "item_glass_juice");
-        addItemAt(target, "item_jam");
+        piece.animIce();
       }
     });
 
     Image addItem = GUI.createImage(GMain.bgAtlas, "icon_pause");
     icon.setPosition(400, 20);
-    gParent.addActor(addItem);
+//    gParent.addActor(addItem);
 
     addItem.addListener(new ClickListener() {
       @Override
@@ -146,10 +145,7 @@ public class GameUIController {
 
       for (int j=0; j<AMOUNT_ITEM_CREATE; j++) {
         Item item = new Item(region, type);
-//        if (i < 6)
-//          lsItem.add(item);
-//        else
-          lsItem.add(item);
+        lsItem.add(item);
       }
 
       hmItem.put(region, lsItem);
@@ -184,12 +180,16 @@ public class GameUIController {
 //          util.log("start: ", pieceStart);
 //          util.log("end: ", pieceEnd);
 
-            swap(pieceStart, pieceEnd);
-            isWrap = true;
+            if ((pieceStart.row == pieceEnd.row && (pieceStart.col == pieceEnd.col+1 || pieceStart.col == pieceEnd.col-1)) ||
+                (pieceStart.col == pieceEnd.col && (pieceStart.row == pieceEnd.row+1 || pieceStart.row == pieceEnd.row-1))) {
+              swap(pieceStart, pieceEnd);
+              isWrap = true;
+            }
           }
         }
 
       }
+
     });
 
     //label: click
@@ -336,15 +336,18 @@ public class GameUIController {
     piece.animGlassJuice(false, false);
 
     for (int row=0; row<ROW; row++)
-      clrPiece(arrPosPiece[row][piece.col]);
+      if (arrPosPiece[row][piece.col] != piece && util.chkTypeFruit(arrPosPiece[row][piece.col]))
+        clrPiece(arrPosPiece[row][piece.col]);
   }
 
   private void clrPieceByHor(Piece piece) {
     //label: anim glass juice
     piece.animGlassJuice(true, false);
 
-    for (int col=0; col<COL; col++)
-      clrPiece(arrPosPiece[piece.row][col]);
+    for (int col=0; col<COL; col++) {
+      if (arrPosPiece[piece.row][col] != piece && util.chkTypeFruit(arrPosPiece[piece.row][col]))
+        clrPiece(arrPosPiece[piece.row][col]);
+    }
   }
 
   private void clrPieceByHorAndVer(Piece piece) {
@@ -368,7 +371,7 @@ public class GameUIController {
     List<Piece> targets = new ArrayList<>();
     for (Piece[] pieces : arrPosPiece) {
       for (Piece target : pieces)
-        if (target.item.type == pCheck.item.type) {
+        if (target.item != null && target.item.type == pCheck.item.type) {
           targets.add(target);
         }
     }//find the same type
@@ -386,8 +389,12 @@ public class GameUIController {
   }
 
   private void clrPiece(Piece piece) {
-    if (piece.item != null)
-      piece.item.reset();
+    if (piece.item != null) {
+      if (util.chkTypeFruit(piece))
+        piece.item.startAnimFruit();
+      else
+        piece.item.remove();
+    }
     piece.clear();
   }
   //-------------------update array pos piece------------------------------
@@ -443,6 +450,9 @@ public class GameUIController {
                     run(ray::remove)
             )
     );
+
+    //todo: thêm tiêu điểm vào tại vị trí target
+
     gamePlayUI.gAnim.addActor(ray);
   }
   //-------------------animation || particle-------------------------------
@@ -512,32 +522,33 @@ public class GameUIController {
   //-------------------swap and reverse item-------------------------------
   private void swap(Piece pStart, Piece pEnd) {
 
-    Item tmp = pStart.item;
-    pStart.item = pEnd.item;
-    pEnd.item = tmp;
+    if (pStart.item != null && pEnd.item != null) {
+      Item tmp    = pStart.item;
+      pStart.item = pEnd.item;
+      pEnd.item   = tmp;
+      isWrap      = true;
 
-    isWrap = true;
+      pStart.item.addAction(
+              moveTo(pStart.pos.x, pStart.pos.y, WRAP_ITEM, fastSlow)
+      );
 
-    pStart.item.addAction(
-            moveTo(pStart.pos.x, pStart.pos.y, WRAP_ITEM, fastSlow)
-    );
-
-    pEnd.item.addAction(
-            sequence(
-                    moveTo(pEnd.pos.x, pEnd.pos.y, WRAP_ITEM, fastSlow),
-                    run(() -> chkSpecialItemWhenSwap(pStart, pEnd)),
-                    run(() -> {
-                      if (lsPieceNullItem.size() <= 0)
-                        reverse(pStart, pEnd);
-                    })
-            )
-    );
+      pEnd.item.addAction(
+              sequence(
+                      moveTo(pEnd.pos.x, pEnd.pos.y, WRAP_ITEM, fastSlow),
+                      run(() -> {
+                        chkSpecialItemWhenSwap(pStart, pEnd);
+                        if (lsPieceNullItem.size() <= 0)
+                          reverse(pStart, pEnd);
+                      })
+              )
+      );
+    }
 
   }
 
   private void reverse(Piece pStart, Piece pEnd) {
 
-    if (pStart.item != null && pEnd.item != null) {
+    if (pStart.item != null && pEnd.item != null && util.chkTypeFruit(pStart) && util.chkTypeFruit(pEnd)) {
       Item tmp = pStart.item;
       pStart.item = pEnd.item;
       pEnd.item = tmp;
@@ -570,7 +581,6 @@ public class GameUIController {
     clrPiece(piece);
     piece.setItem(item);
     item.setPosition(piece.pos);
-    item.addFlare();
     addToGroup(item, gamePlayUI.gItem);
   }
   //-------------------special item----------------------------------------
@@ -584,10 +594,10 @@ public class GameUIController {
       //todo: x2 time
       addTimeLine(ADD_SECOND*2);
 
-      clrPiece(pStart);
-      clrPiece(pEnd);
-
-      updateArrPiece();
+      pStart.animClock(() -> {});
+      pEnd.animClock(() -> {
+        updateArrPiece();
+      });
     }
     else if ((pStart.item.type == Type.clock || pEnd.item.type == Type.clock)
             && (pStart.item.type == Type.jam || pEnd.item.type == Type.jam)) {
@@ -596,18 +606,24 @@ public class GameUIController {
       addTimeLine(ADD_SECOND);
 
       Piece point;
-      if (pStart.item.type == Type.jam)
+      Piece pClock;
+      if (pStart.item.type == Type.jam) {
         point = pStart;
-      else
+        pClock = pEnd;
+      }
+      else {
         point = pEnd;
+        pClock = pStart;
+      }
 
-      skillJam(util.getPieceTheSameType(arrPosPiece, pStart, pEnd),
+      pClock.animClock(() -> {});
+      skillJam(util.getPieceTypeDifferenceWith(arrPosPiece, pStart, pEnd),
               point,
               () -> {
+                point.animJam(() -> {});
                 updateArrPiece();
               });
-      clrPiece(pStart);
-      clrPiece(pEnd);
+
     }
     else if ((pStart.item.type == Type.clock || pEnd.item.type == Type.clock)
             && (pStart.item.type == Type.glass_fruit || pEnd.item.type == Type.glass_fruit)) {
@@ -616,20 +632,25 @@ public class GameUIController {
       addTimeLine(ADD_SECOND);
 
       if (pStart.row == pEnd.row) {
-        if (pStart.item.type == Type.glass_fruit)
+        if (pStart.item.type == Type.glass_fruit) {
           clrPieceByHor(pStart);
-        else
+          pEnd.animClock(() -> {});
+        }
+        else {
           clrPieceByHor(pEnd);
+          pStart.animClock(() -> {});
+        }
       }
       else {
-        if (pStart.item.type == Type.glass_fruit)
+        if (pStart.item.type == Type.glass_fruit) {
           clrPieceByVer(pStart);
-        else
+          pEnd.animClock(() -> {});
+        }
+        else {
           clrPieceByVer(pEnd);
+          pStart.animClock(() -> {});
+        }
       }
-
-      clrPiece(pStart);
-      clrPiece(pEnd);
 
       updateArrPiece();
     }
@@ -638,7 +659,7 @@ public class GameUIController {
       //todo: x1 time
       addTimeLine(ADD_SECOND);
 
-      clrPiece(pStart);
+      pStart.animClock(() -> {});
 
       filterAll();
       clrPiece(pEnd);
@@ -649,7 +670,7 @@ public class GameUIController {
       //todo: x1 time
       addTimeLine(ADD_SECOND);
 
-      clrPiece(pEnd);
+      pEnd.animClock(() -> {});
 
       filterAll();
       clrPiece(pStart);
@@ -658,6 +679,10 @@ public class GameUIController {
     else if (pStart.item.type == Type.jam && pEnd.item.type == Type.jam) {
       System.out.println("jam + jam");
       //todo: effect clear all
+
+      pStart.animJam(() -> {});
+      pEnd.animJam(() -> {});
+
       clrAll();
       updateArrPiece();
     }
@@ -670,8 +695,12 @@ public class GameUIController {
         point = pStart;
       else
         point = pEnd;
-      skillJam(util.getPieceTheSameType(arrPosPiece, pStart, pEnd), point,
-              () -> updateArrPiece()); //todo: effect jam + glass juice
+
+      skillJam(util.getPieceTypeDifferenceWith(arrPosPiece, pStart, pEnd), point,
+              () -> {
+                point.animJam(() -> {});
+                updateArrPiece();
+              }); //todo: effect jam + glass juice
 
       if (pStart.row == pEnd.row) {
         if (pStart.item.type == Type.glass_fruit)
@@ -686,26 +715,24 @@ public class GameUIController {
           clrPieceByVer(pEnd);
       }
 
-      clrPiece(pStart);
-      clrPiece(pEnd);
-
     }
     else if (pStart.item.type == Type.jam && util.chkTypeFruit(pEnd)) {
       System.out.println("jam + fruit");
       skillJam(pEnd, pStart, () -> {
+        pStart.animJam(() -> {});
         updateArrPiece();
       });
-      clrPiece(pStart);
     }
     else if (pEnd.item.type == Type.jam && util.chkTypeFruit(pStart)) {
       System.out.println("jam + fruit");
       skillJam(pStart, pEnd, () -> {
+        pEnd.animJam(() -> {});
         updateArrPiece();
       });
-      clrPiece(pEnd);
     }
     else if (pStart.item.type == Type.glass_fruit && pEnd.item.type == Type.glass_fruit) {
       System.out.println("glass juice + glass juice");
+      pieceStart.item.remove();
       clrPieceByHorAndVer(pEnd);
 
       updateArrPiece();

@@ -174,7 +174,7 @@ public class GamePlayUI extends Group {
   private void initIcon() {
 
     iStart = GUI.createImage(GMain.bgAtlas, "icon_start");
-    gBackground.addActor(iStart);
+//    gBackground.addActor(iStart);
     iStart.addListener(new ClickListener() {
       @Override
       public void clicked(InputEvent event, float x, float y) {

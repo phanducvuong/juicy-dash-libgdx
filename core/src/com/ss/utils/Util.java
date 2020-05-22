@@ -88,7 +88,7 @@ public class Util {
     return piecess[row][col].isEmpty ? piecess[row][col] : null;
   }
 
-  public Piece getPieceTheSameType(Piece[][] pieces, Piece pStart, Piece pEnd) {
+  public Piece getPieceTypeDifferenceWith(Piece[][] pieces, Piece pStart, Piece pEnd) {
     for (Piece[] ps : pieces) {
       for (Piece p : ps)
         if (p != pStart && p != pEnd)

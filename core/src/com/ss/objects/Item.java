@@ -11,19 +11,16 @@ import com.ss.GMain;
 import com.ss.config.Type;
 import com.ss.core.util.GUI;
 import com.ss.ui.GamePlayUI;
-import com.ss.utils.Util;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 import static com.ss.config.Config.*;
 
 public class Item extends Group {
 
-  private Image fruit, animL, animR;
+  private Image fruit, animFruitL, animFruitR;
   private Image flare, glassL1, glassL2, glassR1, glassR2;
-  private Group gAnim;
+  private Image iceL, iceR, ice;
+  private Group gAnimFruit, gAnimIce;
   public Type type;
   public String name;
   public boolean isAlive = false;
@@ -39,29 +36,56 @@ public class Item extends Group {
     this.addActor(fruit);
 
     if (chkRegion(type)) {
-      gAnim = new Group();
-      animL = GUI.createImage(GMain.itemAtlas, type.name()+"_l");
-      animR = GUI.createImage(GMain.itemAtlas, type.name()+"_r");
-
-      if (animL.getWidth() >= animR.getWidth())
-        gAnim.setWidth(animL.getWidth());
-      else
-        gAnim.setWidth(animR.getWidth());
-
-      if (animL.getHeight() >= animR.getHeight())
-        gAnim.setHeight(animL.getHeight());
-      else
-        gAnim.setHeight(animR.getHeight());
-
-      animL.setOrigin(Align.center);
-      animR.setOrigin(Align.center);
-
-      gAnim.addActor(animR);
-      gAnim.addActor(animL);
-      setPosAnim();
+      createAnimFruit();
+      createAnimIce();
     }
     else
       createAnimSpecialItem();
+
+  }
+
+  private void createAnimFruit() {
+    gAnimFruit = new Group();
+    animFruitL = GUI.createImage(GMain.itemAtlas, type.name()+"_l");
+    animFruitR = GUI.createImage(GMain.itemAtlas, type.name()+"_r");
+
+    if (animFruitL.getWidth() >= animFruitR.getWidth())
+      gAnimFruit.setWidth(animFruitL.getWidth());
+    else
+      gAnimFruit.setWidth(animFruitR.getWidth());
+
+    if (animFruitL.getHeight() >= animFruitR.getHeight())
+      gAnimFruit.setHeight(animFruitL.getHeight());
+    else
+      gAnimFruit.setHeight(animFruitR.getHeight());
+
+    animFruitL.setOrigin(Align.center);
+    animFruitR.setOrigin(Align.center);
+
+    gAnimFruit.addActor(animFruitR);
+    gAnimFruit.addActor(animFruitL);
+    setPosAnimFruit();
+  }
+
+  private void createAnimIce() {
+    gAnimIce = new Group();
+    ice = GUI.createImage(GMain.itemAtlas, "ice_" + type.name());
+    ice.getColor().a = 0f;
+    gAnimIce.setSize(ice.getWidth(), ice.getHeight());
+    gAnimIce.addActor(ice);
+    gAnimIce.setPosition(fruit.getX() + fruit.getWidth()/2 - gAnimIce.getWidth()/2,
+                         fruit.getY() + fruit.getHeight()/2 - gAnimIce.getHeight()/2);
+
+    iceL = GUI.createImage(GMain.itemAtlas, "ice_left");
+    iceL.setVisible(false);
+    gAnimIce.addActor(iceL);
+
+    iceR = GUI.createImage(GMain.itemAtlas, "ice_right");
+    iceR.setVisible(false);
+    gAnimIce.addActor(iceR);
+
+    iceL.setOrigin(Align.center);
+    iceR.setOrigin(Align.center);
 
   }
 
@@ -71,6 +95,8 @@ public class Item extends Group {
     flare.setPosition(fruit.getX() + fruit.getWidth()/2 - flare.getWidth()/2,
             fruit.getY() + fruit.getHeight()/2 - flare.getHeight()/2);
     flare.setOrigin(Align.center);
+    this.addActor(flare);
+    fruit.setZIndex(1000);
     animFlare();
 
     switch (type) {
@@ -115,32 +141,6 @@ public class Item extends Group {
     return new Vector2(this.getX(), this.getY());
   }
 
-  public void reset() {
-    if (flare != null)
-      flare.remove();
-    startAnim();
-  }
-
-  private void startAnim() {
-
-    fruit.setVisible(false);
-    if (chkRegion(type)) {
-      this.addActor(gAnim);
-      rndAnimFruit();
-    }
-
-  }
-
-  private void rndAnimFruit() {
-    int rnd = (int) Math.round(Math.random() * 3) + 1;
-    switch (rnd) {
-      case 1: anim1(); break;
-      case 2: anim2(); break;
-      case 3: anim3(); break;
-      case 4: anim4(); break;
-    }
-  }
-
   private boolean chkRegion(Type type) {
     return  type != Type.glass_fruit &&
             type != Type.jam         &&
@@ -148,47 +148,51 @@ public class Item extends Group {
             type != Type.walnut;
   }
 
-  //---------------------------------------add to scene---------------------------------------------
-  //anim normal item
-  public void addGAnimToScene() {
-    this.addActor(gAnim);
-    fruit.setVisible(false);
-  }
-
-  public void addFlare() {
-    this.addActor(flare);
-    fruit.setZIndex(1000);
-  }
-  //---------------------------------------add to scene---------------------------------------------
-
-  private void setPosAnim() {
+  private void setPosAnimFruit() {
     switch (name) {
       case "item_apple":
-        animL.setPosition(-3, -10);
-        animR.setPosition(0, 7);
+        animFruitL.setPosition(-3, -10);
+        animFruitR.setPosition(0, 7);
         break;
       case "item_strawberry":
-        animL.setPosition(0, -17);
-        animR.setPosition(-2, 7);
+        animFruitL.setPosition(0, -17);
+        animFruitR.setPosition(-2, 7);
         break;
       case "item_orange":
-        animR.setZIndex(1000);
-        animR.setPosition(0, 20);
-        animL.setPosition(-1, -6);
+        animFruitR.setZIndex(1000);
+        animFruitR.setPosition(0, 20);
+        animFruitL.setPosition(-1, -6);
         break;
       case "item_grape":
-        animL.setPosition(-10, 0);
-        animR.setPosition(5, 40);
+        animFruitL.setPosition(-10, 0);
+        animFruitR.setPosition(5, 40);
         break;
       case "item_kiwi":
-        animR.setZIndex(1000);
-        animR.setPosition(-2, 16);
-        animL.setPosition(-15, 0);
+        animFruitR.setZIndex(1000);
+        animFruitR.setPosition(-2, 16);
+        animFruitL.setPosition(-15, 0);
         break;
       case "item_banana":
-        animL.setPosition(42, -3);
-        animR.setPosition(0, 20);
+        animFruitL.setPosition(42, -3);
+        animFruitR.setPosition(0, 20);
         break;
+    }
+  }
+
+  //label: anim fruit
+  public void startAnimFruit() {
+    fruit.setVisible(false);
+    this.addActor(gAnimFruit);
+    rndAnimFruit();
+  }
+
+  private void rndAnimFruit() {
+    int rnd = (int) Math.round(Math.random() * 3) + 1;
+    switch (rnd) {
+      case 1: animFruit1(); break;
+      case 2: animFruit2(); break;
+      case 3: animFruit3(); break;
+      case 4: animFruit4(); break;
     }
   }
 
@@ -203,22 +207,22 @@ public class Item extends Group {
     );
   }
 
-  private void anim1() {
+  private void animFruit1() {
 
     Runnable reset = () -> {
-      animL.moveBy(25, 7);
-      animL.moveBy(0, -70);
-      animL.setRotation(0);
-      animL.getColor().a = 1f;
+      animFruitL.moveBy(25, 7);
+      animFruitL.moveBy(0, -70);
+      animFruitL.setRotation(0);
+      animFruitL.getColor().a = 1f;
 
-      animR.moveBy(-25, 7);
-      animR.moveBy(0, -70);
-      animR.setRotation(0);
-      animR.getColor().a = 1f;
+      animFruitR.moveBy(-25, 7);
+      animFruitR.moveBy(0, -70);
+      animFruitR.setRotation(0);
+      animFruitR.getColor().a = 1f;
 
       fruit.setVisible(true);
       isAlive = false;
-      gAnim.remove();
+      gAnimFruit.remove();
       this.remove();
     };
 
@@ -243,25 +247,25 @@ public class Item extends Group {
             run(reset)
     );
 
-    animL.addAction(seqL);
-    animR.addAction(seqR);
+    animFruitL.addAction(seqL);
+    animFruitR.addAction(seqR);
 
   }
 
-  private void anim2() {
+  private void animFruit2() {
 
     Runnable reset = () -> {
-      animL.moveBy(-100, -110);
-      animL.setRotation(0);
-      animL.getColor().a = 1f;
+      animFruitL.moveBy(-100, -110);
+      animFruitL.setRotation(0);
+      animFruitL.getColor().a = 1f;
 
-      animR.moveBy(110, -70);
-      animR.setRotation(0);
-      animR.getColor().a = 1f;
+      animFruitR.moveBy(110, -70);
+      animFruitR.setRotation(0);
+      animFruitR.getColor().a = 1f;
 
       fruit.setVisible(true);
       isAlive = false;
-      gAnim.remove();
+      gAnimFruit.remove();
       this.remove();
     };
 
@@ -288,25 +292,25 @@ public class Item extends Group {
             )
     );
 
-    animL.addAction(seqL);
-    animR.addAction(seqR);
+    animFruitL.addAction(seqL);
+    animFruitR.addAction(seqR);
 
   }
 
-  private void anim3() {
+  private void animFruit3() {
 
     Runnable reset = () -> {
-      animL.moveBy(-45, -90);
-      animL.setRotation(0);
-      animL.getColor().a = 1f;
+      animFruitL.moveBy(-45, -90);
+      animFruitL.setRotation(0);
+      animFruitL.getColor().a = 1f;
 
-      animR.moveBy(45, -90);
-      animR.setRotation(0);
-      animR.getColor().a = 1f;
+      animFruitR.moveBy(45, -90);
+      animFruitR.setRotation(0);
+      animFruitR.getColor().a = 1f;
 
       fruit.setVisible(true);
       isAlive = false;
-      gAnim.remove();
+      gAnimFruit.remove();
       this.remove();
     };
 
@@ -329,25 +333,25 @@ public class Item extends Group {
             )
     );
 
-    animL.addAction(seqL);
-    animR.addAction(seqR);
+    animFruitL.addAction(seqL);
+    animFruitR.addAction(seqR);
 
   }
 
-  private void anim4() {
+  private void animFruit4() {
 
     Runnable reset = () -> {
-      animL.moveBy(-80, -100);
-      animL.setRotation(0);
-      animL.getColor().a = 1f;
+      animFruitL.moveBy(-80, -100);
+      animFruitL.setRotation(0);
+      animFruitL.getColor().a = 1f;
 
-      animR.moveBy(130, -132);
-      animR.setRotation(0);
-      animR.getColor().a = 1f;
+      animFruitR.moveBy(130, -132);
+      animFruitR.setRotation(0);
+      animFruitR.getColor().a = 1f;
 
       fruit.setVisible(true);
       isAlive = false;
-      gAnim.remove();
+      gAnimFruit.remove();
       this.remove();
     };
 
@@ -372,8 +376,8 @@ public class Item extends Group {
             run(reset)
     );
 
-    animL.addAction(seqL);
-    animR.addAction(seqR);
+    animFruitL.addAction(seqL);
+    animFruitR.addAction(seqR);
 
   }
 
@@ -386,15 +390,41 @@ public class Item extends Group {
     );
   }
 
+  //label: anim ice
+  public void addAnimIce() {
+    this.addActor(gAnimIce);
+    ice.addAction(
+            sequence(
+                    alpha(1f, .25f, linear),
+                    run(() -> {
+                      fruit.setVisible(false);
+                      animFruit1();
+                    })
+            )
+    );
+  }
+
+  private void resetAnimIce() {
+    ice.getColor().a = 0f;
+    iceL.setVisible(false);
+    iceR.setVisible(false);
+    gAnimIce.remove();
+  }
+
   //label: anim glass juice
   public void animGlassJuice(boolean hor) {
 
     Runnable reset = () -> {
       isAlive = false;
+      glassL1.remove();
+      glassR1.remove();
+      glassL2.remove();
+      glassR2.remove();
+      fruit.setVisible(true);
+      flare.setVisible(true);
       this.remove();
     };
 
-    flare.remove();
     if (hor) {
       float moveLeft = this.getX() - GamePlayUI.bgTable.getX();
       float moveRight   = GamePlayUI.bgTable.getX() + GamePlayUI.bgTable.getWidth() - this.getX() - glassR1.getWidth();
@@ -474,6 +504,8 @@ public class Item extends Group {
   }
 
   public void addAnimGlassToScene(boolean isBoth) {
+    fruit.setVisible(false);
+    flare.setVisible(false);
     if (isBoth) {
       this.addActor(glassL1);
       this.addActor(glassR1);
@@ -484,6 +516,41 @@ public class Item extends Group {
       this.addActor(glassL1);
       this.addActor(glassR1);
     }
+  }
+
+  //label: anim clock
+  public void animClock(Runnable onComplete) {
+    fruit.setVisible(false);
+    flare.setVisible(false);
+    this.addAction(
+            sequence(
+                    delay(.25f),
+                    run(onComplete),
+                    run(() -> {
+                      isAlive = false;
+                      fruit.setVisible(true);
+                      flare.setVisible(true);
+                      this.remove();
+                    })
+            )
+    );
+  }
+
+  public void animJam(Runnable onComplete) {
+    fruit.setVisible(false);
+    flare.setVisible(false);
+    this.addAction(
+            sequence(
+                    delay(.25f),
+                    run(onComplete),
+                    run(() -> {
+                      isAlive = false;
+                      fruit.setVisible(true);
+                      flare.setVisible(true);
+                      this.remove();
+                    })
+            )
+    );
   }
 
 }

@@ -42,6 +42,21 @@ public class Piece {
     item.addAnimGlassToScene(isBoth);
     item.setPosAnimGlassJuice(hor);
     item.animGlassJuice(hor);
+    clear();
+  }
+
+  public void animClock(Runnable onComplete) {
+    item.animClock(onComplete);
+    clear();
+  }
+
+  public void animJam(Runnable onComplete) {
+    item.animJam(onComplete);
+    clear();
+  }
+
+  public void animIce() {
+    item.addAnimIce();
   }
 
 }
