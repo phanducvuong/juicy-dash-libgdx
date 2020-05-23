@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.Align;
 import com.ss.GMain;
 import com.ss.config.Type;
 import com.ss.core.util.GUI;
+import com.ss.gameLogic.effects.Particle;
 import com.ss.ui.GamePlayUI;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
@@ -19,8 +20,11 @@ public class Item extends Group {
 
   private Image fruit, animFruitL, animFruitR;
   private Image flare, glassL1, glassL2, glassR1, glassR2;
-  private Image iceL, iceR, ice;
-  private Group gAnimFruit, gAnimIce;
+
+  private Image ice;
+  private Particle pIce;
+
+  private Group gAnimFruit;
   public Type type;
   public String name;
   public boolean isAlive = false;
@@ -68,24 +72,10 @@ public class Item extends Group {
   }
 
   private void createAnimIce() {
-    gAnimIce = new Group();
     ice = GUI.createImage(GMain.itemAtlas, "ice_" + type.name());
     ice.getColor().a = 0f;
-    gAnimIce.setSize(ice.getWidth(), ice.getHeight());
-    gAnimIce.addActor(ice);
-    gAnimIce.setPosition(fruit.getX() + fruit.getWidth()/2 - gAnimIce.getWidth()/2,
-                         fruit.getY() + fruit.getHeight()/2 - gAnimIce.getHeight()/2);
-
-    iceL = GUI.createImage(GMain.itemAtlas, "ice_left");
-    iceL.setVisible(false);
-    gAnimIce.addActor(iceL);
-
-    iceR = GUI.createImage(GMain.itemAtlas, "ice_right");
-    iceR.setVisible(false);
-    gAnimIce.addActor(iceR);
-
-    iceL.setOrigin(Align.center);
-    iceR.setOrigin(Align.center);
+    ice.setPosition(fruit.getX() + fruit.getWidth()/2 - ice.getWidth()/2,
+                         fruit.getY() + fruit.getHeight()/2 - ice.getHeight()/2);
 
   }
 
@@ -391,35 +381,46 @@ public class Item extends Group {
   }
 
   //label: anim ice
-  public void addAnimIce() {
-    this.addActor(gAnimIce);
+  public void addAnimIce(Particle pIce) {
+    this.addActor(ice);
     ice.addAction(
             sequence(
-                    alpha(1f, .25f, linear),
+                    alpha(1f, 1f, linear),
                     run(() -> {
-                      fruit.setVisible(false);
-                      animFruit1();
+                      this.addActor(gAnimFruit);
+                      startAnimFruit();
+                      resetAnimIce();
+                      if (pIce != null)
+                        pIce.start(this.getX() + this.getWidth()/2,
+                                this.getY() + this.getHeight()/2, 1f);
                     })
             )
     );
+
+    fruit.addAction(alpha(0f, 1f, linear));
   }
 
   private void resetAnimIce() {
+    fruit.getColor().a = 1f;
     ice.getColor().a = 0f;
-    iceL.setVisible(false);
-    iceR.setVisible(false);
-    gAnimIce.remove();
+    ice.remove();
   }
 
   //label: anim glass juice
-  public void animGlassJuice(boolean hor) {
+  public void animGlassJuice(boolean hor, Runnable onUpdateBoard) {
 
     Runnable reset = () -> {
       isAlive = false;
+      glassL1.setRotation(0);
+      glassR1.setRotation(0);
+      glassL2.setRotation(0);
+      glassR2.setRotation(0);
+
       glassL1.remove();
       glassR1.remove();
       glassL2.remove();
       glassR2.remove();
+
       fruit.setVisible(true);
       flare.setVisible(true);
       this.remove();
@@ -428,42 +429,70 @@ public class Item extends Group {
     if (hor) {
       float moveLeft = this.getX() - GamePlayUI.bgTable.getX();
       float moveRight   = GamePlayUI.bgTable.getX() + GamePlayUI.bgTable.getWidth() - this.getX() - glassR1.getWidth();
-      glassL1.addAction(moveTo(-moveLeft, glassL1.getY(), .25f, slowFast));
+      glassL1.addAction(
+              sequence(
+                      delay(1f),
+                      moveTo(-moveLeft, glassL1.getY(), .25f, slowFast)
+              )
+      );
       glassR1.addAction(
               sequence(
+                      delay(1f),
                       moveTo(moveRight, glassR1.getY(), .25f, slowFast),
-                      run(reset)
+                      parallel(
+                              run(reset),
+                              run(onUpdateBoard)
+                      )
               )
       );
 
       float moveDown = this.getY() - GamePlayUI.bgTable.getY();
       float moveUp   = GamePlayUI.bgTable.getY() + GamePlayUI.bgTable.getHeight() - this.getY() - glassR2.getHeight();
-      glassL2.addAction(moveTo(glassL2.getX(), -moveDown, .25f, slowFast));
+      glassL2.addAction(
+              sequence(
+                      delay(1f),
+                      moveTo(glassL2.getX(), -moveDown, .25f, slowFast)
+              )
+      );
       glassR2.addAction(
               sequence(
-                      moveTo(glassR2.getX(), moveUp, .25f, slowFast),
-                      run(reset)
+                      delay(1f),
+                      moveTo(glassR2.getX(), moveUp, .25f, slowFast)
               )
       );
     }
     else {
       float moveDown = this.getY() - GamePlayUI.bgTable.getY();
       float moveUp   = GamePlayUI.bgTable.getY() + GamePlayUI.bgTable.getHeight() - this.getY() - glassR1.getHeight();
-      glassL1.addAction(moveTo(glassL1.getX(), -moveDown, .25f, slowFast));
+      glassL1.addAction(
+              sequence(
+                      delay(1f),
+                      moveTo(glassL1.getX(), -moveDown, .25f, slowFast)
+              )
+      );
       glassR1.addAction(
               sequence(
+                      delay(1f),
                       moveTo(glassR1.getX(), moveUp, .25f, slowFast),
-                      run(reset)
+                      parallel(
+                              run(reset),
+                              run(onUpdateBoard)
+                      )
               )
       );
 
-      float moveLeft = this.getX() - GamePlayUI.bgTable.getX();
+      float moveLeft    = this.getX() - GamePlayUI.bgTable.getX();
       float moveRight   = GamePlayUI.bgTable.getX() + GamePlayUI.bgTable.getWidth() - this.getX() - glassR2.getWidth();
-      glassL2.addAction(moveTo(-moveLeft, glassL2.getY(), .25f, slowFast));
+      glassL2.addAction(
+              sequence(
+                      delay(1f),
+                      moveTo(-moveLeft, glassL2.getY(), .25f, slowFast)
+              )
+      );
       glassR2.addAction(
               sequence(
-                      moveTo(moveRight, glassR2.getY(), .25f, slowFast),
-                      run(reset)
+                      delay(1f),
+                      moveTo(moveRight, glassR2.getY(), .25f, slowFast)
               )
       );
     }

@@ -27,21 +27,14 @@ scalingCount: 1
 scaling0: 1.0
 timelineCount: 1
 timeline0: 0.0
+independent: false
 - Life Offset - 
 active: false
+independent: false
 - X Offset - 
 active: false
 - Y Offset - 
-active: true
-lowMin: -10.0
-lowMax: -10.0
-highMin: 0.0
-highMax: 0.0
-relative: false
-scalingCount: 1
-scaling0: 1.0
-timelineCount: 1
-timeline0: 0.0
+active: false
 - Spawn Shape - 
 shape: point
 - Spawn Width - 
@@ -64,7 +57,7 @@ scalingCount: 1
 scaling0: 1.0
 timelineCount: 1
 timeline0: 0.0
-- Scale - 
+- X Scale - 
 lowMin: 0.0
 lowMax: 0.0
 highMin: 160.0
@@ -94,6 +87,8 @@ timeline7: 0.5498155
 timeline8: 0.72509223
 timeline9: 0.86715865
 timeline10: 1.0
+- Y Scale - 
+active: false
 - Velocity - 
 active: true
 lowMin: 0.0
@@ -109,8 +104,8 @@ timeline0: 0.0
 active: true
 lowMin: 0.0
 lowMax: 0.0
-highMin: -90.0
-highMax: -90.0
+highMin: 180.0
+highMax: 180.0
 relative: false
 scalingCount: 1
 scaling0: 1.0
@@ -162,8 +157,10 @@ continuous: true
 aligned: false
 additive: false
 behind: false
-- Image Path -
-D:\绮掑瓙\docs\api\resources\SL_Charge_00_01.png
+premultipliedAlpha: false
+spriteMode: single
+- Image Paths -
+/D:/绮掑瓙/docs/api/resources/SL_Charge_00_01.png
 
 
 PC_TomatoF_skillEF_1
@@ -195,8 +192,10 @@ scalingCount: 1
 scaling0: 1.0
 timelineCount: 1
 timeline0: 0.0
+independent: false
 - Life Offset - 
 active: false
+independent: false
 - X Offset - 
 active: false
 - Y Offset - 
@@ -223,7 +222,7 @@ scalingCount: 1
 scaling0: 1.0
 timelineCount: 1
 timeline0: 0.0
-- Scale - 
+- X Scale - 
 lowMin: 0.0
 lowMax: 0.0
 highMin: 190.0
@@ -253,6 +252,8 @@ timeline7: 0.5386417
 timeline8: 0.7096019
 timeline9: 0.852459
 timeline10: 1.0
+- Y Scale - 
+active: false
 - Velocity - 
 active: true
 lowMin: 0.0
@@ -268,8 +269,8 @@ timeline0: 0.0
 active: true
 lowMin: 0.0
 lowMax: 0.0
-highMin: -90.0
-highMax: -90.0
+highMin: 180.0
+highMax: 180.0
 relative: false
 scalingCount: 1
 scaling0: 1.0
@@ -319,8 +320,10 @@ continuous: true
 aligned: false
 additive: true
 behind: false
-- Image Path -
-D:\绮掑瓙\docs\api\resources\SL_Charge_00_01.png
+premultipliedAlpha: false
+spriteMode: single
+- Image Paths -
+/D:/绮掑瓙/docs/api/resources/SL_Charge_00_01.png
 
 
 PC_TomatoF_skillEF_3
@@ -352,8 +355,10 @@ scalingCount: 1
 scaling0: 1.0
 timelineCount: 1
 timeline0: 0.0
+independent: false
 - Life Offset - 
 active: false
+independent: false
 - X Offset - 
 active: false
 - Y Offset - 
@@ -391,7 +396,7 @@ scalingCount: 1
 scaling0: 1.0
 timelineCount: 1
 timeline0: 0.0
-- Scale - 
+- X Scale - 
 lowMin: 0.0
 lowMax: 0.0
 highMin: 10.0
@@ -409,6 +414,8 @@ timeline1: 0.43835616
 timeline2: 0.7123288
 timeline3: 0.8630137
 timeline4: 1.0
+- Y Scale - 
+active: false
 - Velocity - 
 active: true
 lowMin: 0.0
@@ -424,8 +431,8 @@ timeline0: 0.0
 active: true
 lowMin: 0.0
 lowMax: 0.0
-highMin: -90.0
-highMax: -90.0
+highMin: 180.0
+highMax: 180.0
 relative: false
 scalingCount: 1
 scaling0: 1.0
@@ -460,8 +467,10 @@ continuous: true
 aligned: false
 additive: true
 behind: false
-- Image Path -
-D:\绮掑瓙\docs\api\resources\SL_XiangZ_01_03.png
+premultipliedAlpha: false
+spriteMode: single
+- Image Paths -
+/D:/绮掑瓙/docs/api/resources/SL_XiangZ_01_03.png
 
 
 Untitled
@@ -493,8 +502,10 @@ scalingCount: 1
 scaling0: 1.0
 timelineCount: 1
 timeline0: 0.0
+independent: false
 - Life Offset - 
 active: false
+independent: false
 - X Offset - 
 active: false
 - Y Offset - 
@@ -521,7 +532,7 @@ scalingCount: 1
 scaling0: 1.0
 timelineCount: 1
 timeline0: 0.0
-- Scale - 
+- X Scale - 
 lowMin: 0.0
 lowMax: 0.0
 highMin: 150.0
@@ -545,6 +556,8 @@ timeline4: 0.39805827
 timeline5: 0.5553398
 timeline6: 0.79611653
 timeline7: 1.0
+- Y Scale - 
+active: false
 - Velocity - 
 active: true
 lowMin: 0.0
@@ -560,15 +573,24 @@ timeline0: 0.0
 active: true
 lowMin: 0.0
 lowMax: 0.0
-highMin: -90.0
-highMax: -90.0
+highMin: 180.0
+highMax: 180.0
 relative: false
 scalingCount: 1
 scaling0: 1.0
 timelineCount: 1
 timeline0: 0.0
 - Rotation - 
-active: false
+active: true
+lowMin: 0.0
+lowMax: 0.0
+highMin: 90.0
+highMax: 90.0
+relative: false
+scalingCount: 1
+scaling0: 1.0
+timelineCount: 1
+timeline0: 0.0
 - Wind - 
 active: false
 - Gravity - 
@@ -604,5 +626,8 @@ continuous: true
 aligned: false
 additive: true
 behind: false
-- Image Path -
-D:\绮掑瓙\docs\api\resources\NPC_JuShou_skill3_2.png
+premultipliedAlpha: false
+spriteMode: single
+- Image Paths -
+/D:/绮掑瓙/docs/api/resources/NPC_JuShou_skill3_2.png
+

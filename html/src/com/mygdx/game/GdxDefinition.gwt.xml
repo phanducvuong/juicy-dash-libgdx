@@ -4,7 +4,7 @@
 	<inherits name='com.badlogic.gdx.backends.gdx_backends_gwt' />
 
 	<inherits name='MyGdxGame' />
-	<entry-point class='com.mygdx.game.client.HtmlLauncher' />
+	<entry-point class='com.jkstudiogroup.lieng.client.HtmlLauncher' />
 	<set-configuration-property name='xsiframe.failIfScriptTag' value='FALSE'/>
 	<set-configuration-property name="gdx.assetpath" value="../android/assets" />
 </module>

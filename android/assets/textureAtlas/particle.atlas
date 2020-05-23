@@ -4,45 +4,87 @@ size: 1024,256
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+207
+  rotate: false
+  xy: 132, 114
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+4
+  rotate: false
+  xy: 2, 48
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
 NPC_BigLong_skill4_1
   rotate: false
-  xy: 262, 68
+  xy: 392, 114
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 NPC_JuShou_skill3_2
   rotate: false
-  xy: 132, 68
+  xy: 262, 114
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 SL_Charge_00_01
   rotate: false
-  xy: 2, 68
+  xy: 2, 114
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 SL_XiangZ_00_03
   rotate: false
-  xy: 392, 68
+  xy: 652, 114
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 SL_XiangZ_00_04
   rotate: false
-  xy: 522, 68
+  xy: 782, 114
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 SL_XiangZ_01_03
   rotate: false
-  xy: 2, 2
+  xy: 912, 178
   size: 64, 64
   orig: 64, 64
+  offset: 0, 0
+  index: -1
+liuxing6
+  rotate: false
+  xy: 68, 71
+  size: 86, 41
+  orig: 86, 41
+  offset: 0, 0
+  index: -1
+spark-alt2
+  rotate: false
+  xy: 522, 114
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+wujiaoxing
+  rotate: false
+  xy: 2, 2
+  size: 45, 44
+  orig: 45, 44
+  offset: 0, 0
+  index: -1
+wujiaoxing0
+  rotate: false
+  xy: 912, 132
+  size: 45, 44
+  orig: 45, 44
   offset: 0, 0
   index: -1

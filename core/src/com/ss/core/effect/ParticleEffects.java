@@ -3,6 +3,7 @@ package com.ss.core.effect;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
+import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 
@@ -11,7 +12,8 @@ public class ParticleEffects extends Actor {
   private Group group;
   private ParticleEffectPool.PooledEffect poolEffect;
   private ParticleEffectPool pep;
-  public ParticleEffect pe;
+  private ParticleEffect pe;
+  public boolean isActive = false;
 
   public ParticleEffects(Group group, ParticleEffectPool pep, ParticleEffect pe) {
     this.group = group;
@@ -23,6 +25,7 @@ public class ParticleEffects extends Actor {
   public boolean remove() {
     if (poolEffect != null)
       poolEffect.free();
+    isActive = false;
     return super.remove();
   }
 
@@ -31,8 +34,6 @@ public class ParticleEffects extends Actor {
     super.act(delta);
     pe.setPosition(getX(), getY());
     pe.update(delta);
-
-    System.out.println("AAA");
 
     if (pe.isComplete())
       remove();
@@ -48,11 +49,17 @@ public class ParticleEffects extends Actor {
   public void start(float x, float y, float scl) {
     pe.reset();
     poolEffect = pep.obtain();
-    this.setZIndex(1000);
     setX(x);
     setY(y);
     pe.scaleEffect(scl);
     group.addActor(this);
+  }
+
+  public void setRotate(float degree) {
+    for (ParticleEmitter emitter : pe.getEmitters()) {
+      ParticleEmitter.ScaledNumericValue val = emitter.getAngle();
+      val.setHigh(degree);
+    }
   }
 
 }

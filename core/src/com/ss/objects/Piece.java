@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.ss.GMain;
 import com.ss.config.Type;
 import com.ss.core.util.GUI;
+import com.ss.gameLogic.effects.Particle;
 import com.ss.utils.Util;
 
 import java.util.List;
@@ -38,10 +39,10 @@ public class Piece {
     isEmpty = true;
   }
 
-  public void animGlassJuice(boolean hor, boolean isBoth) {
+  public void animGlassJuice(boolean hor, boolean isBoth, Runnable onUpdateBoard) {
     item.addAnimGlassToScene(isBoth);
     item.setPosAnimGlassJuice(hor);
-    item.animGlassJuice(hor);
+    item.animGlassJuice(hor, onUpdateBoard);
     clear();
   }
 
@@ -55,8 +56,9 @@ public class Piece {
     clear();
   }
 
-  public void animIce() {
-    item.addAnimIce();
+  public void animIce(Particle pIce) {
+    item.addAnimIce(pIce);
+    clear();
   }
 
 }

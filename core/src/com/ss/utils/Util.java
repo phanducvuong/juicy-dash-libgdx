@@ -2,6 +2,7 @@ package com.ss.utils;
 
 import com.badlogic.gdx.math.Vector2;
 import com.ss.config.Type;
+import com.ss.gameLogic.effects.Particle;
 import com.ss.objects.Item;
 import com.ss.objects.Piece;
 
@@ -40,14 +41,15 @@ public class Util {
   }
 
   public boolean chkTypeFruit(Piece piece) {
-    return piece.item.type != Type.clock
-           && piece.item.type != Type.jam
-           && piece.item.type != Type.glass_fruit;
+    return piece.item       != null       &&
+           piece.item.type  != Type.clock &&
+           piece.item.type  != Type.jam   &&
+           piece.item.type  != Type.glass_fruit;
   }
 
   public boolean chkSpecialItem(Type type) {
     return type == Type.clock ||
-           type == Type.jam ||
+           type == Type.jam   ||
            type == Type.glass_fruit;
   }
 

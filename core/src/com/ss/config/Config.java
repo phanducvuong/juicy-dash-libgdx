@@ -15,6 +15,7 @@ public class Config {
   //label: file particle
   public static final FileHandle ICE_PARTICLE             = Gdx.files.internal("particles/ice.p");
   public static final FileHandle JAM_PARTICLE             = Gdx.files.internal("particles/jam.p");
+  public static final FileHandle BURN_JAM                 = Gdx.files.internal("particles/burn_jam.p");
 
   //label: amount item
   public static final int     AMOUNT_ITEM_CREATE          = 49;

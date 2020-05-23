@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Group;
-import com.ss.GMain;
 import com.ss.core.effect.ParticleEffects;
 
 public class Particle {
@@ -24,8 +23,16 @@ public class Particle {
     particle.start(x, y,sclEffect);
   }
 
+  public boolean isActive() {
+    return particle.isActive;
+  }
+
   public void remove() {
     particle.remove();
+  }
+
+  public void setActive(boolean isActive) {
+    particle.isActive = isActive;
   }
 
 }
