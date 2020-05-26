@@ -10,14 +10,18 @@ import com.ss.utils.ShakeScreen;
 
 public class GameScene extends GScreen {
 
-  private Group gParent;
+  public Group gParent;
   private GameUIController gameUiController;
+  private ShakeScreen shake;
+  private float baseX, baseY;
 
   public GameScene() {
 
     this.gParent = new Group();
-    this.gameUiController = new GameUIController(this.gParent);
-    ShakeScreen.shake(2f, .3f);
+    this.gameUiController = new GameUIController(this);
+    this.shake = new ShakeScreen(15f, 1f);
+    this.baseX = GStage.getCamera().position.x;
+    this.baseY = GStage.getCamera().position.y;
 
   }
 
@@ -28,17 +32,17 @@ public class GameScene extends GScreen {
 
   @Override
   public void init() {
-
     GStage.addToLayer(GLayer.ui, this.gParent);
-
   }
 
   @Override
   public void run() {
-    if (ShakeScreen.getRumbleTimeLeft() > 0){
-      ShakeScreen.tick(Gdx.graphics.getDeltaTime());
-      GStage.getCamera().translate(ShakeScreen.getPos());
-      System.out.println("AAA");
-    }
+    GStage.getCamera().position.x = baseX;
+    GStage.getCamera().position.y = baseY;
+    shake.update(Gdx.graphics.getDeltaTime(), GStage.getCamera());
+  }
+
+  public void shake() {
+    shake.reset();
   }
 }

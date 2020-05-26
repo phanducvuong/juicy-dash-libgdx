@@ -6,45 +6,64 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
 import com.ss.GMain;
 import com.ss.config.Type;
+import com.ss.core.util.GStage;
 import com.ss.core.util.GUI;
 import com.ss.gameLogic.effects.Particle;
 import com.ss.ui.GamePlayUI;
+import com.ss.utils.Bezier;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 import static com.ss.config.Config.*;
 
 public class Item extends Group {
 
-  private Image fruit, animFruitL, animFruitR;
-  private Image flare, glassL1, glassL2, glassR1, glassR2;
+  private Group     gLbScore;
 
-  private Image ice;
-  private Particle pIce;
+  private Image     fruit, animFruitL, animFruitR;
+  private Image     flare, glassL1, glassL2, glassR1, glassR2;
+  private Image     ice;
+  private Label     lbScore;
 
-  private Group gAnimFruit;
-  public Type type;
-  public String name;
-  public boolean isAlive = false;
+  private Group     gAnimFruit;
+  public  Type      type;
+  public  String    name;
+  public  boolean   isAlive = false;
 
-  public Item(String region, Type type) {
+  public Item(String region, Type type, Group gLbScore) {
 
-    this.name = region;
-    this.type = type;
+    this.gLbScore     = gLbScore;
+    this.name         = region;
+    this.type         = type;
 
     fruit = GUI.createImage(GMain.itemAtlas, region);
     setSize(fruit.getWidth(), fruit.getHeight());
     this.setOrigin(Align.center);
     this.addActor(fruit);
 
+    createLbScore();
     if (chkRegion(type)) {
       createAnimFruit();
       createAnimIce();
     }
     else
       createAnimSpecialItem();
+
+  }
+
+  private void createLbScore() {
+    lbScore = new Label("+" + SCORE_FRUIT, new Label.LabelStyle(whiteFont, null));
+    lbScore.setAlignment(Align.center);
+
+    if (type == Type.glass_fruit)
+      lbScore.setText("+" + SCORE_GLASS_JUICE);
+    else if (type == Type.jam)
+      lbScore.setText("+" + SCORE_JAM);
+    else if (type == Type.clock)
+      lbScore.setText("+" + SCORE_CLOCK);
 
   }
 
@@ -171,6 +190,13 @@ public class Item extends Group {
 
   //label: anim fruit
   public void startAnimFruit() {
+    animLbScore();
+    fruit.setVisible(false);
+    this.addActor(gAnimFruit);
+    rndAnimFruit();
+  }
+
+  public void animLvSuccess() {
     fruit.setVisible(false);
     this.addActor(gAnimFruit);
     rndAnimFruit();
@@ -392,7 +418,7 @@ public class Item extends Group {
                       resetAnimIce();
                       if (pIce != null)
                         pIce.start(this.getX() + this.getWidth()/2,
-                                this.getY() + this.getHeight()/2, 1f);
+                                   this.getY() + this.getHeight()/2, 1f);
                     })
             )
     );
@@ -580,6 +606,34 @@ public class Item extends Group {
                     })
             )
     );
+  }
+
+  //label: anim lbScore
+  public void animLbScore() {
+    lbScore.clearActions();
+    lbScore.getColor().a = 1f;
+    lbScore.setPosition(this.getX() + this.getWidth()/2 - lbScore.getWidth()/2,
+                        this.getY() + this.getHeight()/2 - lbScore.getHeight()/2);
+    gLbScore.addActor(lbScore);
+
+    lbScore.addAction(
+            sequence(
+                    parallel(
+                            alpha(0f, 1.75f, linear),
+                            Actions.moveBy(0, -100, 1.5f, linear)
+                    ),
+                    run(() -> {
+                      lbScore.setText("+" + SCORE_FRUIT);
+                      lbScore.remove();
+                      lbScore.moveBy(0, 100);
+                      lbScore.getColor().a = 1f;
+                    })
+            )
+    );
+  }
+
+  public void setScoreLb(int score) {
+    lbScore.setText("+" + score);
   }
 
 }

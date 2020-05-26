@@ -48,16 +48,27 @@ public class Piece {
 
   public void animClock(Runnable onComplete) {
     item.animClock(onComplete);
+    item.animLbScore();
     clear();
   }
 
   public void animJam(Runnable onComplete) {
     item.animJam(onComplete);
+    item.animLbScore();
     clear();
   }
 
   public void animIce(Particle pIce) {
     item.addAnimIce(pIce);
+    clear();
+  }
+
+  public void setScore(int score) {
+    item.setScoreLb(score);
+  }
+
+  public void animLvSuccess() {
+    item.animLvSuccess();
     clear();
   }
 

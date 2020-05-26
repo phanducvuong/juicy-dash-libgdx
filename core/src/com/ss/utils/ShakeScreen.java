@@ -1,44 +1,40 @@
 package com.ss.utils;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
+
 import java.util.Random;
 
 public class ShakeScreen {
 
-  private static float time = 0;
-  private static float currentTime = 0;
-  private static float power = 0;
-  private static float currentPower = 0;
-  private static Random random;
-  private static Vector3 pos = new Vector3();
+  private float elapsed, duration, radius;
+  private Random random;
+  private float rndAngle, intensity;
 
-  public static void shake(float rumblePower, float rumbleLength) {
-    random = new Random();
-    power = rumblePower;
-    time = rumbleLength;
-    currentTime = 0;
+  public ShakeScreen(float intensity, float duration) {
+    this.elapsed = duration;
+    this.random = new Random();
+    this.duration = duration;
+    this.intensity = intensity;
+    this.rndAngle = random.nextFloat() % 360f;
   }
 
-  public static Vector3 tick(float delta) {
-    if (currentTime <= time) {
-      currentPower = power * ((time - currentTime) / time);
+  public void update (float delta, OrthographicCamera camera) {
+    if (elapsed < duration) {
 
-      pos.x = (random.nextFloat() - 0.5f) * 2 * currentPower;
-      pos.y = (random.nextFloat() - 0.5f) * 2 * currentPower;
+      // Calculate the amount of shake based on how long it has been shaking already
+      float currentPower = intensity * camera.zoom * ((duration - elapsed) / duration);
+      float x = (random.nextFloat() - 0.5f) * currentPower;
+      float y = (random.nextFloat() - 0.5f) * currentPower;
+      camera.translate(-x, -y);
 
-      currentTime += delta;
-    } else {
-      time = 0;
+      // Increase the elapsed time by the delta provided.
+      elapsed += delta;
     }
-    return pos;
   }
 
-  public static float getRumbleTimeLeft() {
-    return time;
-  }
-
-  public static Vector3 getPos() {
-    return pos;
+  public void reset() {
+    elapsed = 0;
   }
 
 }
