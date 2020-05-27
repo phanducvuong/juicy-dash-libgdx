@@ -17,6 +17,7 @@ public class Config {
   public static final FileHandle BURN_JAM                 = Gdx.files.internal("particles/burn_jam.p");
   public static final FileHandle BURN_ALL                 = Gdx.files.internal("particles/burn_all.p");
   public static final FileHandle EXPLODE                  = Gdx.files.internal("particles/explode.p");
+  public static final FileHandle WONDER                   = Gdx.files.internal("particles/wonder.p");
 
   //label: amount item
   public static final int     AMOUNT_ITEM_CREATE          = 49;
@@ -25,8 +26,10 @@ public class Config {
   public static final int     NEXT_LEVEL                  = 2;
   public static final long    TARGET                      = 3000;
   public static final long    TARGET_INCREASE             = 1000;
+  public static final long    MAX_TARGET_INCREASE         = 10000;
   public static final int     ADD_SECOND                  = 15;
   public static final int     TIME_START_GAME             = 120;
+  public static final int     TIME_DECREASE               = 10;
 
   //label: game play ui
   public static final float   OFFSET_Y_BGTABLE            = 150;

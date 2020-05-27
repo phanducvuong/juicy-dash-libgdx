@@ -2,7 +2,6 @@ package com.ss.ui;
 
 import static com.badlogic.gdx.math.Interpolation.*;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
@@ -18,20 +17,18 @@ import com.ss.core.util.GStage;
 import com.ss.core.util.GUI;
 import com.ss.gameLogic.effects.Particle;
 import com.ss.utils.Clipping;
-import com.ss.utils.Pause;
 
 public class GamePlayUI extends Group {
 
-  private final float CENTER_X = GStage.getWorldWidth()/2;
-  private final float CENTER_Y = GStage.getWorldHeight()/2;
+  public final float CENTER_X = GStage.getWorldWidth()/2;
+  public final float CENTER_Y = GStage.getWorldHeight()/2;
 
   private       GameUIController controller;
-  public        Group gBackground, gItem, gAnimLb, gAnimSkill;
-  public static Image bgTable;
-  private       Label lbRound;
+  public        Group            gBackground, gItem, gAnimLb, gAnimSkill;
+  public static Image            bgTable;
+  private       Label            lbRound;
 
-  public        Image iStart, iPause;
-  public boolean isPause = false;
+  public          Image iStart, iPause;
 
   private       Group    gTime;
   public        Clipping timeLine;
@@ -52,7 +49,6 @@ public class GamePlayUI extends Group {
 
   private Group     gAnimLbRound;
   private Label     animLbRound;
-  private Pause     pauseScene;
 
   public GamePlayUI(GameUIController controller) {
 
@@ -71,8 +67,6 @@ public class GamePlayUI extends Group {
 
     setWidth(CENTER_X*2);
     setHeight(CENTER_Y*2);
-
-    pauseScene = new Pause(new Color(128/255f, 213/255f, 181/255f, .3f));
 
     initBg();
     initTime();
@@ -264,6 +258,7 @@ public class GamePlayUI extends Group {
   public void updateRound(int round) {
     String s = C.lang.locale.get("txt_round");
     lbRound.setText(s + " " + round);
+    animLbRound.setText(C.lang.locale.get("round") + " " + round);
   }
 
   public void addTimeLine(float time) {
@@ -272,7 +267,7 @@ public class GamePlayUI extends Group {
 
   //--------------------------------------animation-------------------------------------------------
 
-  public void animComplete() {
+  public void animComplete(Runnable onNextLv) {
     gAnimLb.addActor(gLbComplete);
     float x = gLbComplete.getX() + gLbComplete.getWidth()/2;
     float y = gLbComplete.getY() + gLbComplete.getHeight()/2;
@@ -289,13 +284,13 @@ public class GamePlayUI extends Group {
                     delay(.5f),
                     run(() -> {
                       resetLbComplete();
-                      animLbRound();
+                      animLbRound(onNextLv);
                     })
             )
     );
   }
 
-  private void animLbRound() {
+  public void animLbRound(Runnable onNextLv) {
     gAnimLb.addActor(gAnimLbRound);
     gAnimLbRound.addAction(
             sequence(
@@ -304,10 +299,8 @@ public class GamePlayUI extends Group {
                     delay(1f),
                     moveTo(CENTER_X*2 + gAnimLbRound.getWidth()/2 + 10,
                            CENTER_Y - gAnimLbRound.getHeight()/2, .35f, swingIn),
-                    run(() -> {
-                      resetAnimLbRound();
-                      //todo: next level
-                    })
+                    run(onNextLv),
+                    run(this::resetAnimLbRound)
             )
     );
   }
@@ -331,14 +324,17 @@ public class GamePlayUI extends Group {
 
   @Override
   public void act(float delta) {
-    super.act(delta);
+    if (!controller.isPause) {
+      super.act(delta);
 
-    if (!isPause) {
-      count += delta;
-      if (count >= 1f) {
-        controller.updateLbTimeLine();
-        count = 0f;
+      if (!controller.isGameOver) {
+        count += delta;
+        if (count >= 1f) {
+          controller.updateLbTimeLine();
+          count = 0f;
+        }
       }
+
     }
   }
 

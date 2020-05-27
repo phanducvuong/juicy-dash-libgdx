@@ -9,11 +9,11 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 
 public class ParticleEffects extends Actor {
 
-  private Group group;
+  private Group                           group;
+  private ParticleEffectPool              pep;
+  public  ParticleEffect                  pe;
   private ParticleEffectPool.PooledEffect poolEffect;
-  private ParticleEffectPool pep;
-  private ParticleEffect pe;
-  public boolean isActive = false;
+  public boolean                          isActive = false;
 
   public ParticleEffects(Group group, ParticleEffectPool pep, ParticleEffect pe) {
     this.group = group;

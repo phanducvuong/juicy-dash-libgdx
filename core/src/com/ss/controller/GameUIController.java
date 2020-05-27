@@ -1,6 +1,9 @@
 package com.ss.controller;
 
 import static com.badlogic.gdx.math.Interpolation.*;
+
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -18,6 +21,8 @@ import com.ss.objects.Item;
 import com.ss.objects.Piece;
 import com.ss.scenes.GameScene;
 import com.ss.ui.GamePlayUI;
+import com.ss.ui.PauseUI;
+import com.ss.utils.Solid;
 import com.ss.utils.Util;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
@@ -35,6 +40,8 @@ public class GameUIController {
   private Group       gParent;
   private GameScene   scene;
   private GamePlayUI  gamePlayUI;
+  private PauseUI     pauseUI;
+  public  Image       blackScreen;
 
   private Piece[][]                   arrPosPiece = new Piece[ROW][COL];
   private HashMap<String, List<Item>> hmItem;
@@ -43,18 +50,21 @@ public class GameUIController {
   private List<Type>                  lv;
 
   public boolean  isWrap      = true,
-                  isGameOver  = false;
+                  isGameOver  = false,
+                  isPause     = false;
   private Piece   pieceStart, pieceEnd;
 
-  private int     timeOut     = 0,
-                  timeExpired = TIME_START_GAME,
-                  round       = 0;
+  private int     timeExpired,
+                  timeOut           = 0,
+                  round             = 0;
   private float   sclTime;
   private long    target,
-                  scorePre = 0,
+                  scorePre          = 0, //điểm hiện tại của user
+                  dtScore           = 0, //target tăng lên mỗi khi user qua màn (dtScore dùng để tính clipping)
+                  sumScoreEachTurn  = 0, //cộng dồn điểm mỗi khi match => dùng để tính clipping
                   targetIncrease,
-                  tmpScore; //scorePre: điểm hiện tại đang có, target: điểm cần đạt để qua màn, tmpScore: điểm mối khi ăn trái cây để update scorePre
-  private boolean isCompleteRound = false;
+                  tmpScore;              //tmpScore: điểm mỗi khi ăn trái cây để update scorePre
+  private boolean isCompleteRound   = false;
 
   private List<Image>     lsRayJam;
   private Particle        pBurnAll;
@@ -64,7 +74,11 @@ public class GameUIController {
 
     this.gParent            = gameScene.gParent;
     this.scene              = gameScene;
+
     this.gamePlayUI         = new GamePlayUI(this);
+    this.pauseUI            = new PauseUI(this);
+    this.blackScreen        = new Image(Solid.create(new Color(128/255f, 213/255f, 181/255f, .45f)));
+
     this.hmItem             = new HashMap<>();
     this.lv                 = new ArrayList<>();
     this.lsRayJam           = new ArrayList<>();
@@ -74,6 +88,7 @@ public class GameUIController {
     this.target             = 0;
     this.targetIncrease     = TARGET;
     this.tmpScore           = 0;
+    this.timeExpired        = TIME_START_GAME;
 
     //label add ui to scene
     gParent.addActor(gamePlayUI);
@@ -89,7 +104,6 @@ public class GameUIController {
 
     //next level
     nextLevel();
-    startNewItem(ROW-1);
 
     //label: test animation
 
@@ -101,8 +115,7 @@ public class GameUIController {
     icon.setPosition(500, 20);
     gParent.addActor(icon);
 
-    Particle iceP = new Particle(gParent, BURN_ALL, GMain.particleAtlas);
-    Particle explode = new Particle(gParent, EXPLODE, GMain.particleAtlas);
+    Particle wonder = new Particle(gParent, WONDER, GMain.particleAtlas);
 
     icon.addListener(new ClickListener() {
       @Override
@@ -111,10 +124,14 @@ public class GameUIController {
         Piece piece = arrPosPiece[2][2];
         Piece target = arrPosPiece[2][3];
 
-        addItemAt(target, "item_jam");
-        addItemAt(arrPosPiece[2][2], "item_jam");
+//        addItemAt(target, "item_jam");
+//        addItemAt(arrPosPiece[2][2], "item_jam");
 //        addItemAt(arrPosPiece[2][3], "item_glass_juice");
 //        addItemAt(arrPosPiece[2][4], "item_clock");
+
+        wonder.changeSprite(1);
+        wonder.start(gamePlayUI.CENTER_X, gamePlayUI.CENTER_Y, 2.5f);
+
       }
     });
 
@@ -127,8 +144,11 @@ public class GameUIController {
       public void clicked(InputEvent event, float x, float y) {
         super.clicked(event, x, y);
 
-//        explode.start(GStage.getWorldWidth()/2, GStage.getWorldHeight()/2, 1.5f);
-        lvSuccess();
+        isPause = true;
+        blackScreen.setSize(GStage.getWorldWidth(), GStage.getWorldHeight());
+        gParent.addActor(blackScreen);
+        gParent.addActor(pauseUI);
+        pauseUI.showPause();
 
       }
     });
@@ -212,7 +232,7 @@ public class GameUIController {
       public void drag(InputEvent event, float x, float y, int pointer) {
         super.drag(event, x, y, pointer);
 
-        if (!isGameOver && !gamePlayUI.isPause) {
+        if (!isGameOver && !isPause) {
           pieceEnd = util.inRange(arrPosPiece, new Vector2(x, y));
           if (!isWrap && pieceStart != null && pieceEnd != null && pieceEnd != pieceStart) {
 //          util.log("start: ", pieceStart);
@@ -441,8 +461,8 @@ public class GameUIController {
       }
   }
 
-  public void lvSuccess() {
-    gamePlayUI.animComplete();
+  private void lvSuccess(Runnable onNextLv) {
+    gamePlayUI.animComplete(onNextLv);
     for (Piece[] pieces : arrPosPiece) {
       for (Piece piece : pieces)
         if (piece.item != null) {
@@ -573,7 +593,7 @@ public class GameUIController {
               sequence(
                       delay(TIME_DELAY_TO_CHECK_ALL),
                       run(() -> {
-                        if (scorePre >= target) {
+                        if (scorePre >= target && !isGameOver) {
                           isCompleteRound = true;
                           nextLevel();
                           //todo: next level
@@ -980,8 +1000,9 @@ public class GameUIController {
 
   private void updateScore() {
     scorePre    += tmpScore;
+    sumScoreEachTurn += tmpScore;
+    float sclTo = (float) sumScoreEachTurn / dtScore;
     tmpScore    = 0;
-    float sclTo = (float) scorePre / target;
     gamePlayUI.scoreLine.clipTo(sclTo, 1f);
     gamePlayUI.updateScore(scorePre);
 
@@ -1009,38 +1030,58 @@ public class GameUIController {
 
   private void nextLevel() {
 
+    Runnable onNextLv = () -> {
+
+      //label: reset score
+      if (round == 1)
+        targetIncrease = TARGET;
+      else if (targetIncrease >= MAX_TARGET_INCREASE)
+        targetIncrease = MAX_TARGET_INCREASE;
+      else
+        targetIncrease += TARGET_INCREASE;
+      target += targetIncrease;
+
+      if (scorePre >= target)
+        target = scorePre + targetIncrease;
+      dtScore = target - scorePre;
+      sumScoreEachTurn = 0;
+
+      gamePlayUI.updateGoal(target);
+      updateScore();
+
+      updateBoard();
+    };
+
+    //label: reset time
+    timeExpired -= 10;
+    if (timeExpired <= 70)
+      timeExpired = 70;
     timeOut = timeExpired;
     sclTime = (float) sclTime(timeOut);
     isCompleteRound = false;
 
+    //label: reset round
     round += 1;
     gamePlayUI.updateRound(round);
     gamePlayUI.timeLine.reset(1f, 1f);
 
     if (round == 1)
-      targetIncrease = TARGET;
+      gamePlayUI.animLbRound(onNextLv);
     else
-      targetIncrease += TARGET_INCREASE;
-    target += targetIncrease;
+      lvSuccess(onNextLv);
 
-    if (scorePre >= target)
-      target = scorePre + targetIncrease;
-
-    gamePlayUI.updateGoal(target);
-    updateScore();
-
-    //todo: unlock input
-    unlockInput();
   }
 
   private void gameOver() {
-    isGameOver      = true;
-    timeExpired     = TIME_START_GAME;
-    target          = 0;
-    scorePre        = 0;
-    targetIncrease  = TARGET;
-    timeOut         = 0;
-    round           = 0;
+    isGameOver        = true;
+    timeExpired       = TIME_START_GAME;
+    target            = 0;
+    scorePre          = 0;
+    targetIncrease    = TARGET;
+    timeOut           = 0;
+    round             = 0;
+    dtScore           = 0;
+    sumScoreEachTurn  = 0;
     //todo: show popup game over
   }
 
