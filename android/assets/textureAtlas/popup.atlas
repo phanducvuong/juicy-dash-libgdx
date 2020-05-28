@@ -1,0 +1,20 @@
+
+popup.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+btn_ok_ads_time
+  rotate: false
+  xy: 2, 2
+  size: 232, 71
+  orig: 232, 71
+  offset: 0, 0
+  index: -1
+pop_ads_time
+  rotate: false
+  xy: 2, 75
+  size: 527, 547
+  orig: 527, 547
+  offset: 0, 0
+  index: -1

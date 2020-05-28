@@ -114,10 +114,18 @@ lowMax: 0.0
 highMin: 1.0
 highMax: 1.0
 relative: false
-scalingCount: 1
-scaling0: 1.0
-timelineCount: 1
+scalingCount: 5
+scaling0: 0.0
+scaling1: 0.7368421
+scaling2: 0.877193
+scaling3: 0.64912283
+scaling4: 0.0
+timelineCount: 5
 timeline0: 0.0
+timeline1: 0.13013698
+timeline2: 0.44520548
+timeline3: 0.70547944
+timeline4: 1.0
 - Options - 
 attached: false
 continuous: false
@@ -248,10 +256,18 @@ lowMax: 0.0
 highMin: 1.0
 highMax: 1.0
 relative: false
-scalingCount: 1
-scaling0: 1.0
-timelineCount: 1
+scalingCount: 5
+scaling0: 0.0
+scaling1: 0.75438595
+scaling2: 0.877193
+scaling3: 0.64912283
+scaling4: 0.0
+timelineCount: 5
 timeline0: 0.0
+timeline1: 0.11643836
+timeline2: 0.4520548
+timeline3: 0.70547944
+timeline4: 1.0
 - Options - 
 attached: false
 continuous: false

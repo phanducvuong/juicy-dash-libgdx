@@ -18,6 +18,13 @@ public class Config {
   public static final FileHandle BURN_ALL                 = Gdx.files.internal("particles/burn_all.p");
   public static final FileHandle EXPLODE                  = Gdx.files.internal("particles/explode.p");
   public static final FileHandle WONDER                   = Gdx.files.internal("particles/wonder.p");
+  public static final FileHandle LOVELY                   = Gdx.files.internal("particles/lovely.p");
+
+  //label: count item match to show wonder
+  public static final int     WONDER_LOVELY               = 8;
+  public static final int     WONDER_FANTASTIC            = 12;
+  public static final int     WONDER_AWESOME              = 15;
+  public static final int     WONDER_AMAZING              = 20;
 
   //label: amount item
   public static final int     AMOUNT_ITEM_CREATE          = 49;

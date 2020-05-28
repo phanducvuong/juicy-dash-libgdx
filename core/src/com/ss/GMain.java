@@ -19,18 +19,21 @@ import java.util.Locale;
 
 public class GMain extends GDirectedGame {
 
-  public static int screenHeight = 0;
-  public static int screenWidth = 0;
-  public static TextureAtlas bgAtlas, itemAtlas, particleAtlas;
-  public static Preferences pref;
-  public static GameScene gameScene;
+  public static int          screenHeight = 0;
+  public static int          screenWidth  = 0;
+  public static TextureAtlas bgAtlas,
+                             itemAtlas,
+                             particleAtlas,
+                             popupAtlas;
+  public static Preferences  pref;
+  public static GameScene    gameScene;
 
-  public static IPlatform platform;
-  public static GMain inst;
+  public static IPlatform    platform;
+  public static GMain        inst;
 
   public GMain(IPlatform plat) {
     platform = plat;
-    inst = this;
+    inst     = this;
   }
 
   private void init() {
@@ -75,6 +78,7 @@ public class GMain extends GDirectedGame {
     SoundEffects.initSound();
 
     bgAtlas       = GAssetsManager.getTextureAtlas("bg.atlas");
+    popupAtlas    = GAssetsManager.getTextureAtlas("popup.atlas");
     itemAtlas     = GAssetsManager.getTextureAtlas("item.atlas");
     particleAtlas = GAssetsManager.getTextureAtlas("particle.atlas");
     GAssetsManager.finishLoading();

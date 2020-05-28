@@ -13,14 +13,14 @@ repeat: none
   index: -1
 013
   rotate: false
-  xy: 1122, 272
+  xy: 1688, 316
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 03412
   rotate: false
-  xy: 507, 303
+  xy: 1105, 499
   size: 254, 11
   orig: 254, 11
   offset: 0, 0
@@ -34,7 +34,7 @@ repeat: none
   index: -1
 13-2
   rotate: false
-  xy: 320, 25
+  xy: 1524, 287
   size: 96, 93
   orig: 96, 93
   offset: 0, 0
@@ -48,14 +48,14 @@ repeat: none
   index: -1
 14-1
   rotate: false
-  xy: 1235, 382
+  xy: 1235, 369
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 2-6
   rotate: false
-  xy: 418, 54
+  xy: 1622, 316
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -69,35 +69,35 @@ repeat: none
   index: -1
 26-1
   rotate: false
-  xy: 1105, 381
+  xy: 909, 185
   size: 128, 129
   orig: 128, 129
   offset: 0, 0
   index: -1
 4
   rotate: false
-  xy: 595, 107
+  xy: 1820, 316
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 5-3
   rotate: false
-  xy: 767, 186
+  xy: 1169, 239
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 5-5
   rotate: false
-  xy: 1240, 342
+  xy: 1952, 342
   size: 38, 38
   orig: 38, 38
   offset: 0, 0
   index: -1
 L002
   rotate: false
-  xy: 1027, 205
+  xy: 1429, 271
   size: 93, 109
   orig: 93, 109
   offset: 0, 0
@@ -118,28 +118,28 @@ NPC_JuShou_skill3_2
   index: -1
 SL_Charge_00_01
   rotate: false
-  xy: 507, 173
+  xy: 1105, 369
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 SL_XiangZ_00_03
   rotate: false
-  xy: 637, 173
+  xy: 1039, 186
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 SL_XiangZ_00_04
   rotate: false
-  xy: 897, 186
+  xy: 1299, 239
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 SL_XiangZ_01_03
   rotate: false
-  xy: 661, 107
+  xy: 1886, 316
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -174,16 +174,23 @@ guang02
   index: -1
 liuxing6
   rotate: false
-  xy: 1105, 338
+  xy: 1169, 196
   size: 86, 41
   orig: 86, 41
   offset: 0, 0
   index: -1
 liuxing7
   rotate: false
-  xy: 507, 130
+  xy: 909, 142
   size: 86, 41
   orig: 86, 41
+  offset: 0, 0
+  index: -1
+lovely
+  rotate: false
+  xy: 507, 120
+  size: 400, 194
+  orig: 400, 194
   offset: 0, 0
   index: -1
 spark-alt2
@@ -195,21 +202,21 @@ spark-alt2
   index: -1
 wsparticle37
   rotate: false
-  xy: 1122, 206
+  xy: 1754, 316
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 wujiaoxing
   rotate: false
-  xy: 727, 127
+  xy: 1105, 323
   size: 45, 44
   orig: 45, 44
   offset: 0, 0
   index: -1
 wujiaoxing0
   rotate: false
-  xy: 1193, 335
+  xy: 320, 74
   size: 45, 44
   orig: 45, 44
   offset: 0, 0

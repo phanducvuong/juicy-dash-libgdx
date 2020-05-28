@@ -25,7 +25,7 @@ public class Item extends Group {
 
   private Image     fruit, animFruitL, animFruitR;
   private Image     flare, glassL1, glassL2, glassR1, glassR2;
-  private Image     ice;
+  public Image     ice, iAnimClock;
   private Label     lbScore;
 
   private Group     gAnimFruit;
@@ -120,6 +120,10 @@ public class Item extends Group {
         glassR1.setOrigin(Align.center);
         glassL2.setOrigin(Align.center);
         glassR2.setOrigin(Align.center);
+        break;
+      case clock:
+        iAnimClock = GUI.createImage(GMain.itemAtlas, "item_clock");
+        iAnimClock.setScale(.4f);
         break;
     }
   }
@@ -458,13 +462,27 @@ public class Item extends Group {
       glassL1.addAction(
               sequence(
                       delay(1f),
-                      moveTo(-moveLeft, glassL1.getY(), .25f, slowFast)
+                      run(() -> {
+                        fruit.setVisible(false);
+                        flare.setVisible(false);
+                      }),
+                      parallel(
+                              moveTo(-moveLeft, glassL1.getY(), .25f, slowFast),
+                              run(() -> glassL1.getColor().a = 1f)
+                      )
               )
       );
       glassR1.addAction(
               sequence(
                       delay(1f),
-                      moveTo(moveRight, glassR1.getY(), .25f, slowFast),
+                      run(() -> {
+                        fruit.setVisible(false);
+                        flare.setVisible(false);
+                      }),
+                      parallel(
+                              moveTo(moveRight, glassR1.getY(), .25f, slowFast),
+                              run(() -> glassR1.getColor().a = 1f)
+                      ),
                       parallel(
                               run(reset),
                               run(onUpdateBoard)
@@ -477,13 +495,27 @@ public class Item extends Group {
       glassL2.addAction(
               sequence(
                       delay(1f),
-                      moveTo(glassL2.getX(), -moveDown, .25f, slowFast)
+                      run(() -> {
+                        fruit.setVisible(false);
+                        flare.setVisible(false);
+                      }),
+                      parallel(
+                              moveTo(glassL2.getX(), -moveDown, .25f, slowFast),
+                              run(() -> glassL2.getColor().a = 1f)
+                      )
               )
       );
       glassR2.addAction(
               sequence(
                       delay(1f),
-                      moveTo(glassR2.getX(), moveUp, .25f, slowFast)
+                      run(() -> {
+                        fruit.setVisible(false);
+                        flare.setVisible(false);
+                      }),
+                      parallel(
+                              moveTo(glassR2.getX(), moveUp, .25f, slowFast),
+                              run(() -> glassR2.getColor().a = 1f)
+                      )
               )
       );
     }
@@ -493,13 +525,27 @@ public class Item extends Group {
       glassL1.addAction(
               sequence(
                       delay(1f),
-                      moveTo(glassL1.getX(), -moveDown, .25f, slowFast)
+                      run(() -> {
+                        fruit.setVisible(false);
+                        flare.setVisible(false);
+                      }),
+                      parallel(
+                              moveTo(glassL1.getX(), -moveDown, .25f, slowFast),
+                              run(() -> glassL1.getColor().a = 1f)
+                      )
               )
       );
       glassR1.addAction(
               sequence(
                       delay(1f),
-                      moveTo(glassR1.getX(), moveUp, .25f, slowFast),
+                      run(() -> {
+                        fruit.setVisible(false);
+                        flare.setVisible(false);
+                      }),
+                      parallel(
+                              moveTo(glassR1.getX(), moveUp, .25f, slowFast),
+                              run(() -> glassR1.getColor().a = 1f)
+                      ),
                       parallel(
                               run(reset),
                               run(onUpdateBoard)
@@ -512,13 +558,27 @@ public class Item extends Group {
       glassL2.addAction(
               sequence(
                       delay(1f),
-                      moveTo(-moveLeft, glassL2.getY(), .25f, slowFast)
+                      run(() -> {
+                        fruit.setVisible(false);
+                        flare.setVisible(false);
+                      }),
+                      parallel(
+                              moveTo(-moveLeft, glassL2.getY(), .25f, slowFast),
+                              run(() -> glassL2.getColor().a = 1f)
+                      )
               )
       );
       glassR2.addAction(
               sequence(
                       delay(1f),
-                      moveTo(moveRight, glassR2.getY(), .25f, slowFast)
+                      run(() -> {
+                        fruit.setVisible(false);
+                        flare.setVisible(false);
+                      }),
+                      parallel(
+                              moveTo(moveRight, glassR2.getY(), .25f, slowFast),
+                              run(() -> glassR2.getColor().a = 1f)
+                      )
               )
       );
     }
@@ -559,15 +619,21 @@ public class Item extends Group {
   }
 
   public void addAnimGlassToScene(boolean isBoth) {
-    fruit.setVisible(false);
-    flare.setVisible(false);
     if (isBoth) {
+      glassL1.getColor().a = 0f;
+      glassR1.getColor().a = 0f;
+      glassL2.getColor().a = 0f;
+      glassR2.getColor().a = 0f;
+
       this.addActor(glassL1);
       this.addActor(glassR1);
       this.addActor(glassL2);
       this.addActor(glassR2);
     }
     else {
+      glassL1.getColor().a = 0f;
+      glassR1.getColor().a = 0f;
+
       this.addActor(glassL1);
       this.addActor(glassR1);
     }
@@ -577,6 +643,7 @@ public class Item extends Group {
   public void animClock(Runnable onComplete) {
     fruit.setVisible(false);
     flare.setVisible(false);
+
     this.addAction(
             sequence(
                     delay(.25f),
@@ -616,6 +683,27 @@ public class Item extends Group {
                         this.getY() + this.getHeight()/2 - lbScore.getHeight()/2);
     gLbScore.addActor(lbScore);
 
+    if (iAnimClock != null) { //for item clock
+      iAnimClock.clearActions();
+      iAnimClock.getColor().a = 1f;
+      iAnimClock.setPosition(lbScore.getX() - 35, lbScore.getY() + 5);
+      gLbScore.addActor(iAnimClock);
+
+      iAnimClock.addAction(
+              sequence(
+                      parallel(
+                              alpha(0f, 1.75f, linear),
+                              Actions.moveBy(0, -100, 1.5f, linear)
+                      ),
+                      run(() -> {
+                        iAnimClock.remove();
+                        iAnimClock.moveBy(0, 100);
+                        iAnimClock.getColor().a = 1f;
+                      })
+              )
+      );
+    }
+
     lbScore.addAction(
             sequence(
                     parallel(
@@ -623,13 +711,24 @@ public class Item extends Group {
                             Actions.moveBy(0, -100, 1.5f, linear)
                     ),
                     run(() -> {
-                      lbScore.setText("+" + SCORE_FRUIT);
+                      resetLbScore();
                       lbScore.remove();
                       lbScore.moveBy(0, 100);
                       lbScore.getColor().a = 1f;
                     })
             )
     );
+  }
+
+  private void resetLbScore() {
+    if (chkRegion(type))
+      lbScore.setText("+" + SCORE_FRUIT);
+    else if (type == Type.glass_fruit)
+      lbScore.setText("+" + SCORE_GLASS_JUICE);
+    else if (type == Type.jam)
+      lbScore.setText("+" + SCORE_JAM);
+    else if (type == Type.clock)
+      lbScore.setText("+" + SCORE_CLOCK);
   }
 
   public void setScoreLb(int score) {

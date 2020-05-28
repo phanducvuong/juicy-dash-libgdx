@@ -2,9 +2,13 @@ package com.ss.ui;
 
 import static com.badlogic.gdx.math.Interpolation.*;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
+
+import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -16,6 +20,7 @@ import com.ss.controller.GameUIController;
 import com.ss.core.util.GStage;
 import com.ss.core.util.GUI;
 import com.ss.gameLogic.effects.Particle;
+import com.ss.utils.Button;
 import com.ss.utils.Clipping;
 
 public class GamePlayUI extends Group {
@@ -24,17 +29,18 @@ public class GamePlayUI extends Group {
   public final float CENTER_Y = GStage.getWorldHeight()/2;
 
   private       GameUIController controller;
-  public        Group            gBackground, gItem, gAnimLb, gAnimSkill;
+  public        Group            gBackground, gItem, gAnimLb, gAnimSkill, gPopup;
   public static Image            bgTable;
   private       Label            lbRound;
 
-  public          Image iStart, iPause;
+  public        Image iStart, iPause;
 
   private       Group    gTime;
   public        Clipping timeLine;
   private       Image    bgBar;
   public        Label    lbTime;
-  private float count     = 0f;
+  private float count    = 0f;
+  public static Vector2  posCLock;
 
   private       Group     gScore;
   private       Image     bgScore;
@@ -43,12 +49,17 @@ public class GamePlayUI extends Group {
   public static float     posScoreX = 0,
                           posScoreY = 0;
 
+  private       Group     gPopupAdsTime;
+
   private Particle  pComplete;
   private Group     gLbComplete;
   private Label     lbComplete;
+  private Label     lbTimeIsUp;
 
   private Group     gAnimLbRound;
   private Label     animLbRound;
+
+  private Particle  pWonder, pLovely;
 
   public GamePlayUI(GameUIController controller) {
 
@@ -57,13 +68,19 @@ public class GamePlayUI extends Group {
     this.gItem        = new Group();
     this.gAnimSkill   = new Group();
     this.gAnimLb      = new Group();
+    this.gPopup       = new Group();
 
     this.controller   = controller;
+
+    this.pWonder      = new Particle(gAnimSkill, Config.WONDER, GMain.particleAtlas);
+    this.pWonder.initLsEmitter();
+    this.pLovely      = new Particle(gAnimSkill, Config.LOVELY, GMain.particleAtlas);
 
     this.addActor(gBackground);
     this.addActor(gItem);
     this.addActor(gAnimLb);
     this.addActor(gAnimSkill);
+    this.addActor(gPopup);
 
     setWidth(CENTER_X*2);
     setHeight(CENTER_Y*2);
@@ -73,6 +90,7 @@ public class GamePlayUI extends Group {
     initScore();
     initIcon();
     initLbLvUp();
+    initPopupAdsTime();
     initAnimLbRound();
 
   }
@@ -120,11 +138,12 @@ public class GamePlayUI extends Group {
     timeLine = new Clipping(bgBar.getX() + 6, bgBar.getY() + 4, GMain.bgAtlas, "line_time");
     gTime.addActor(timeLine);
 
-    lbTime = new Label("2:30", new Label.LabelStyle(Config.whiteFont, null));
+    lbTime = new Label("", new Label.LabelStyle(Config.whiteFont, null));
     lbTime.setAlignment(Align.center);
     lbTime.setPosition(bgBar.getX() + bgBar.getWidth()/2 - lbTime.getWidth()/2,
             bgBar.getY() + bgBar.getHeight()/2 - lbTime.getHeight()/2 - 8);
     gTime.addActor(lbTime);
+    setTimeLineForNewRound(Config.TIME_START_GAME);
 
     Image clock = GUI.createImage(GMain.itemAtlas, "item_clock");
     clock.setScale(.5f);
@@ -133,6 +152,10 @@ public class GamePlayUI extends Group {
     if (C.lang.locale.get("id_country").equals("vn"))
       clock.moveBy(-30, 0);
     gTime.addActor(clock);
+
+    posCLock   = new Vector2();
+    posCLock.x = gTime.getX() + clock.getX();
+    posCLock.y = gTime.getY() - clock.getHeight()*clock.getScaleY();
 
     Label lbTxtTime = new Label(C.lang.locale.get("txt_time"), new Label.LabelStyle(Config.whiteFont, null));
     lbTxtTime.setPosition(clock.getX() + clock.getWidth()*clock.getScaleX() + 5,
@@ -247,6 +270,55 @@ public class GamePlayUI extends Group {
 
   }
 
+  private void initPopupAdsTime() {
+    gPopupAdsTime = new Group();
+    Image bg      = GUI.createImage(GMain.popupAtlas, "pop_ads_time");
+    gPopupAdsTime.setSize(bg.getWidth(), bg.getHeight());
+    gPopupAdsTime.setOrigin(Align.center);
+    gPopupAdsTime.setPosition(CENTER_X - gPopupAdsTime.getWidth()/2, CENTER_Y - gPopupAdsTime.getHeight()/2);
+    gPopupAdsTime.addActor(bg);
+
+    Label lbAdsTime = new Label(C.lang.locale.get("quote_ads_time"), new Label.LabelStyle(Config.whiteFont, null));
+    lbAdsTime.setAlignment(Align.center);
+    lbAdsTime.setFontScale(1.1f, 1.2f);
+    lbAdsTime.setPosition(bg.getX() + bg.getWidth()/2 - lbAdsTime.getWidth()/2,
+                          bg.getY() + bg.getHeight()/2 - 100);
+    gPopupAdsTime.addActor(lbAdsTime);
+
+    Button btnOkAdsTime = new Button(GMain.popupAtlas, "btn_ok_ads_time",
+                                     C.lang.locale.get("txt_ads_time"), Config.greenFont);
+    btnOkAdsTime.setPosition(bg.getX() + bg.getWidth()/2 - btnOkAdsTime.getWidth()/2,
+                             bg.getY() + bg.getHeight()/2 + btnOkAdsTime.getHeight()*2);
+    btnOkAdsTime.movebyLb(0, -15);
+    btnOkAdsTime.setFontScale(.85f, .85f);
+    gPopupAdsTime.addActor(btnOkAdsTime);
+
+    Image btnX = GUI.createImage(GMain.bgAtlas, "icon_exit");
+    btnX.setScale(.9f);
+    btnX.setOrigin(Align.center);
+    btnX.setPosition(bg.getX() + bg.getWidth() - btnX.getWidth()/2,bg.getX() - btnX.getHeight()/2);
+    gPopupAdsTime.addActor(btnX);
+
+    gPopupAdsTime.setScale(0f);
+
+    //label: even click
+    btnClick(btnOkAdsTime, () -> {
+      //todo: get free 30s when ads success
+    });
+
+    btnX.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        super.clicked(event, x, y);
+        gPopupAdsTime.setScale(0);
+        gPopupAdsTime.remove();
+        showPopupGameOver();
+      }
+    });
+
+    gPopup.addActor(gPopupAdsTime);
+  }
+
   public void updateScore(long score) {
     lbScore.setText(score+"");
   }
@@ -261,11 +333,33 @@ public class GamePlayUI extends Group {
     animLbRound.setText(C.lang.locale.get("round") + " " + round);
   }
 
+  public void setTimeLineForNewRound(int timeOut) {
+    int minute = timeOut %3600/60;
+    int second = timeOut %60;
+
+    String time = minute + ":" + second;
+    lbTime.setText(time);
+    timeLine.clipBy(0f, 0f);
+  }
+
   public void addTimeLine(float time) {
     timeLine.clipBy(-time, 0f);
   }
 
-  //--------------------------------------animation-------------------------------------------------
+  //--------------------------------------show/hide popup-------------------------------------------
+  public void showPopupAdsTime() {
+    gPopup.addActor(gPopupAdsTime);
+    gPopupAdsTime.addAction(
+            scaleTo(1f, 1f, .25f, bounceOut)
+    );
+  }
+
+  private void showPopupGameOver() {
+
+  }
+  //--------------------------------------show/hide popup-------------------------------------------
+
+  //--------------------------------------animation game play---------------------------------------
 
   public void animComplete(Runnable onNextLv) {
     gAnimLb.addActor(gLbComplete);
@@ -305,7 +399,16 @@ public class GamePlayUI extends Group {
     );
   }
 
-  //--------------------------------------animation-------------------------------------------------
+  public void showPWonder(int idWonder) { //idWonder => sprite tương ứng với mỗi điểm mỗi khi ăn được
+    pWonder.changeSprite(idWonder);
+    pWonder.start(CENTER_X, CENTER_Y, 2.5f);
+  }
+
+  public void showLovely() {
+    pLovely.start(CENTER_X, CENTER_Y, 2.5f);
+  }
+
+  //--------------------------------------animation game play---------------------------------------
 
   //--------------------------------------reset-----------------------------------------------------
 
@@ -321,6 +424,58 @@ public class GamePlayUI extends Group {
   }
 
   //--------------------------------------reset-----------------------------------------------------
+
+  //--------------------------------------anim click------------------------------------------------
+  private void imgClick(Image btn, Runnable onComplete) {
+
+    btn.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        super.clicked(event, x, y);
+        btn.setTouchable(Touchable.disabled);
+        animClick(btn, onComplete);
+      }
+    });
+
+  }
+
+  private void btnClick(Button btn, Runnable onComplete) {
+
+    btn.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        super.clicked(event, x, y);
+        btn.setTouchable(Touchable.disabled);
+        animClick(btn, onComplete);
+      }
+    });
+
+  }
+
+  private void animClick(Image btn, Runnable onComplete) {
+    btn.addAction(
+            sequence(
+                    Actions.scaleBy(.1f, .1f, .05f, fastSlow),
+                    Actions.scaleBy(-.1f, -.1f, .05f, fastSlow),
+                    run(onComplete),
+                    run(() -> btn.setTouchable(Touchable.enabled))
+
+            )
+    );
+  }
+
+  private void animClick(Group btn, Runnable onComplete) {
+    btn.addAction(
+            sequence(
+                    Actions.scaleBy(.1f, .1f, .05f, fastSlow),
+                    Actions.scaleBy(-.1f, -.1f, .05f, fastSlow),
+                    run(onComplete),
+                    run(() -> btn.setTouchable(Touchable.enabled))
+
+            )
+    );
+  }
+  //--------------------------------------anim click------------------------------------------------
 
   @Override
   public void act(float delta) {

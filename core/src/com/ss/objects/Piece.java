@@ -3,10 +3,13 @@ package com.ss.objects;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.utils.Align;
 import com.ss.GMain;
 import com.ss.config.Type;
 import com.ss.core.util.GUI;
 import com.ss.gameLogic.effects.Particle;
+import com.ss.ui.GamePlayUI;
+import com.ss.utils.Bezier;
 import com.ss.utils.Util;
 
 import java.util.List;
@@ -59,7 +62,8 @@ public class Piece {
   }
 
   public void animIce(Particle pIce) {
-    item.addAnimIce(pIce);
+    if (item != null)
+      item.addAnimIce(pIce);
     clear();
   }
 
@@ -69,6 +73,12 @@ public class Piece {
 
   public void animLvSuccess() {
     item.animLvSuccess();
+    clear();
+  }
+
+  public void animLbScore() {
+    item.animLbScore();
+    item.remove();
     clear();
   }
 

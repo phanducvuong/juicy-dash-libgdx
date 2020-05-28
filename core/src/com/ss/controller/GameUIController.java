@@ -63,8 +63,9 @@ public class GameUIController {
                   dtScore           = 0, //target tăng lên mỗi khi user qua màn (dtScore dùng để tính clipping)
                   sumScoreEachTurn  = 0, //cộng dồn điểm mỗi khi match => dùng để tính clipping
                   targetIncrease,
-                  tmpScore;              //tmpScore: điểm mỗi khi ăn trái cây để update scorePre
-  private boolean isCompleteRound   = false;
+                  tmpScore,              //tmpScore: điểm mỗi khi ăn trái cây để update scorePre
+                  countScoreToShowWonder;              //tmpScore: điểm mỗi khi ăn trái cây để update scorePre
+  public boolean  isCompleteRound   = true;
 
   private List<Image>     lsRayJam;
   private Particle        pBurnAll;
@@ -103,6 +104,8 @@ public class GameUIController {
 //    addItem();
 
     //next level
+    gameOver();
+    isGameOver = false;
     nextLevel();
 
     //label: test animation
@@ -116,39 +119,35 @@ public class GameUIController {
     gParent.addActor(icon);
 
     Particle wonder = new Particle(gParent, WONDER, GMain.particleAtlas);
+    wonder.initLsEmitter();
 
     icon.addListener(new ClickListener() {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         super.clicked(event, x, y);
-        Piece piece = arrPosPiece[2][2];
-        Piece target = arrPosPiece[2][3];
 
-//        addItemAt(target, "item_jam");
-//        addItemAt(arrPosPiece[2][2], "item_jam");
-//        addItemAt(arrPosPiece[2][3], "item_glass_juice");
-//        addItemAt(arrPosPiece[2][4], "item_clock");
-
-        wonder.changeSprite(1);
-        wonder.start(gamePlayUI.CENTER_X, gamePlayUI.CENTER_Y, 2.5f);
+        gamePlayUI.showPopupAdsTime();
 
       }
     });
 
     Image addItem = GUI.createImage(GMain.bgAtlas, "icon_pause");
     icon.setPosition(400, 20);
-    gParent.addActor(addItem);
+//    gParent.addActor(addItem);
 
     addItem.addListener(new ClickListener() {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         super.clicked(event, x, y);
 
-        isPause = true;
-        blackScreen.setSize(GStage.getWorldWidth(), GStage.getWorldHeight());
-        gParent.addActor(blackScreen);
-        gParent.addActor(pauseUI);
-        pauseUI.showPause();
+//        isPause = true;
+//        blackScreen.setSize(GStage.getWorldWidth(), GStage.getWorldHeight());
+//        gParent.addActor(blackScreen);
+//        gParent.addActor(pauseUI);
+//        pauseUI.showPause();
+
+        wonder.changeSprite(0);
+        wonder.start(gamePlayUI.CENTER_X, gamePlayUI.CENTER_Y, 2.5f);
 
       }
     });
@@ -309,9 +308,10 @@ public class GameUIController {
       for (int j=0; j<COL; j++) {
 
         //loại bỏ các item đã được check qua và match với nhau
-        if (!lsPosIsMatch.contains(arrPosPiece[i][j])
-            && !lsPosIsMatch.contains(arrPosPiece[i][j])
-            && !arrPosPiece[i][j].isEmpty) {
+        if (!lsPosIsMatch.contains(arrPosPiece[i][j]) &&
+            !lsPosIsMatch.contains(arrPosPiece[i][j]) &&
+            !arrPosPiece[i][j].isEmpty                &&
+            util.chkTypeFruit(arrPosPiece[i][j])) {
 
           List<Piece> tmpV = util.filterVertically(arrPosPiece, arrPosPiece[i][j]);
           List<Piece> tmpH = util.filterHorizontally(arrPosPiece, arrPosPiece[i][j]);
@@ -361,6 +361,7 @@ public class GameUIController {
 
 //    addItemSequence(lsPieceNullItem, ROW-1, .75f);
     if (lsPieceNullItem.size() > 0) {
+      countScoreToShowWonder += lsPieceNullItem.size();
       updateScore();
       turn = ROW;
       nextRow();
@@ -397,11 +398,34 @@ public class GameUIController {
     for (int row=0; row<ROW; row++) {
       Piece    pCheck  = arrPosPiece[row][piece.col];
       Particle pIce    = lsParticleIce.get(row);
-      if (pCheck != piece && util.chkTypeFruit(pCheck)) {
+      if (pCheck != piece && pCheck.item != null && util.chkTypeFruit(pCheck)) {
         tmpScore += SCORE_SKILL_GLASS_JUICE;
         pCheck.setScore(SCORE_SKILL_GLASS_JUICE);
+        System.out.println(pCheck.item);
         pCheck.animIce(pIce);
       }
+      else if (pCheck != piece && pCheck.item != null && pCheck.item.type == Type.glass_fruit) {
+        gParent.addAction(
+                sequence(
+                        delay(1f),
+                        run(pCheck::animLbScore)
+                )
+        );
+      }
+      else if (pCheck != piece && pCheck.item != null && pCheck.item.type == Type.jam)
+        gParent.addAction(
+                sequence(
+                        delay(1f),
+                        run(pCheck::animLbScore)
+                )
+        );
+      else if (pCheck != piece && pCheck.item != null && pCheck.item.type == Type.clock)
+        gParent.addAction(
+                sequence(
+                        delay(1f),
+                        run(() -> pCheck.animClock(() -> {}))
+                )
+        );
     }
   }
 
@@ -412,10 +436,35 @@ public class GameUIController {
     for (int col=0; col<COL; col++) {
       Piece    pCheck = arrPosPiece[piece.row][col];
       Particle pIce   = lsParticleIce.get(col);
-      if (pCheck != piece && util.chkTypeFruit(pCheck)) {
+      if (pCheck != piece && pCheck.item!= null && util.chkTypeFruit(pCheck)) {
         tmpScore += SCORE_SKILL_GLASS_JUICE;
         pCheck.setScore(SCORE_SKILL_GLASS_JUICE);
+        System.out.println(pCheck.item);
         pCheck.animIce(pIce);
+      }
+      else if (pCheck != piece && pCheck.item!= null && pCheck.item.type == Type.glass_fruit) {
+        gParent.addAction(
+                sequence(
+                        delay(1f),
+                        run(pCheck::animLbScore)
+                )
+        );
+      }
+      else if (pCheck != piece && pCheck.item!= null && pCheck.item.type == Type.jam) {
+        gParent.addAction(
+                sequence(
+                        delay(1f),
+                        run(pCheck::animLbScore)
+                )
+        );
+      }
+      else if (pCheck != piece && pCheck.item!= null && pCheck.item.type == Type.clock) {
+        gParent.addAction(
+                sequence(
+                        delay(1f),
+                        run(() -> pCheck.animClock(() -> {}))
+                )
+        );
       }
     }
   }
@@ -435,6 +484,30 @@ public class GameUIController {
         pCheck.setScore(SCORE_SKILL_GLASS_JUICE + 20);
         pCheck.animIce(pIce);
       }
+      else if (pCheck != piece && pCheck.item.type == Type.glass_fruit) {
+        gParent.addAction(
+                sequence(
+                        delay(1f),
+                        run(pCheck::animLbScore)
+                )
+        );
+      }
+      else if (pCheck != piece && pCheck.item.type == Type.jam) {
+        gParent.addAction(
+                sequence(
+                        delay(1f),
+                        run(pCheck::animLbScore)
+                )
+        );
+      }
+      else if (pCheck != piece && pCheck.item.type == Type.clock) {
+        gParent.addAction(
+                sequence(
+                        delay(1f),
+                        run(() -> pCheck.animClock(() -> {}))
+                )
+        );
+      }
     }
 
     for (int row=0; row<ROW; row++) {
@@ -442,10 +515,34 @@ public class GameUIController {
       Particle pIce   = lsParticleIce.get(indexParticle);
       indexParticle++;
 
-      if (pCheck != piece && util.chkTypeFruit(pCheck)) {
+      if (pCheck != piece && pCheck.item!= null && util.chkTypeFruit(pCheck)) {
         tmpScore += SCORE_SKILL_GLASS_JUICE;
         pCheck.setScore(SCORE_SKILL_GLASS_JUICE + 20);
         pCheck.animIce(pIce);
+      }
+      else if (pCheck != piece && pCheck.item!= null && pCheck.item.type == Type.glass_fruit) {
+        gParent.addAction(
+                sequence(
+                        delay(1f),
+                        run(pCheck::animLbScore)
+                )
+        );
+      }
+      else if (pCheck != piece && pCheck.item!= null && pCheck.item.type == Type.jam) {
+        gParent.addAction(
+                sequence(
+                        delay(1f),
+                        run(pCheck::animLbScore)
+                )
+        );
+      }
+      else if (pCheck != piece && pCheck.item!= null && pCheck.item.type == Type.clock) {
+        gParent.addAction(
+                sequence(
+                        delay(1f),
+                        run(() -> pCheck.animClock(() -> {}))
+                )
+        );
       }
     }
   }
@@ -604,8 +701,11 @@ public class GameUIController {
                         }
                       }),
                       run(() -> {
-                        if (lsPieceNullItem.size() <= 0)
+                        if (lsPieceNullItem.size() <= 0) {
+                          showWonder();
                           unlockInput();
+                          countScoreToShowWonder = 0;
+                        }
                       })
               )
       );
@@ -757,21 +857,17 @@ public class GameUIController {
       if (pStart.row == pEnd.row) {
         if (pStart.item.type == Type.glass_fruit) {
           clrPieceByHor(pStart, this::updateBoard);
-          pEnd.animClock(() -> {});
         }
         else {
           clrPieceByHor(pEnd, this::updateBoard);
-          pStart.animClock(() -> {});
         }
       }
       else {
         if (pStart.item.type == Type.glass_fruit) {
           clrPieceByVer(pStart, this::updateBoard);
-          pEnd.animClock(() -> {});
         }
         else {
           clrPieceByVer(pEnd, this::updateBoard);
-          pStart.animClock(() -> {});
         }
       }
     }
@@ -825,9 +921,10 @@ public class GameUIController {
       else
         point = pEnd;
 
+      Item itemPoint = point.item;
       skillJam(util.getPieceTypeDifferenceWith(arrPosPiece, pStart, pEnd), point,
               () -> {
-                point.animJam(() -> {});
+                itemPoint.animJam(() -> {});
                 updateBoard();
               }); //todo: effect jam + glass juice
 
@@ -861,11 +958,12 @@ public class GameUIController {
     }
     else if (pStart.item.type == Type.glass_fruit && pEnd.item.type == Type.glass_fruit) {
       System.out.println("glass juice + glass juice");
-      clrPiece(pStart);
+//      clrPiece(pStart);
       clrPieceByHorAndVer(pEnd, this::updateBoard);
     }
     else if (pStart.item.type == Type.glass_fruit && util.chkTypeFruit(pEnd)) {
       System.out.println("glass juice + fruit");
+      filterAll();
       if (pStart.row == pEnd.row)
         clrPieceByHor(pStart, this::updateBoard);
       else
@@ -873,6 +971,7 @@ public class GameUIController {
     }
     else if (pEnd.item.type == Type.glass_fruit && util.chkTypeFruit(pStart)) {
       System.out.println("glass juice + fruit");
+      filterAll();
       if (pStart.row == pEnd.row)
         clrPieceByHor(pEnd, this::updateBoard);
       else
@@ -1031,34 +1130,36 @@ public class GameUIController {
   private void nextLevel() {
 
     Runnable onNextLv = () -> {
-
-      //label: reset score
-      if (round == 1)
-        targetIncrease = TARGET;
-      else if (targetIncrease >= MAX_TARGET_INCREASE)
-        targetIncrease = MAX_TARGET_INCREASE;
-      else
-        targetIncrease += TARGET_INCREASE;
-      target += targetIncrease;
-
-      if (scorePre >= target)
-        target = scorePre + targetIncrease;
-      dtScore = target - scorePre;
-      sumScoreEachTurn = 0;
-
-      gamePlayUI.updateGoal(target);
-      updateScore();
-
+      isCompleteRound   = false;
       updateBoard();
+      countScoreToShowWonder = 0;
     };
 
     //label: reset time
-    timeExpired -= 10;
+    if (round > 0)
+      timeExpired -= 10;
     if (timeExpired <= 70)
       timeExpired = 70;
     timeOut = timeExpired;
     sclTime = (float) sclTime(timeOut);
-    isCompleteRound = false;
+    gamePlayUI.setTimeLineForNewRound(timeOut);
+
+    //label: reset score
+    if (round == 0)
+      targetIncrease = TARGET;
+    else if (targetIncrease >= MAX_TARGET_INCREASE)
+      targetIncrease = MAX_TARGET_INCREASE;
+    else
+      targetIncrease += TARGET_INCREASE;
+    target += targetIncrease;
+
+    if (scorePre >= target)
+      target = scorePre + targetIncrease;
+    dtScore = target - scorePre;
+    sumScoreEachTurn  = 0;
+
+    gamePlayUI.updateGoal(target);
+    updateScore();
 
     //label: reset round
     round += 1;
@@ -1073,15 +1174,16 @@ public class GameUIController {
   }
 
   private void gameOver() {
-    isGameOver        = true;
-    timeExpired       = TIME_START_GAME;
-    target            = 0;
-    scorePre          = 0;
-    targetIncrease    = TARGET;
-    timeOut           = 0;
-    round             = 0;
-    dtScore           = 0;
-    sumScoreEachTurn  = 0;
+    isGameOver              = true;
+    timeExpired             = TIME_START_GAME;
+    target                  = 0;
+    scorePre                = 0;
+    targetIncrease          = TARGET;
+    timeOut                 = 0;
+    round                   = 0;
+    dtScore                 = 0;
+    sumScoreEachTurn        = 0;
+    countScoreToShowWonder  = 0;
     //todo: show popup game over
   }
 
@@ -1089,6 +1191,22 @@ public class GameUIController {
     isWrap = false;
     pieceStart = null;
     pieceEnd = null;
+  }
+
+  private void showWonder() {
+    //todo: add sound effect
+
+    if (countScoreToShowWonder >= WONDER_LOVELY &&
+        countScoreToShowWonder < WONDER_FANTASTIC)
+      gamePlayUI.showLovely();
+    else if (countScoreToShowWonder >= WONDER_FANTASTIC &&
+             countScoreToShowWonder < WONDER_AWESOME)
+      gamePlayUI.showPWonder(0);
+    else if (countScoreToShowWonder >= WONDER_AWESOME &&
+             countScoreToShowWonder < WONDER_AMAZING)
+      gamePlayUI.showPWonder(1);
+    else if (countScoreToShowWonder >= WONDER_AMAZING)
+      gamePlayUI.showPWonder(2);
   }
 
   private void addToGroup(Item item, Group group) {
