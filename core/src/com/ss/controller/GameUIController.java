@@ -3,7 +3,6 @@ package com.ss.controller;
 import static com.badlogic.gdx.math.Interpolation.*;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -37,10 +36,10 @@ import static com.ss.config.Config.*;
 public class GameUIController {
 
   private Util        util = Util.inst();
-  private Group       gParent;
+  public  Group       gParent;
   private GameScene   scene;
   private GamePlayUI  gamePlayUI;
-  private PauseUI     pauseUI;
+  public  PauseUI     pauseUI;
   public  Image       blackScreen;
 
   private Piece[][]                   arrPosPiece = new Piece[ROW][COL];
@@ -55,12 +54,12 @@ public class GameUIController {
   private Piece   pieceStart, pieceEnd;
 
   private int     timeExpired,
-                  timeOut           = 0,
-                  round             = 0;
+                  timeOut           = 0;
+  public  int     round             = 0;
   private float   sclTime;
-  private long    target,
-                  scorePre          = 0, //điểm hiện tại của user
-                  dtScore           = 0, //target tăng lên mỗi khi user qua màn (dtScore dùng để tính clipping)
+  public  long    target,
+                  scorePre          = 0; //điểm hiện tại của user
+  private long    dtScore           = 0, //target tăng lên mỗi khi user qua màn (dtScore dùng để tính clipping)
                   sumScoreEachTurn  = 0, //cộng dồn điểm mỗi khi match => dùng để tính clipping
                   targetIncrease,
                   tmpScore,              //tmpScore: điểm mỗi khi ăn trái cây để update scorePre
@@ -79,6 +78,7 @@ public class GameUIController {
     this.gamePlayUI         = new GamePlayUI(this);
     this.pauseUI            = new PauseUI(this);
     this.blackScreen        = new Image(Solid.create(new Color(128/255f, 213/255f, 181/255f, .45f)));
+    this.blackScreen.setSize(GStage.getWorldWidth(), GStage.getWorldHeight());
 
     this.hmItem             = new HashMap<>();
     this.lv                 = new ArrayList<>();
@@ -101,12 +101,8 @@ public class GameUIController {
     initParticle();
 
     eventTouchScreen();
-//    addItem();
 
-    //next level
-    gameOver();
-    isGameOver = false;
-    nextLevel();
+    newGame();
 
     //label: test animation
 
@@ -126,7 +122,7 @@ public class GameUIController {
       public void clicked(InputEvent event, float x, float y) {
         super.clicked(event, x, y);
 
-        gamePlayUI.showPopupAdsTime();
+        addItemAt(arrPosPiece[0][1], "item_jam");
 
       }
     });
@@ -272,15 +268,13 @@ public class GameUIController {
 
     List<Item> lsItem = util.getLsItem(hmItem, lv);
     Collections.shuffle(lsItem, new Random());
-    System.out.println("SIZE: " + lsItem.size());
 
     int count = 0;
     for (int i=ROW-1; i>=0; i--) {
       for (int j = 0; j< COL; j++) {
 
-        Item item = lsItem.get(count);
         Piece piece = util.getPieceEmpty(arrPosPiece, i, j);
-        addNewItem(item, piece);
+        addNewItem(piece);
 
         count++;
 
@@ -352,10 +346,8 @@ public class GameUIController {
     for (int row=ROW-1; row>=0; row--) {
       for (int col=0; col<COL; col++) {
         Piece piece = arrPosPiece[row][col];
-        if (piece.item == null) {
-          piece.item = util.getRndItem(hmItem, lv);
+        if (piece.item == null)
           lsPieceNullItem.add(piece);
-        }
       }
     }
 
@@ -370,7 +362,6 @@ public class GameUIController {
   }
 
   private void slideVer(int row, int col) {
-
     for (int r=row-1; r>=0; r--) {
       Piece piece = arrPosPiece[r][col];
       Item item = piece.item;
@@ -381,7 +372,6 @@ public class GameUIController {
         break;
       }
     }
-
   }
 
   private void clrLsFilterPiece(List<Piece> filter) {
@@ -401,7 +391,6 @@ public class GameUIController {
       if (pCheck != piece && pCheck.item != null && util.chkTypeFruit(pCheck)) {
         tmpScore += SCORE_SKILL_GLASS_JUICE;
         pCheck.setScore(SCORE_SKILL_GLASS_JUICE);
-        System.out.println(pCheck.item);
         pCheck.animIce(pIce);
       }
       else if (pCheck != piece && pCheck.item != null && pCheck.item.type == Type.glass_fruit) {
@@ -439,7 +428,6 @@ public class GameUIController {
       if (pCheck != piece && pCheck.item!= null && util.chkTypeFruit(pCheck)) {
         tmpScore += SCORE_SKILL_GLASS_JUICE;
         pCheck.setScore(SCORE_SKILL_GLASS_JUICE);
-        System.out.println(pCheck.item);
         pCheck.animIce(pIce);
       }
       else if (pCheck != piece && pCheck.item!= null && pCheck.item.type == Type.glass_fruit) {
@@ -479,12 +467,12 @@ public class GameUIController {
       Particle pIce   = lsParticleIce.get(indexParticle);
       indexParticle++;
 
-      if (pCheck != piece && util.chkTypeFruit(pCheck)) {
+      if (pCheck != piece && pCheck.item != null && util.chkTypeFruit(pCheck)) {
         tmpScore += SCORE_SKILL_GLASS_JUICE;
         pCheck.setScore(SCORE_SKILL_GLASS_JUICE + 20);
         pCheck.animIce(pIce);
       }
-      else if (pCheck != piece && pCheck.item.type == Type.glass_fruit) {
+      else if (pCheck != piece && pCheck.item != null && pCheck.item.type == Type.glass_fruit) {
         gParent.addAction(
                 sequence(
                         delay(1f),
@@ -492,7 +480,7 @@ public class GameUIController {
                 )
         );
       }
-      else if (pCheck != piece && pCheck.item.type == Type.jam) {
+      else if (pCheck != piece && pCheck.item != null && pCheck.item.type == Type.jam) {
         gParent.addAction(
                 sequence(
                         delay(1f),
@@ -500,7 +488,7 @@ public class GameUIController {
                 )
         );
       }
-      else if (pCheck != piece && pCheck.item.type == Type.clock) {
+      else if (pCheck != piece && pCheck.item != null && pCheck.item.type == Type.clock) {
         gParent.addAction(
                 sequence(
                         delay(1f),
@@ -556,6 +544,15 @@ public class GameUIController {
           clrPiece(piece);
         }
       }
+  }
+
+  private void clrAll() {
+    for (Piece[] pieces : arrPosPiece) {
+      for (Piece piece : pieces) {
+        if (piece.item != null)
+          piece.clear();
+      }
+    }
   }
 
   private void lvSuccess(Runnable onNextLv) {
@@ -716,8 +713,8 @@ public class GameUIController {
 
     for (Piece piece : lsPieceNullItem) {
       for (int col=0; col<COL; col++) {
-        if (arrPosPiece[turn][col] == piece)
-          addNewItem(piece.item, piece);
+        if (turn >= 0 && turn < ROW && arrPosPiece[turn][col] == piece)
+          addNewItem(piece);
       }
     }
 
@@ -736,7 +733,8 @@ public class GameUIController {
     startNewItem(turn);
   }
 
-  private void addNewItem(Item item, Piece piece) {
+  private void addNewItem(Piece piece) {
+    Item item = util.getRndItem(hmItem, lv);
     piece.setItem(item);
     addToGroup(item, gamePlayUI.gItem);
     item.setPosStart(piece.pos);
@@ -801,7 +799,7 @@ public class GameUIController {
 
   //-------------------special item----------------------------------------
   private void addSpecialItem(Piece piece, String key) {
-    System.out.println("Add special");
+//    System.out.println("Add special");
     Item item = util.getItem(hmItem.get(key));
     clrPiece(piece);
     piece.setItem(item);
@@ -815,18 +813,18 @@ public class GameUIController {
   private void chkSpecialItemWhenSwap(Piece pStart, Piece pEnd) {
 
     if (pStart.item.type == Type.clock && pEnd.item.type == Type.clock) {
-      System.out.println("x2 time");
+//      System.out.println("x2 time");
       //todo: x2 time
-      addTimeLine(ADD_SECOND*2);
+      updateTimeLine(ADD_SECOND*2);
 
       pStart.animClock(() -> {});
       pEnd.animClock(this::updateBoard);
     }
     else if ((pStart.item.type == Type.clock || pEnd.item.type == Type.clock)
             && (pStart.item.type == Type.jam || pEnd.item.type == Type.jam)) {
-      System.out.println("x1 time, jam");
+//      System.out.println("x1 time, jam");
       //todo: x1 time
-      addTimeLine(ADD_SECOND);
+      updateTimeLine(ADD_SECOND);
 
       Piece point;
       Piece pClock;
@@ -850,9 +848,9 @@ public class GameUIController {
     }
     else if ((pStart.item.type == Type.clock || pEnd.item.type == Type.clock)
             && (pStart.item.type == Type.glass_fruit || pEnd.item.type == Type.glass_fruit)) {
-      System.out.println("x1 time, glass juice");
+//      System.out.println("x1 time, glass juice");
       //todo: x1 time
-      addTimeLine(ADD_SECOND);
+      updateTimeLine(ADD_SECOND);
 
       if (pStart.row == pEnd.row) {
         if (pStart.item.type == Type.glass_fruit) {
@@ -872,9 +870,9 @@ public class GameUIController {
       }
     }
     else if (pStart.item.type == Type.clock && util.chkTypeFruit(pEnd)) {
-      System.out.println("x1 time, normal item");
+//      System.out.println("x1 time, normal item");
       //todo: x1 time
-      addTimeLine(ADD_SECOND);
+      updateTimeLine(ADD_SECOND);
 
       pStart.animClock(() -> {});
 
@@ -883,9 +881,9 @@ public class GameUIController {
       updateBoard();
     }
     else if (pEnd.item.type == Type.clock && util.chkTypeFruit(pStart)) {
-      System.out.println("x1 time, normal item");
+//      System.out.println("x1 time, normal item");
       //todo: x1 time
-      addTimeLine(ADD_SECOND);
+      updateTimeLine(ADD_SECOND);
 
       pEnd.animClock(() -> {});
 
@@ -894,7 +892,7 @@ public class GameUIController {
       updateBoard();
     }
     else if (pStart.item.type == Type.jam && pEnd.item.type == Type.jam) {
-      System.out.println("jam + jam");
+//      System.out.println("jam + jam");
       //todo: effect clear all
 
       pBurnAll.start(GStage.getWorldWidth()/2, GStage.getWorldHeight()/2, 4f);
@@ -913,7 +911,7 @@ public class GameUIController {
     }
     else if ((pStart.item.type == Type.jam || pEnd.item.type == Type.jam)
             && (pStart.item.type == Type.glass_fruit || pEnd.item.type == Type.glass_fruit)) {
-      System.out.println("jam + glass juice");
+//      System.out.println("jam + glass juice");
 
       Piece point;
       if (pStart.item.type == Type.jam)
@@ -943,26 +941,26 @@ public class GameUIController {
 
     }
     else if (pStart.item.type == Type.jam && util.chkTypeFruit(pEnd)) {
-      System.out.println("jam + fruit");
+//      System.out.println("jam + fruit");
       skillJam(pEnd, pStart, () -> {
         pStart.animJam(() -> {});
         updateBoard();
       });
     }
     else if (pEnd.item.type == Type.jam && util.chkTypeFruit(pStart)) {
-      System.out.println("jam + fruit");
+//      System.out.println("jam + fruit");
       skillJam(pStart, pEnd, () -> {
         pEnd.animJam(() -> {});
         updateBoard();
       });
     }
     else if (pStart.item.type == Type.glass_fruit && pEnd.item.type == Type.glass_fruit) {
-      System.out.println("glass juice + glass juice");
+//      System.out.println("glass juice + glass juice");
 //      clrPiece(pStart);
       clrPieceByHorAndVer(pEnd, this::updateBoard);
     }
     else if (pStart.item.type == Type.glass_fruit && util.chkTypeFruit(pEnd)) {
-      System.out.println("glass juice + fruit");
+//      System.out.println("glass juice + fruit");
       filterAll();
       if (pStart.row == pEnd.row)
         clrPieceByHor(pStart, this::updateBoard);
@@ -970,7 +968,7 @@ public class GameUIController {
         clrPieceByVer(pStart, this::updateBoard);
     }
     else if (pEnd.item.type == Type.glass_fruit && util.chkTypeFruit(pStart)) {
-      System.out.println("glass juice + fruit");
+//      System.out.println("glass juice + fruit");
       filterAll();
       if (pStart.row == pEnd.row)
         clrPieceByHor(pEnd, this::updateBoard);
@@ -978,7 +976,7 @@ public class GameUIController {
         clrPieceByVer(pEnd, this::updateBoard);
     }
     else {
-      System.out.println("normal + normal");
+//      System.out.println("normal + normal");
       filterAll();
       updateBoard();
     }
@@ -992,7 +990,7 @@ public class GameUIController {
       List<Piece> tmpH = util.filterHorizontally(arrPosPiece, arrPosPiece[piece.row][piece.col]);
       if (tmpH.size() >= 3) {
         saves.addAll(tmpH);
-        System.out.println("BEFORE VER: " + saves.size());
+//        System.out.println("BEFORE VER: " + saves.size());
         util.removeItemAt(piece, saves);
         addSpecialItem(piece, "item_clock");
         itemIsMatchHor = true;
@@ -1038,7 +1036,7 @@ public class GameUIController {
       if (tmpV.size() >= 3) {
         saves.addAll(tmpV);
         util.removeItemAt(piece, saves);
-        System.out.println("BEFORE HOR: " + saves.size());
+//        System.out.println("BEFORE HOR: " + saves.size());
         addSpecialItem(piece, "item_clock");
         itemIsMatchVer = true;
       }
@@ -1082,10 +1080,14 @@ public class GameUIController {
     if (!isCompleteRound) {
       if (timeOut > 0) {
         timeOut -= 1f;
-        int minute = timeOut %3600/60;
-        int second = timeOut %60;
+        int minute = timeOut % 3600/60;
+        int second = timeOut % 60;
 
-        String time = minute + ":" + second;
+        String ss = second+"";
+        if (second < 10)
+          ss = "0" + second;
+
+        String time = minute + ":" + ss;
         gamePlayUI.lbTime.setText(time);
         gamePlayUI.timeLine.clipBy(sclTime, 0f);
       }
@@ -1109,7 +1111,7 @@ public class GameUIController {
   }
 
   //label: add time for clock
-  private void addTimeLine(int second) {
+  private void updateTimeLine(int second) {
     int temp = timeOut + second;
     if (temp > timeExpired) {
       timeOut = timeExpired;
@@ -1137,9 +1139,9 @@ public class GameUIController {
 
     //label: reset time
     if (round > 0)
-      timeExpired -= 10;
-    if (timeExpired <= 70)
-      timeExpired = 70;
+      timeExpired -= TIME_MINUS;
+    if (timeExpired <= MIN_TIME_EXPIRED)
+      timeExpired = MIN_TIME_EXPIRED;
     timeOut = timeExpired;
     sclTime = (float) sclTime(timeOut);
     gamePlayUI.setTimeLineForNewRound(timeOut);
@@ -1173,29 +1175,72 @@ public class GameUIController {
 
   }
 
+  public void continueWhenWatchAdsGetTime() {
+    isGameOver       = false;
+    updateTimeLine(TIME_WATCH_ADS);
+  }
+
   private void gameOver() {
     isGameOver              = true;
+    if (GMain.platform.isVideoRewardReady())
+      gamePlayUI.showPopupAdsTime();
+    else
+      gamePlayUI.showPopupGameOver();
+    //todo: show popup game over
+  }
+
+  public void resetGame() {
+    isCompleteRound         = true;
     timeExpired             = TIME_START_GAME;
     target                  = 0;
     scorePre                = 0;
+    tmpScore                = 0;
     targetIncrease          = TARGET;
     timeOut                 = 0;
     round                   = 0;
     dtScore                 = 0;
     sumScoreEachTurn        = 0;
     countScoreToShowWonder  = 0;
-    //todo: show popup game over
+  }
+
+  public void newGame() {
+    refactoryAllItemInGame();
+    resetGame();
+    isGameOver = false;
+    nextLevel();
+  }
+
+  public void refactoryAllItemInGame() {
+    gParent.clearActions();
+    gamePlayUI.clearActionAllObject();
+    clrAll();
+
+    for (List<Item> items : hmItem.values()) {
+      for (Item item : items)
+        item.refactoryItem();
+    }
+
+    for (Particle p : lsParticleIce) {
+      p.remove();
+    }
+    for (Particle p : lsParticleBurnJam) {
+      p.remove();
+    }
+    for (Image ray : lsRayJam) {
+      ray.clearActions();
+      ray.remove();
+    }
   }
 
   private void unlockInput() {
-    isWrap = false;
+    isWrap     = false;
     pieceStart = null;
-    pieceEnd = null;
+    pieceEnd   = null;
   }
 
+  //------------------------------------show/hide combo and popup-----------------------------------
   private void showWonder() {
     //todo: add sound effect
-
     if (countScoreToShowWonder >= WONDER_LOVELY &&
         countScoreToShowWonder < WONDER_FANTASTIC)
       gamePlayUI.showLovely();
@@ -1208,6 +1253,14 @@ public class GameUIController {
     else if (countScoreToShowWonder >= WONDER_AMAZING)
       gamePlayUI.showPWonder(2);
   }
+
+  public void showPauseUI() {
+    isPause = true;
+    gParent.addActor(blackScreen);
+    gParent.addActor(pauseUI);
+    pauseUI.showPause();
+  }
+  //------------------------------------show/hide combo and popup-----------------------------------
 
   private void addToGroup(Item item, Group group) {
     group.addActor(item);

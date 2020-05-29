@@ -7,16 +7,16 @@ import java.util.Random;
 
 public class ShakeScreen {
 
-  private float elapsed, duration, radius;
-  private Random random;
-  private float rndAngle, intensity;
+  private float   elapsed, duration;
+  private Random  random;
+  private float   rndAngle, intensity;
 
   public ShakeScreen(float intensity, float duration) {
-    this.elapsed = duration;
-    this.random = new Random();
-    this.duration = duration;
-    this.intensity = intensity;
-    this.rndAngle = random.nextFloat() % 360f;
+    this.elapsed    = duration;
+    this.random     = new Random();
+    this.duration   = duration;
+    this.intensity  = intensity;
+    this.rndAngle   = random.nextFloat() % 360f;
   }
 
   public void update (float delta, OrthographicCamera camera) {
@@ -24,8 +24,8 @@ public class ShakeScreen {
 
       // Calculate the amount of shake based on how long it has been shaking already
       float currentPower = intensity * camera.zoom * ((duration - elapsed) / duration);
-      float x = (random.nextFloat() - 0.5f) * currentPower;
-      float y = (random.nextFloat() - 0.5f) * currentPower;
+      float x            = (random.nextFloat() - 0.5f) * currentPower;
+      float y            = (random.nextFloat() - 0.5f) * currentPower;
       camera.translate(-x, -y);
 
       // Increase the elapsed time by the delta provided.

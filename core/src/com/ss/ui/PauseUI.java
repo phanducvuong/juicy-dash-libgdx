@@ -28,8 +28,7 @@ public class PauseUI extends Group {
                             btnRestart,
                             btnSoundOn,
                             btnSoundOff,
-                            btnHome,
-                            btnX;
+                            btnHome;
 
   public PauseUI(GameUIController controller) {
     this.controller = controller;
@@ -53,7 +52,8 @@ public class PauseUI extends Group {
     gPause.addActor(btnResume);
 
     eventClickBtn(btnResume, () -> {
-
+      controller.isPause = false;
+      hidePause();
     });
 
     //label: btnHome
@@ -76,9 +76,8 @@ public class PauseUI extends Group {
             bgPause.getY() + gPause.getHeight()/2 - btnRestart.getHeight()*btnRestart.getScaleY()/2 + 80);
     gPause.addActor(btnRestart);
 
-    eventClickBtn(btnRestart, () -> {
 
-    });
+    eventClickBtn(btnRestart, this::hidePauseAndRestartGame);
 
     //label: btnSoundOn
     btnSoundOn = GUI.createImage(GMain.bgAtlas, "icon_sound_on");
@@ -89,7 +88,9 @@ public class PauseUI extends Group {
     gPause.addActor(btnSoundOn);
 
     eventClickBtn(btnSoundOn, () -> {
-
+      btnSoundOn.setTouchable(Touchable.enabled);
+      btnSoundOn.setVisible(false);
+      btnSoundOff.setVisible(true);
     });
 
     //label: btnSoundOff
@@ -101,17 +102,10 @@ public class PauseUI extends Group {
     gPause.addActor(btnSoundOff);
 
     eventClickBtn(btnSoundOff, () -> {
-
+      btnSoundOff.setTouchable(Touchable.enabled);
+      btnSoundOff.setVisible(false);
+      btnSoundOn.setVisible(true);
     });
-
-    //label: btnX
-    btnX = GUI.createImage(GMain.bgAtlas, "icon_exit");
-    btnX.setOrigin(Align.center);
-    btnX.setPosition(bgPause.getX() + gPause.getWidth() - btnX.getWidth() - 10,
-            bgPause.getY() - 60);
-    gPause.addActor(btnX);
-
-    eventClickBtn(btnX, this::hidePause);
 
     gPause.setScale(2.5f);
     gPause.getColor().a = 0f;
@@ -136,18 +130,19 @@ public class PauseUI extends Group {
             sequence(
                     Actions.scaleBy(.1f, .1f, .05f, fastSlow),
                     Actions.scaleBy(-.1f, -.1f, .05f, fastSlow),
-                    run(onComplete),
-                    run(() -> btn.setTouchable(Touchable.enabled))
-
+                    run(onComplete)
             )
     );
   }
 
   public void showPause() {
     gPause.addAction(
-            parallel(
-                    scaleTo(1f, 1f, .25f, fastSlow),
-                    alpha(1f, .5f, linear)
+            sequence(
+                    parallel(
+                            scaleTo(1f, 1f, .25f, fastSlow),
+                            alpha(1f, .5f, linear)
+                    ),
+                    run(this::unlockTouchable)
             )
     );
   }
@@ -157,15 +152,40 @@ public class PauseUI extends Group {
             sequence(
                     parallel(
                             scaleTo(2.5f, 2.5f, .5f, fastSlow),
-                            alpha(0f, .25f),
-                            run(() -> controller.blackScreen.remove())
+                            alpha(0f, .25f)
                     ),
                     run(() -> {
+                      controller.blackScreen.remove();
                       controller.isPause = false;
                       this.remove();
                     })
             )
     );
+  }
+
+  private void hidePauseAndRestartGame() {
+    gPause.addAction(
+            sequence(
+                    parallel(
+                            scaleTo(2.5f, 2.5f, .5f, fastSlow),
+                            alpha(0f, .25f)
+                    ),
+                    run(() -> {
+                      controller.blackScreen.remove();
+                      controller.isPause = false;
+                      controller.newGame();
+                      this.remove();
+                    })
+            )
+    );
+  }
+
+  private void unlockTouchable() {
+    btnResume.setTouchable(Touchable.enabled);
+    btnRestart.setTouchable(Touchable.enabled);
+    btnHome.setTouchable(Touchable.enabled);
+    btnSoundOn.setTouchable(Touchable.enabled);
+    btnSoundOff.setTouchable(Touchable.enabled);
   }
 
 }

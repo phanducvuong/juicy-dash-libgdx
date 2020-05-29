@@ -10,18 +10,18 @@ import com.ss.utils.ShakeScreen;
 
 public class GameScene extends GScreen {
 
-  public Group gParent;
-  private GameUIController gameUiController;
-  private ShakeScreen shake;
-  private float baseX, baseY;
+  public  Group            gParent;
+  private GameUIController gameUIController;
+  private ShakeScreen      shake;
+  private float            baseX, baseY;
 
   public GameScene() {
 
-    this.gParent = new Group();
-    this.gameUiController = new GameUIController(this);
-    this.shake = new ShakeScreen(15f, 1f);
-    this.baseX = GStage.getCamera().position.x;
-    this.baseY = GStage.getCamera().position.y;
+    this.gParent          = new Group();
+    this.gameUIController = new GameUIController(this);
+    this.shake            = new ShakeScreen(15f, 1f);
+    this.baseX            = GStage.getCamera().position.x;
+    this.baseY            = GStage.getCamera().position.y;
 
   }
 

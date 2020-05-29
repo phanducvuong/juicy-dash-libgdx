@@ -11,6 +11,7 @@ public class Config {
   public static final BitmapFont whiteFont                = GAssetsManager.getBitmapFont("white_font.fnt");
   public static final BitmapFont redFont                  = GAssetsManager.getBitmapFont("red_font.fnt");
   public static final BitmapFont greenFont                = GAssetsManager.getBitmapFont("green_font.fnt");
+  public static final BitmapFont brownFont                = GAssetsManager.getBitmapFont("font_brown.fnt");
 
   //label: file particle
   public static final FileHandle ICE_PARTICLE             = Gdx.files.internal("particles/ice.p");
@@ -37,13 +38,14 @@ public class Config {
   public static final int     ADD_SECOND                  = 15;
   public static final int     TIME_START_GAME             = 120;
   public static final int     TIME_DECREASE               = 10;
+  public static final int     TIME_WATCH_ADS              = 30;
+  public static final int     MIN_TIME_EXPIRED            = 70;
+  public static final int     TIME_MINUS                  = 10;
 
   //label: game play ui
-  public static final float   OFFSET_Y_BGTABLE            = 150;
-
+  public static final float   OFFSET_Y_BG_TABLE           = 110;
   public static final int     COL                         = 7,
                               ROW                         = 7;
-
   public static final float   OFFSET_X_PIECE              = 10,
                               OFFSET_Y_PIECE              = 8,
                               WIDTH_PIECE                 = 97,

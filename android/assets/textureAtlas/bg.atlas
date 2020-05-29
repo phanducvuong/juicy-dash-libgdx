@@ -1,12 +1,19 @@
 
 bg.png
-size: 2048,1024
+size: 2048,2048
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+bg
+  rotate: false
+  xy: 2, 743
+  size: 720, 1280
+  orig: 720, 1280
+  offset: 0, 0
+  index: -1
 bg_home
   rotate: false
-  xy: 2, 94
+  xy: 724, 1123
   size: 700, 900
   orig: 700, 900
   offset: 0, 0
@@ -18,114 +25,107 @@ bg_line
   orig: 381, 44
   offset: 0, 0
   index: -1
-bg_piece
-  rotate: false
-  xy: 2, 48
-  size: 700, 44
-  orig: 700, 44
-  offset: 0, 0
-  index: -1
 bg_round
   rotate: false
-  xy: 704, 110
+  xy: 724, 932
   size: 492, 189
   orig: 492, 189
   offset: 0, 0
   index: -1
 bg_table
   rotate: false
-  xy: 704, 301
+  xy: 2, 48
   size: 700, 693
   orig: 700, 693
   offset: 0, 0
   index: -1
 dash
   rotate: false
-  xy: 1406, 317
+  xy: 1426, 1346
   size: 467, 91
   orig: 467, 91
   offset: 0, 0
   index: -1
 icon_exit
   rotate: false
-  xy: 1710, 58
+  xy: 704, 467
   size: 115, 115
   orig: 115, 115
   offset: 0, 0
   index: -1
 icon_home
   rotate: false
-  xy: 1710, 175
+  xy: 724, 726
   size: 136, 140
   orig: 136, 140
   offset: 0, 0
   index: -1
 icon_pause
   rotate: false
-  xy: 1875, 296
+  xy: 842, 612
   size: 108, 112
   orig: 108, 112
   offset: 0, 0
   index: -1
 icon_restart
   rotate: false
-  xy: 1434, 175
+  xy: 1218, 981
   size: 136, 140
   orig: 136, 140
   offset: 0, 0
   index: -1
 icon_sound_off
   rotate: false
-  xy: 1572, 33
+  xy: 704, 584
   size: 136, 140
   orig: 136, 140
   offset: 0, 0
   index: -1
 icon_sound_on
   rotate: false
-  xy: 1572, 175
+  xy: 1662, 1204
   size: 136, 140
   orig: 136, 140
   offset: 0, 0
   index: -1
 icon_start
   rotate: false
-  xy: 1198, 61
+  xy: 1426, 1106
   size: 234, 238
   orig: 234, 238
   offset: 0, 0
   index: -1
 icon_tutorial
   rotate: false
-  xy: 1434, 33
+  xy: 862, 726
   size: 136, 140
   orig: 136, 140
   offset: 0, 0
   index: -1
 line_score
   rotate: false
-  xy: 704, 78
+  xy: 724, 900
   size: 366, 30
   orig: 366, 30
   offset: 0, 0
   index: -1
 line_time
   rotate: false
-  xy: 704, 46
+  xy: 724, 868
   size: 366, 30
   orig: 366, 30
   offset: 0, 0
   index: -1
 popup_start
   rotate: false
-  xy: 1406, 410
+  xy: 1426, 1439
   size: 581, 584
   orig: 581, 584
   offset: 0, 0
   index: -1
 shadow
   rotate: false
-  xy: 1072, 68
+  xy: 1895, 1397
   size: 83, 40
   orig: 83, 40
   offset: 0, 0

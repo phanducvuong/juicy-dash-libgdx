@@ -25,7 +25,7 @@ public class Item extends Group {
 
   private Image     fruit, animFruitL, animFruitR;
   private Image     flare, glassL1, glassL2, glassR1, glassR2;
-  public Image     ice, iAnimClock;
+  public  Image     ice, iAnimClock;
   private Label     lbScore;
 
   private Group     gAnimFruit;
@@ -643,7 +643,6 @@ public class Item extends Group {
   public void animClock(Runnable onComplete) {
     fruit.setVisible(false);
     flare.setVisible(false);
-
     this.addAction(
             sequence(
                     delay(.25f),
@@ -718,6 +717,65 @@ public class Item extends Group {
                     })
             )
     );
+  }
+
+  public void refactoryItem() {
+    isAlive = false;
+    fruit.clearActions();
+    fruit.getColor().a = 1f;
+    fruit.setVisible(true);
+
+    if (iAnimClock != null) {
+      iAnimClock.clearActions();
+      iAnimClock.getColor().a = 1f;
+      iAnimClock.remove();
+    }
+
+    if (ice != null) {
+      ice.clearActions();
+      resetAnimIce();
+    }
+
+    if (flare != null)
+      flare.setVisible(true);
+
+    if (glassL1 != null && glassR1 != null && glassL2 != null && glassR2 != null) {
+      glassL1.setRotation(0);
+      glassR1.setRotation(0);
+      glassL2.setRotation(0);
+      glassR2.setRotation(0);
+
+      glassL1.clearActions();
+      glassR1.clearActions();
+      glassL2.clearActions();
+      glassR2.clearActions();
+
+      glassL1.remove();
+      glassR1.remove();
+      glassL2.remove();
+      glassR2.remove();
+    }
+
+    if (gAnimFruit != null) {
+      animFruitL.clearActions();
+      animFruitR.clearActions();
+
+      animFruitL.setRotation(0);
+      animFruitR.setRotation(0);
+      animFruitL.getColor().a = 1f;
+      animFruitR.getColor().a = 1f;
+
+      setPosAnimFruit();
+      gAnimFruit.remove();
+    }
+
+    lbScore.clearActions();
+    lbScore.getColor().a = 1f;
+    lbScore.remove();
+
+    resetLbScore();
+    this.clearActions();
+    this.remove();
   }
 
   private void resetLbScore() {
