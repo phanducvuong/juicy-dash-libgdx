@@ -27,7 +27,7 @@ bg_line
   index: -1
 bg_round
   rotate: false
-  xy: 724, 932
+  xy: 1426, 1248
   size: 492, 189
   orig: 492, 189
   offset: 0, 0
@@ -39,79 +39,93 @@ bg_table
   orig: 700, 693
   offset: 0, 0
   index: -1
-dash
+dash_bottom
   rotate: false
-  xy: 1426, 1346
-  size: 467, 91
-  orig: 467, 91
+  xy: 1426, 1115
+  size: 484, 131
+  orig: 484, 131
+  offset: 0, 0
+  index: -1
+dash_top
+  rotate: false
+  xy: 724, 588
+  size: 734, 231
+  orig: 734, 231
+  offset: 0, 0
+  index: -1
+i_games
+  rotate: false
+  xy: 704, 98
+  size: 136, 140
+  orig: 136, 140
   offset: 0, 0
   index: -1
 icon_exit
   rotate: false
-  xy: 704, 467
+  xy: 1781, 998
   size: 115, 115
   orig: 115, 115
   offset: 0, 0
   index: -1
 icon_home
   rotate: false
-  xy: 724, 726
+  xy: 704, 240
   size: 136, 140
   orig: 136, 140
   offset: 0, 0
   index: -1
 icon_pause
   rotate: false
-  xy: 842, 612
+  xy: 842, 126
   size: 108, 112
   orig: 108, 112
   offset: 0, 0
   index: -1
 icon_restart
   rotate: false
-  xy: 1218, 981
+  xy: 1643, 973
   size: 136, 140
   orig: 136, 140
   offset: 0, 0
   index: -1
 icon_sound_off
   rotate: false
-  xy: 704, 584
+  xy: 842, 240
   size: 136, 140
   orig: 136, 140
   offset: 0, 0
   index: -1
 icon_sound_on
   rotate: false
-  xy: 1662, 1204
+  xy: 704, 382
   size: 136, 140
   orig: 136, 140
   offset: 0, 0
   index: -1
 icon_start
   rotate: false
-  xy: 1426, 1106
+  xy: 1407, 875
   size: 234, 238
   orig: 234, 238
   offset: 0, 0
   index: -1
 icon_tutorial
   rotate: false
-  xy: 862, 726
+  xy: 842, 382
   size: 136, 140
   orig: 136, 140
   offset: 0, 0
   index: -1
 line_score
   rotate: false
-  xy: 724, 900
+  xy: 704, 556
   size: 366, 30
   orig: 366, 30
   offset: 0, 0
   index: -1
 line_time
   rotate: false
-  xy: 724, 868
+  xy: 704, 524
   size: 366, 30
   orig: 366, 30
   offset: 0, 0
@@ -125,8 +139,15 @@ popup_start
   index: -1
 shadow
   rotate: false
-  xy: 1895, 1397
+  xy: 1920, 1397
   size: 83, 40
   orig: 83, 40
+  offset: 0, 0
+  index: -1
+title
+  rotate: false
+  xy: 724, 821
+  size: 681, 300
+  orig: 681, 300
   offset: 0, 0
   index: -1

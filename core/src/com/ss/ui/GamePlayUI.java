@@ -87,9 +87,6 @@ public class GamePlayUI extends Group {
     this.addActor(gAnimSkill);
     this.addActor(gPopup);
 
-    setWidth(CENTER_X*2);
-    setHeight(CENTER_Y*2);
-
     initBg();
     initTime();
     initScore();
@@ -217,6 +214,7 @@ public class GamePlayUI extends Group {
 
     Image bg = GUI.createImage(GMain.bgAtlas, "bg");
     bg.setSize(CENTER_X*2, CENTER_Y*2);
+    bg.setOrigin(Align.center);
     gBackground.addActor(bg);
 
     bgTable = GUI.createImage(GMain.bgAtlas, "bg_table");
@@ -239,7 +237,6 @@ public class GamePlayUI extends Group {
 
     //label: event click
     imgClick(iPause, () -> controller.showPauseUI());
-
   }
 
   private void initPopupAdsTime() {

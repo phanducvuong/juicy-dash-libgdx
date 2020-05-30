@@ -63,28 +63,11 @@ public class HTTPAssetLoader {
         if (httpResponse.getStatus().getStatusCode() >= 200 && httpResponse.getStatus().getStatusCode() < 300) {
 
           final byte[] rawByte = httpResponse.getResult();
-//          final InputStream is = httpResponse.getResultAsStream();
           try {
 
             final FileHandle file;
-//            if (Gdx.files.isExternalStorageAvailable())
-//              file = Gdx.files.external(path);
-//            else
-              file = Gdx.files.local(path);
+            file = Gdx.files.local(path);
             file.writeBytes(rawByte, false);
-
-//            BufferedOutputStream bos = new BufferedOutputStream(file.write(false));
-//            BufferedInputStream bis = new BufferedInputStream(is);
-//            byte[] buffer = new byte[16384];
-//            int len;
-//
-//            while ((len = bis.read(buffer)) > 0) {
-//              bos.write(buffer, 0, len);
-//            }
-//
-//            bos.flush();
-//            bos.close();
-//            bis.close();
 
             Gdx.app.postRunnable(() -> {
               if (file.exists() && !errorFound && loadCount < mileStone) {

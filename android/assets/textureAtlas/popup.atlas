@@ -4,37 +4,65 @@ size: 2048,1024
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+box_games
+  rotate: false
+  xy: 2, 96
+  size: 171, 217
+  orig: 171, 217
+  offset: 0, 0
+  index: -1
 btn_blue
   rotate: false
-  xy: 504, 165
+  xy: 1535, 954
   size: 200, 61
   orig: 200, 61
   offset: 0, 0
   index: -1
 btn_ok_ads_time
   rotate: false
-  xy: 2, 2
+  xy: 1006, 395
   size: 232, 71
   orig: 232, 71
   offset: 0, 0
   index: -1
 btn_yellow
   rotate: false
-  xy: 1033, 714
+  xy: 175, 252
   size: 200, 61
   orig: 200, 61
   offset: 0, 0
   index: -1
+decor_left
+  rotate: false
+  xy: 2, 2
+  size: 133, 92
+  orig: 133, 92
+  offset: 0, 0
+  index: -1
+decor_right
+  rotate: false
+  xy: 1535, 859
+  size: 127, 93
+  orig: 127, 93
+  offset: 0, 0
+  index: -1
 pop_ads_time
   rotate: false
-  xy: 504, 228
+  xy: 1006, 468
   size: 527, 547
   orig: 527, 547
   offset: 0, 0
   index: -1
 popup_game_over
   rotate: false
-  xy: 2, 75
+  xy: 2, 315
+  size: 500, 700
+  orig: 500, 700
+  offset: 0, 0
+  index: -1
+popup_games
+  rotate: false
+  xy: 504, 315
   size: 500, 700
   orig: 500, 700
   offset: 0, 0

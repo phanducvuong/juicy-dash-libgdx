@@ -37,7 +37,7 @@ public class GameUIController {
 
   private Util        util = Util.inst();
   public  Group       gParent;
-  private GameScene   scene;
+  public  GameScene   scene;
   private GamePlayUI  gamePlayUI;
   public  PauseUI     pauseUI;
   public  Image       blackScreen;
@@ -99,7 +99,6 @@ public class GameUIController {
     initLv();
     initRayJam();
     initParticle();
-
     eventTouchScreen();
 
     newGame();

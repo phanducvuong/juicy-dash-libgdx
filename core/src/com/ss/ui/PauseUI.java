@@ -65,7 +65,7 @@ public class PauseUI extends Group {
     gPause.addActor(btnHome);
 
     eventClickBtn(btnHome, () -> {
-
+      controller.scene.setScreen(GMain.inst.startScene);
     });
 
     //label: btnRestart

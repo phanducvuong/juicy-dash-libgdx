@@ -13,6 +13,8 @@ import com.ss.core.util.GStage;
 import com.ss.core.util.GStage.StageBorder;
 import com.ss.scenes.GameScene;
 import com.ss.config.C;
+import com.ss.scenes.StartScene;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -26,10 +28,11 @@ public class GMain extends GDirectedGame {
                              particleAtlas,
                              popupAtlas;
   public static Preferences  pref;
-  public static GameScene    gameScene;
 
   public static IPlatform    platform;
   public static GMain        inst;
+  public StartScene          startScene;
+  public GameScene           gameScene;
 
   public GMain(IPlatform plat) {
     platform = plat;
@@ -38,8 +41,8 @@ public class GMain extends GDirectedGame {
 
   private void init() {
 
-    screenWidth = 720;
-    screenHeight = 1280;
+    screenWidth   = 720;
+    screenHeight  = 1280;
 
     GStage.init(screenWidth, screenHeight, 0, 0, new StageBorder() {
       @Override
@@ -53,10 +56,6 @@ public class GMain extends GDirectedGame {
       }
     });
 
-  }
-
-  private static GScreen menuScreen() {
-    return gameScene = new GameScene();
   }
 
   public void create() {
@@ -76,6 +75,7 @@ public class GMain extends GDirectedGame {
 
     initLocalNotification();
     SoundEffects.initSound();
+    C.init();
 
     bgAtlas       = GAssetsManager.getTextureAtlas("bg.atlas");
     popupAtlas    = GAssetsManager.getTextureAtlas("popup.atlas");
@@ -84,10 +84,10 @@ public class GMain extends GDirectedGame {
     GAssetsManager.finishLoading();
 
     this.init();
+    gameScene   = new GameScene();
+    startScene  = new StartScene();
 
-    SoundEffects.initSound();
-    C.init();
-    this.setScreen(menuScreen());
+    this.setScreen(startScene);
 
   }
 

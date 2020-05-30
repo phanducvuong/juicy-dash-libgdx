@@ -13,15 +13,12 @@ public class GameScene extends GScreen {
   public  Group            gParent;
   private GameUIController gameUIController;
   private ShakeScreen      shake;
-  private float            baseX, baseY;
 
   public GameScene() {
 
     this.gParent          = new Group();
     this.gameUIController = new GameUIController(this);
     this.shake            = new ShakeScreen(15f, 1f);
-    this.baseX            = GStage.getCamera().position.x;
-    this.baseY            = GStage.getCamera().position.y;
 
   }
 
@@ -37,8 +34,6 @@ public class GameScene extends GScreen {
 
   @Override
   public void run() {
-    GStage.getCamera().position.x = baseX;
-    GStage.getCamera().position.y = baseY;
     shake.update(Gdx.graphics.getDeltaTime(), GStage.getCamera());
   }
 

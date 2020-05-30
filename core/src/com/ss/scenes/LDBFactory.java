@@ -65,7 +65,7 @@ public class LDBFactory {
 
     @Override
     public GScreen backScreen() {
-      return GMain.gameScene;
+      return GMain.inst.gameScene;
     }
 
   }

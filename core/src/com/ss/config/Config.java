@@ -3,13 +3,13 @@ package com.ss.config;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.ss.GMain;
 import com.ss.core.util.GAssetsManager;
 
 public class Config {
 
   //label: init font
   public static final BitmapFont whiteFont                = GAssetsManager.getBitmapFont("white_font.fnt");
-  public static final BitmapFont redFont                  = GAssetsManager.getBitmapFont("red_font.fnt");
   public static final BitmapFont greenFont                = GAssetsManager.getBitmapFont("green_font.fnt");
   public static final BitmapFont brownFont                = GAssetsManager.getBitmapFont("font_brown.fnt");
 
@@ -20,6 +20,10 @@ public class Config {
   public static final FileHandle EXPLODE                  = Gdx.files.internal("particles/explode.p");
   public static final FileHandle WONDER                   = Gdx.files.internal("particles/wonder.p");
   public static final FileHandle LOVELY                   = Gdx.files.internal("particles/lovely.p");
+
+  //label: load json
+  private static final FileHandle JSON_GAMES              = Gdx.files.internal("other_games.json");
+  public  static final String     OTHER_GAME_STRING       = GMain.platform.GetConfigStringValue("", JSON_GAMES.readString());
 
   //label: count item match to show wonder
   public static final int     WONDER_LOVELY               = 8;
