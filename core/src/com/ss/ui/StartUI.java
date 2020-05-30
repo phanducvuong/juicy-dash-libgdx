@@ -138,8 +138,8 @@ public class StartUI extends Group {
                 sequence(
                         Actions.scaleBy(.1f, .1f, .05f, fastSlow),
                         Actions.scaleBy(-.1f, -.1f, .05f, fastSlow),
-                        run(onComplete),
-                        run(() -> btn.setTouchable(Touchable.enabled))
+                        run(() -> btn.setTouchable(Touchable.enabled)),
+                        run(onComplete)
                 )
         );
 

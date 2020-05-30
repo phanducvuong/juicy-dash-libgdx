@@ -11,13 +11,13 @@ import com.ss.utils.ShakeScreen;
 public class GameScene extends GScreen {
 
   public  Group            gParent;
-  private GameUIController gameUIController;
+  private GameUIController controller;
   private ShakeScreen      shake;
 
   public GameScene() {
 
     this.gParent          = new Group();
-    this.gameUIController = new GameUIController(this);
+    this.controller       = new GameUIController(this);
     this.shake            = new ShakeScreen(15f, 1f);
 
   }
@@ -30,6 +30,7 @@ public class GameScene extends GScreen {
   @Override
   public void init() {
     GStage.addToLayer(GLayer.ui, this.gParent);
+    controller.newGame();
   }
 
   @Override

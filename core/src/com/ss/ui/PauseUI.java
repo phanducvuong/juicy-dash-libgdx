@@ -65,7 +65,11 @@ public class PauseUI extends Group {
     gPause.addActor(btnHome);
 
     eventClickBtn(btnHome, () -> {
+      unlockTouchable();
       controller.scene.setScreen(GMain.inst.startScene);
+      controller.blackScreen.remove();
+      controller.isPause = false;
+      this.remove();
     });
 
     //label: btnRestart

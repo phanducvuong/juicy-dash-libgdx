@@ -101,8 +101,6 @@ public class GameUIController {
     initParticle();
     eventTouchScreen();
 
-    newGame();
-
     //label: test animation
 
     Image animJam = GUI.createImage(GMain.itemAtlas, "anim_jam");
@@ -811,173 +809,175 @@ public class GameUIController {
   //swap item which is the special item
   private void chkSpecialItemWhenSwap(Piece pStart, Piece pEnd) {
 
-    if (pStart.item.type == Type.clock && pEnd.item.type == Type.clock) {
+    if (pStart.item != null && pEnd.item != null) {
+      if (pStart.item.type == Type.clock && pEnd.item.type == Type.clock) {
 //      System.out.println("x2 time");
-      //todo: x2 time
-      updateTimeLine(ADD_SECOND*2);
+        //todo: x2 time
+        updateTimeLine(ADD_SECOND*2);
 
-      pStart.animClock(() -> {});
-      pEnd.animClock(this::updateBoard);
-    }
-    else if ((pStart.item.type == Type.clock || pEnd.item.type == Type.clock)
-            && (pStart.item.type == Type.jam || pEnd.item.type == Type.jam)) {
+        pStart.animClock(() -> {});
+        pEnd.animClock(this::updateBoard);
+      }
+      else if ((pStart.item.type == Type.clock || pEnd.item.type == Type.clock)
+              && (pStart.item.type == Type.jam || pEnd.item.type == Type.jam)) {
 //      System.out.println("x1 time, jam");
-      //todo: x1 time
-      updateTimeLine(ADD_SECOND);
+        //todo: x1 time
+        updateTimeLine(ADD_SECOND);
 
-      Piece point;
-      Piece pClock;
-      if (pStart.item.type == Type.jam) {
-        point = pStart;
-        pClock = pEnd;
+        Piece point;
+        Piece pClock;
+        if (pStart.item.type == Type.jam) {
+          point = pStart;
+          pClock = pEnd;
+        }
+        else {
+          point = pEnd;
+          pClock = pStart;
+        }
+
+        pClock.animClock(() -> {});
+        skillJam(util.getPieceTypeDifferenceWith(arrPosPiece, pStart, pEnd),
+                point,
+                () -> {
+                  point.animJam(() -> {});
+                  updateBoard();
+                });
+
       }
-      else {
-        point = pEnd;
-        pClock = pStart;
-      }
-
-      pClock.animClock(() -> {});
-      skillJam(util.getPieceTypeDifferenceWith(arrPosPiece, pStart, pEnd),
-              point,
-              () -> {
-                point.animJam(() -> {});
-                updateBoard();
-              });
-
-    }
-    else if ((pStart.item.type == Type.clock || pEnd.item.type == Type.clock)
-            && (pStart.item.type == Type.glass_fruit || pEnd.item.type == Type.glass_fruit)) {
+      else if ((pStart.item.type == Type.clock || pEnd.item.type == Type.clock)
+              && (pStart.item.type == Type.glass_fruit || pEnd.item.type == Type.glass_fruit)) {
 //      System.out.println("x1 time, glass juice");
-      //todo: x1 time
-      updateTimeLine(ADD_SECOND);
+        //todo: x1 time
+        updateTimeLine(ADD_SECOND);
 
-      if (pStart.row == pEnd.row) {
-        if (pStart.item.type == Type.glass_fruit) {
-          clrPieceByHor(pStart, this::updateBoard);
+        if (pStart.row == pEnd.row) {
+          if (pStart.item.type == Type.glass_fruit) {
+            clrPieceByHor(pStart, this::updateBoard);
+          }
+          else {
+            clrPieceByHor(pEnd, this::updateBoard);
+          }
         }
         else {
-          clrPieceByHor(pEnd, this::updateBoard);
+          if (pStart.item.type == Type.glass_fruit) {
+            clrPieceByVer(pStart, this::updateBoard);
+          }
+          else {
+            clrPieceByVer(pEnd, this::updateBoard);
+          }
         }
       }
-      else {
-        if (pStart.item.type == Type.glass_fruit) {
-          clrPieceByVer(pStart, this::updateBoard);
-        }
-        else {
-          clrPieceByVer(pEnd, this::updateBoard);
-        }
+      else if (pStart.item.type == Type.clock && util.chkTypeFruit(pEnd)) {
+//      System.out.println("x1 time, normal item");
+        //todo: x1 time
+        updateTimeLine(ADD_SECOND);
+
+        pStart.animClock(() -> {});
+
+        filterAll();
+        clrPiece(pEnd);
+        updateBoard();
       }
-    }
-    else if (pStart.item.type == Type.clock && util.chkTypeFruit(pEnd)) {
+      else if (pEnd.item.type == Type.clock && util.chkTypeFruit(pStart)) {
 //      System.out.println("x1 time, normal item");
-      //todo: x1 time
-      updateTimeLine(ADD_SECOND);
+        //todo: x1 time
+        updateTimeLine(ADD_SECOND);
 
-      pStart.animClock(() -> {});
+        pEnd.animClock(() -> {});
 
-      filterAll();
-      clrPiece(pEnd);
-      updateBoard();
-    }
-    else if (pEnd.item.type == Type.clock && util.chkTypeFruit(pStart)) {
-//      System.out.println("x1 time, normal item");
-      //todo: x1 time
-      updateTimeLine(ADD_SECOND);
-
-      pEnd.animClock(() -> {});
-
-      filterAll();
-      clrPiece(pStart);
-      updateBoard();
-    }
-    else if (pStart.item.type == Type.jam && pEnd.item.type == Type.jam) {
+        filterAll();
+        clrPiece(pStart);
+        updateBoard();
+      }
+      else if (pStart.item.type == Type.jam && pEnd.item.type == Type.jam) {
 //      System.out.println("jam + jam");
-      //todo: effect clear all
+        //todo: effect clear all
 
-      pBurnAll.start(GStage.getWorldWidth()/2, GStage.getWorldHeight()/2, 4f);
-      scene.shake();
-      pStart.animJam(() -> {});
-      pEnd.animJam(() -> {});
-      clrAll(pStart, pEnd);
+        pBurnAll.start(GStage.getWorldWidth()/2, GStage.getWorldHeight()/2, 4f);
+        scene.shake();
+        pStart.animJam(() -> {});
+        pEnd.animJam(() -> {});
+        clrAll(pStart, pEnd);
 
-      gamePlayUI.gBackground.addAction(
-              sequence(
-                      delay(1f),
-                      run(this::updateBoard)
-              )
-      );
+        gamePlayUI.gBackground.addAction(
+                sequence(
+                        delay(1f),
+                        run(this::updateBoard)
+                )
+        );
 
-    }
-    else if ((pStart.item.type == Type.jam || pEnd.item.type == Type.jam)
-            && (pStart.item.type == Type.glass_fruit || pEnd.item.type == Type.glass_fruit)) {
+      }
+      else if ((pStart.item.type == Type.jam || pEnd.item.type == Type.jam)
+              && (pStart.item.type == Type.glass_fruit || pEnd.item.type == Type.glass_fruit)) {
 //      System.out.println("jam + glass juice");
 
-      Piece point;
-      if (pStart.item.type == Type.jam)
-        point = pStart;
-      else
-        point = pEnd;
-
-      Item itemPoint = point.item;
-      skillJam(util.getPieceTypeDifferenceWith(arrPosPiece, pStart, pEnd), point,
-              () -> {
-                itemPoint.animJam(() -> {});
-                updateBoard();
-              }); //todo: effect jam + glass juice
-
-      if (pStart.row == pEnd.row) {
-        if (pStart.item.type == Type.glass_fruit)
-          clrPieceByHor(pStart, () -> {});
+        Piece point;
+        if (pStart.item.type == Type.jam)
+          point = pStart;
         else
-          clrPieceByHor(pEnd, () -> {});
-      }
-      else {
-        if (pStart.item.type == Type.glass_fruit)
-          clrPieceByVer(pStart, () -> {});
-        else
-          clrPieceByVer(pEnd, () -> {});
-      }
+          point = pEnd;
 
-    }
-    else if (pStart.item.type == Type.jam && util.chkTypeFruit(pEnd)) {
+        Item itemPoint = point.item;
+        skillJam(util.getPieceTypeDifferenceWith(arrPosPiece, pStart, pEnd), point,
+                () -> {
+                  itemPoint.animJam(() -> {});
+                  updateBoard();
+                }); //todo: effect jam + glass juice
+
+        if (pStart.row == pEnd.row) {
+          if (pStart.item.type == Type.glass_fruit)
+            clrPieceByHor(pStart, () -> {});
+          else
+            clrPieceByHor(pEnd, () -> {});
+        }
+        else {
+          if (pStart.item.type == Type.glass_fruit)
+            clrPieceByVer(pStart, () -> {});
+          else
+            clrPieceByVer(pEnd, () -> {});
+        }
+
+      }
+      else if (pStart.item.type == Type.jam && util.chkTypeFruit(pEnd)) {
 //      System.out.println("jam + fruit");
-      skillJam(pEnd, pStart, () -> {
-        pStart.animJam(() -> {});
-        updateBoard();
-      });
-    }
-    else if (pEnd.item.type == Type.jam && util.chkTypeFruit(pStart)) {
+        skillJam(pEnd, pStart, () -> {
+          pStart.animJam(() -> {});
+          updateBoard();
+        });
+      }
+      else if (pEnd.item.type == Type.jam && util.chkTypeFruit(pStart)) {
 //      System.out.println("jam + fruit");
-      skillJam(pStart, pEnd, () -> {
-        pEnd.animJam(() -> {});
-        updateBoard();
-      });
-    }
-    else if (pStart.item.type == Type.glass_fruit && pEnd.item.type == Type.glass_fruit) {
+        skillJam(pStart, pEnd, () -> {
+          pEnd.animJam(() -> {});
+          updateBoard();
+        });
+      }
+      else if (pStart.item.type == Type.glass_fruit && pEnd.item.type == Type.glass_fruit) {
 //      System.out.println("glass juice + glass juice");
 //      clrPiece(pStart);
-      clrPieceByHorAndVer(pEnd, this::updateBoard);
-    }
-    else if (pStart.item.type == Type.glass_fruit && util.chkTypeFruit(pEnd)) {
+        clrPieceByHorAndVer(pEnd, this::updateBoard);
+      }
+      else if (pStart.item.type == Type.glass_fruit && util.chkTypeFruit(pEnd)) {
 //      System.out.println("glass juice + fruit");
-      filterAll();
-      if (pStart.row == pEnd.row)
-        clrPieceByHor(pStart, this::updateBoard);
-      else
-        clrPieceByVer(pStart, this::updateBoard);
-    }
-    else if (pEnd.item.type == Type.glass_fruit && util.chkTypeFruit(pStart)) {
+        filterAll();
+        if (pStart.row == pEnd.row)
+          clrPieceByHor(pStart, this::updateBoard);
+        else
+          clrPieceByVer(pStart, this::updateBoard);
+      }
+      else if (pEnd.item.type == Type.glass_fruit && util.chkTypeFruit(pStart)) {
 //      System.out.println("glass juice + fruit");
-      filterAll();
-      if (pStart.row == pEnd.row)
-        clrPieceByHor(pEnd, this::updateBoard);
-      else
-        clrPieceByVer(pEnd, this::updateBoard);
-    }
-    else {
+        filterAll();
+        if (pStart.row == pEnd.row)
+          clrPieceByHor(pEnd, this::updateBoard);
+        else
+          clrPieceByVer(pEnd, this::updateBoard);
+      }
+      else {
 //      System.out.println("normal + normal");
-      filterAll();
-      updateBoard();
+        filterAll();
+        updateBoard();
+      }
     }
 
   }

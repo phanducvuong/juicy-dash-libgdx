@@ -355,7 +355,11 @@ public class GamePlayUI extends Group {
     });
 
     imgClick(btnHome, () -> {
-      //todo: setScreen homeScreen
+      controller.scene.setScreen(GMain.inst.startScene);
+      controller.blackScreen.remove();
+      controller.isPause = false;
+      btnHome.setTouchable(Touchable.enabled);
+      gPopupGameOver.remove();
     });
 
     gPopupGameOver.moveBy(0, 600);
