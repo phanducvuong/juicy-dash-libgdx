@@ -137,7 +137,6 @@ public class CrossPanel extends Group {
         super.clicked(event, x, y);
 
         btnX.setTouchable(Touchable.disabled);
-        blackScreen.remove();
         animEscape(btnX);
 
       }
@@ -154,6 +153,7 @@ public class CrossPanel extends Group {
                     ),
                     run(() -> {
                       btn.setTouchable(Touchable.enabled);
+                      blackScreen.remove();
                       this.remove();
                     })
             )

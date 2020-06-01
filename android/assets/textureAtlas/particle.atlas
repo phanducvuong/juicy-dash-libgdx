@@ -6,7 +6,7 @@ filter: Nearest,Nearest
 repeat: none
 006
   rotate: false
-  xy: 2, 2
+  xy: 113, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -76,7 +76,7 @@ repeat: none
   index: -1
 4
   rotate: false
-  xy: 1820, 316
+  xy: 1886, 316
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -90,7 +90,7 @@ repeat: none
   index: -1
 5-5
   rotate: false
-  xy: 1952, 342
+  xy: 663, 80
   size: 38, 38
   orig: 38, 38
   offset: 0, 0
@@ -139,7 +139,7 @@ SL_XiangZ_00_04
   index: -1
 SL_XiangZ_01_03
   rotate: false
-  xy: 1886, 316
+  xy: 1952, 316
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -165,6 +165,13 @@ fantastic
   orig: 600, 194
   offset: 0, 0
   index: -1
+feng1
+  rotate: false
+  xy: 2, 2
+  size: 109, 32
+  orig: 109, 32
+  offset: 0, 0
+  index: -1
 guang02
   rotate: false
   xy: 2, 36
@@ -172,16 +179,44 @@ guang02
   orig: 186, 82
   offset: 0, 0
   index: -1
+hong01
+  rotate: false
+  xy: 1429, 244
+  size: 36, 25
+  orig: 36, 25
+  offset: 0, 0
+  index: -1
+hong02
+  rotate: false
+  xy: 743, 83
+  size: 36, 35
+  orig: 36, 35
+  offset: 0, 0
+  index: -1
+hong07
+  rotate: false
+  xy: 1169, 212
+  size: 118, 25
+  orig: 118, 25
+  offset: 0, 0
+  index: -1
+hong08
+  rotate: false
+  xy: 909, 148
+  size: 123, 35
+  orig: 123, 35
+  offset: 0, 0
+  index: -1
 liuxing6
   rotate: false
-  xy: 1169, 196
+  xy: 408, 77
   size: 86, 41
   orig: 86, 41
   offset: 0, 0
   index: -1
 liuxing7
   rotate: false
-  xy: 909, 142
+  xy: 320, 77
   size: 86, 41
   orig: 86, 41
   offset: 0, 0
@@ -200,6 +235,13 @@ spark-alt2
   orig: 128, 128
   offset: 0, 0
   index: -1
+wsparticle
+  rotate: false
+  xy: 1820, 316
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
 wsparticle37
   rotate: false
   xy: 1754, 316
@@ -216,8 +258,29 @@ wujiaoxing
   index: -1
 wujiaoxing0
   rotate: false
-  xy: 320, 74
+  xy: 616, 74
   size: 45, 44
   orig: 45, 44
+  offset: 0, 0
+  index: -1
+yezi
+  rotate: false
+  xy: 703, 83
+  size: 38, 35
+  orig: 38, 35
+  offset: 0, 0
+  index: -1
+yf14
+  rotate: false
+  xy: 496, 57
+  size: 61, 61
+  orig: 61, 61
+  offset: 0, 0
+  index: -1
+yf2
+  rotate: false
+  xy: 559, 57
+  size: 55, 61
+  orig: 55, 61
   offset: 0, 0
   index: -1

@@ -20,6 +20,8 @@ public class Config {
   public static final FileHandle EXPLODE                  = Gdx.files.internal("particles/explode.p");
   public static final FileHandle WONDER                   = Gdx.files.internal("particles/wonder.p");
   public static final FileHandle LOVELY                   = Gdx.files.internal("particles/lovely.p");
+  public static final FileHandle NEW_ROUND                = Gdx.files.internal("particles/new_round.p");
+  public static final FileHandle WIND                     = Gdx.files.internal("particles/wind.p");
 
   //label: load json
   private static final FileHandle JSON_GAMES              = Gdx.files.internal("other_games.json");
@@ -68,5 +70,28 @@ public class Config {
   public static final int     SCORE_CLOCK                 = 15;
   public static final int     SCORE_SKILL_JAM             = 120;
   public static final int     SCORE_SKILL_GLASS_JUICE     = 100;
+
+  //label: volume sound
+  public static final float   MUSIC_VOLUME                = .5f;
+  public static final float   CLICK_VOLUME                = 1f;
+  public static final float   LASER_OFF_VOLUME            = 1f;
+  public static final float   FREEZING_VOLUME             = .4f;
+  public static final float   ICE_EXPLODE_VOLUME          = 1f;
+  public static final float   CHEW_VOLUME                 = 1f;
+  public static final float   DROP_VOLUME                 = 1f;
+  public static final float   JAM_VOLUME                  = 1f;
+  public static final float   ALARM_VOLUME                = 1f;
+  public static final float   AMAZING_VOLUME              = .5f;
+  public static final float   AWESOME_VOLUME              = .5f;
+  public static final float   FANTASTIC_VOLUME            = .5f;
+  public static final float   LOVELY_VOLUME               = .5f;
+  public static final float   CLOCK_VOLUME                = 1f;
+  public static final float   EXCHANGE_VOLUME             = 1f;
+  public static final float   FIREWORK_VOLUME             = 1f;
+  public static final float   GLASS_JUICE_VOLUME          = 1f;
+  public static final float   LINE_VOLUME                 = 1f;
+  public static final float   WIN_VOLUME                  = 1f;
+  public static final float   STAMP_VOLUME                = 1f;
+  public static final float   LOSE_VOLUME                 = 1f;
 
 }

@@ -99,12 +99,6 @@ public class Util {
     return null;
   }
 
-  public float distTwoPoint(Vector2 p1, Vector2 p2) {
-    float dx = p2.x - p1.x;
-    float dy = p2.y - p1.y;
-    return (float) Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-  }
-
   public Item getItem(List<Item> items) {
     for (Item item : items) {
       if (!item.isAlive) {
@@ -115,8 +109,25 @@ public class Util {
     return null;
   }
 
-  public Item getRndItem(HashMap<String, List<Item>> hm, List<Type> types) {
+  public boolean chkTypeIn(List<Type> types, Type typeChk) {
+    for (Type type : types) {
+      if (typeChk == type)
+        return true;
+    }
+    return false;
+  }
 
+  public String rndSoundDrop() {
+    int rnd = (int) (Math.round(Math.random()*2) + 1);
+    return "drop_"+rnd;
+  }
+
+  public String rndSoundChew() {
+    int rnd = (int) (Math.round(Math.random()*2) + 1);
+    return "chew_"+rnd;
+  }
+
+  public Item getRndItem(HashMap<String, List<Item>> hm, List<Type> types) {
     int d = types.size();
     int rnd = (int) Math.floor(Math.random() * d);
     String key = "item_" + types.get(rnd).name();
@@ -129,7 +140,6 @@ public class Util {
       }
     }
     return null;
-
   }
 
   public List<Item> getLsItem(HashMap<String, List<Item>> hmItem, List<Type> types) {

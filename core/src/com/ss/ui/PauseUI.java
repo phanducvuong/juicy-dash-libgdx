@@ -2,7 +2,6 @@ package com.ss.ui;
 
 import static com.badlogic.gdx.math.Interpolation.*;
 
-import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
@@ -13,7 +12,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.ss.GMain;
+import com.ss.config.Config;
 import com.ss.controller.GameUIController;
+import com.ss.core.effect.SoundEffects;
 import com.ss.core.util.GStage;
 import com.ss.core.util.GUI;
 
@@ -92,6 +93,10 @@ public class PauseUI extends Group {
     gPause.addActor(btnSoundOn);
 
     eventClickBtn(btnSoundOn, () -> {
+      SoundEffects.isMuteSound = true;
+      SoundEffects.isMuteMusic = true;
+      SoundEffects.music.stop();
+
       btnSoundOn.setTouchable(Touchable.enabled);
       btnSoundOn.setVisible(false);
       btnSoundOff.setVisible(true);
@@ -106,6 +111,10 @@ public class PauseUI extends Group {
     gPause.addActor(btnSoundOff);
 
     eventClickBtn(btnSoundOff, () -> {
+      SoundEffects.isMuteSound = false;
+      SoundEffects.isMuteMusic = false;
+      SoundEffects.music.play();
+
       btnSoundOff.setTouchable(Touchable.enabled);
       btnSoundOff.setVisible(false);
       btnSoundOn.setVisible(true);
@@ -122,6 +131,9 @@ public class PauseUI extends Group {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         super.clicked(event, x, y);
+
+        SoundEffects.start("click", Config.CLICK_VOLUME);
+
         btn.setTouchable(Touchable.disabled);
         animClick(btn, onComplete);
       }

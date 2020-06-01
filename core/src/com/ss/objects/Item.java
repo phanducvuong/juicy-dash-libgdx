@@ -10,11 +10,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
 import com.ss.GMain;
 import com.ss.config.Type;
+import com.ss.core.action.exAction.GSimpleAction;
+import com.ss.core.effect.SoundEffects;
 import com.ss.core.util.GStage;
 import com.ss.core.util.GUI;
 import com.ss.gameLogic.effects.Particle;
 import com.ss.ui.GamePlayUI;
 import com.ss.utils.Bezier;
+import com.ss.utils.Util;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 import static com.ss.config.Config.*;
@@ -193,7 +196,10 @@ public class Item extends Group {
   }
 
   //label: anim fruit
-  public void startAnimFruit() {
+  public void startAnimFruit(boolean isSpecialItem) {
+    if (!isSpecialItem)
+      SoundEffects.start(Util.inst().rndSoundChew(), CHEW_VOLUME);
+
     animLbScore();
     fruit.setVisible(false);
     this.addActor(gAnimFruit);
@@ -417,12 +423,15 @@ public class Item extends Group {
             sequence(
                     alpha(1f, 1f, linear),
                     run(() -> {
+                      SoundEffects.start("ice_explode", ICE_EXPLODE_VOLUME);
                       this.addActor(gAnimFruit);
-                      startAnimFruit();
+                      startAnimFruit(true);
                       resetAnimIce();
-                      if (pIce != null)
+                      if (pIce != null) {
+                        SoundEffects.start("glass_juice", GLASS_JUICE_VOLUME);
                         pIce.start(this.getX() + this.getWidth()/2,
                                    this.getY() + this.getHeight()/2, 1f);
+                      }
                     })
             )
     );

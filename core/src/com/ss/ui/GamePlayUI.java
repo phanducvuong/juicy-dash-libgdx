@@ -1,6 +1,8 @@
 package com.ss.ui;
 
 import static com.badlogic.gdx.math.Interpolation.*;
+
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -16,11 +18,14 @@ import com.ss.GMain;
 import com.ss.config.C;
 import com.ss.config.Config;
 import com.ss.controller.GameUIController;
+import com.ss.core.action.exAction.GSimpleAction;
+import com.ss.core.effect.SoundEffects;
 import com.ss.core.util.GStage;
 import com.ss.core.util.GUI;
 import com.ss.gameLogic.effects.Particle;
 import com.ss.utils.Button;
 import com.ss.utils.Clipping;
+import com.ss.utils.Solid;
 
 public class GamePlayUI extends Group {
 
@@ -63,8 +68,12 @@ public class GamePlayUI extends Group {
 
   private Group     gAnimLbRound;
   private Label     animLbRound;
+  private Image     black;
 
-  private Particle  pWonder, pLovely;
+  private Particle  pWonder,
+                    pLovely,
+                    pNewRound,
+                    pWind;
 
   public GamePlayUI(GameUIController controller) {
 
@@ -79,13 +88,19 @@ public class GamePlayUI extends Group {
 
     this.pWonder      = new Particle(gAnimSkill, Config.WONDER, GMain.particleAtlas);
     this.pWonder.initLsEmitter();
+
     this.pLovely      = new Particle(gAnimSkill, Config.LOVELY, GMain.particleAtlas);
+    this.pNewRound    = new Particle(gAnimSkill, Config.NEW_ROUND, GMain.particleAtlas);
+    this.pWind        = new Particle(gAnimSkill, Config.WIND, GMain.particleAtlas);
 
     this.addActor(gBackground);
     this.addActor(gItem);
     this.addActor(gAnimLb);
     this.addActor(gAnimSkill);
     this.addActor(gPopup);
+
+    this.black = new Image(Solid.create(new Color(0/255f, 0/255f, 0/255f, .35f)));
+    this.black.setSize(CENTER_X*2, CENTER_Y*2);
 
     initBg();
     initTime();
@@ -102,7 +117,6 @@ public class GamePlayUI extends Group {
     gAnimLbRound = new Group();
     Image bgRound = GUI.createImage(GMain.bgAtlas, "bg_round");
     gAnimLbRound.setSize(bgRound.getWidth(), bgRound.getHeight());
-//    gAnimLbRound.setPosition(CENTER_X - gAnimLbRound.getWidth()/2, -gAnimLbRound.getHeight() - 10);
     gAnimLbRound.setPosition(-gAnimLbRound.getWidth() - 10, CENTER_Y - gAnimLbRound.getHeight()/2);
     gAnimLbRound.addActor(bgRound);
 
@@ -359,6 +373,7 @@ public class GamePlayUI extends Group {
       controller.blackScreen.remove();
       controller.isPause = false;
       btnHome.setTouchable(Touchable.enabled);
+      hidePopupGameOver();
       gPopupGameOver.remove();
     });
 
@@ -419,6 +434,8 @@ public class GamePlayUI extends Group {
   }
 
   public void showPopupGameOver() {
+    SoundEffects.start("lose", Config.LOSE_VOLUME);
+
     lbRoundGameOver.setText(controller.round+"");
     lbScoreGameOver.setText(controller.scorePre+"");
     lbGoalGameOver.setText(controller.target+"");
@@ -447,6 +464,8 @@ public class GamePlayUI extends Group {
     gAnimLb.addActor(gLbComplete);
     float x = gLbComplete.getX() + gLbComplete.getWidth()/2;
     float y = gLbComplete.getY() + gLbComplete.getHeight()/2;
+
+    SoundEffects.start("win", Config.WIN_VOLUME);
     pComplete.start(x, y, 2f);
 
     gLbComplete.addAction(
@@ -467,14 +486,22 @@ public class GamePlayUI extends Group {
   }
 
   public void animLbRound(Runnable onNextLv) {
+    gAnimLb.addActor(black);
     gAnimLb.addActor(gAnimLbRound);
     gAnimLbRound.addAction(
             sequence(
+                    delay(.75f),
+                    run(() -> SoundEffects.start("line", 1f)),
                     moveTo(CENTER_X - gAnimLbRound.getWidth()/2,
                            CENTER_Y - gAnimLbRound.getHeight()/2, .5f, fastSlow),
-                    delay(1f),
-                    moveTo(CENTER_X*2 + gAnimLbRound.getWidth()/2 + 10,
-                           CENTER_Y - gAnimLbRound.getHeight()/2, .35f, swingIn),
+                    delay(1.25f),
+                    run(() -> {
+                      gAnimLbRound.getColor().a = 0f;
+                      pNewRound.start(CENTER_X, CENTER_Y, 1.5f);
+                      SoundEffects.start("laser_off", 1f);
+                    }),
+                    delay(.75f),
+                    run(() -> black.remove()),
                     run(onNextLv),
                     run(this::resetAnimLbRound)
             )
@@ -482,11 +509,19 @@ public class GamePlayUI extends Group {
   }
 
   public void showPWonder(int idWonder) { //idWonder => sprite tương ứng với mỗi điểm mỗi khi ăn được
+    switch (idWonder) {
+      case 0: SoundEffects.start("fantastic", Config.FANTASTIC_VOLUME); break;
+      case 1: SoundEffects.start("awesome", Config.AWESOME_VOLUME); break;
+      case 2: SoundEffects.start("amazing", Config.AMAZING_VOLUME); break;
+    }
+
     pWonder.changeSprite(idWonder);
     pWonder.start(CENTER_X, CENTER_Y, 2.5f);
+    pWind.start(CENTER_X, CENTER_Y - 300, 1f);
   }
 
   public void showLovely() {
+    SoundEffects.start("lovely", Config.LOVELY_VOLUME);
     pLovely.start(CENTER_X, CENTER_Y, 2.5f);
   }
 
@@ -501,7 +536,8 @@ public class GamePlayUI extends Group {
   }
 
   private void resetAnimLbRound() {
-    gAnimLbRound.setPosition(-gAnimLbRound.getWidth()/2 - 10, CENTER_Y - gAnimLbRound.getHeight()/2);
+    gAnimLbRound.getColor().a = 1f;
+    gAnimLbRound.setPosition(-gAnimLbRound.getWidth() - 10, CENTER_Y - gAnimLbRound.getHeight()/2);
     gAnimLbRound.remove();
   }
 
@@ -527,6 +563,9 @@ public class GamePlayUI extends Group {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         super.clicked(event, x, y);
+
+        SoundEffects.start("click", Config.CLICK_VOLUME);
+
         btn.setTouchable(Touchable.disabled);
         animClick(btn, onComplete);
       }

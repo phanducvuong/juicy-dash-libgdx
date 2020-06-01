@@ -13,7 +13,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.ss.GMain;
+import com.ss.config.Config;
 import com.ss.controller.StartUIController;
+import com.ss.core.effect.SoundEffects;
 import com.ss.core.util.GStage;
 import com.ss.core.util.GUI;
 import com.ss.utils.Solid;
@@ -46,6 +48,7 @@ public class StartUI extends Group {
     this.addActor(gBackground);
     this.addActor(gPopup);
 
+    SoundEffects.startMusic();
     initBg();
 
     Image icon = GUI.createImage(GMain.bgAtlas, "icon_pause");
@@ -109,11 +112,19 @@ public class StartUI extends Group {
 
     //label: event click
     imgClick(soundOn, () -> {
+      SoundEffects.isMuteMusic = true;
+      SoundEffects.isMuteSound = true;
+      SoundEffects.music.stop();
+
       soundOn.setVisible(false);
       soundOff.setVisible(true);
     });
 
     imgClick(soundOff, () -> {
+      SoundEffects.isMuteMusic = false;
+      SoundEffects.isMuteSound = false;
+      SoundEffects.music.play();
+
       soundOn.setVisible(true);
       soundOff.setVisible(false);
     });
@@ -132,6 +143,8 @@ public class StartUI extends Group {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         super.clicked(event, x, y);
+
+        SoundEffects.start("click", Config.CLICK_VOLUME);
 
         btn.setTouchable(Touchable.disabled);
         btn.addAction(

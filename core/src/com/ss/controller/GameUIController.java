@@ -11,8 +11,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.ss.GMain;
+import com.ss.config.Config;
 import com.ss.config.Type;
 import com.ss.core.action.exAction.GSimpleAction;
+import com.ss.core.effect.SoundEffects;
 import com.ss.core.util.GStage;
 import com.ss.core.util.GUI;
 import com.ss.gameLogic.effects.Particle;
@@ -120,6 +122,7 @@ public class GameUIController {
         super.clicked(event, x, y);
 
         addItemAt(arrPosPiece[0][1], "item_jam");
+        addItemAt(arrPosPiece[0][2], "item_jam");
 
       }
     });
@@ -169,6 +172,7 @@ public class GameUIController {
     lv.add(Type.grape);
     lv.add(Type.banana);
     lv.add(Type.apple);
+
   }
 
   private void initPiece() {
@@ -283,7 +287,7 @@ public class GameUIController {
 
   private void addItemAt(Piece piece, String key) {
     Item item = util.getItem(hmItem.get(key));
-    clrPiece(piece);
+    clrPiece(piece, false);
     piece.setItem(item);
     item.setPosition(piece.pos);
     addToGroup(item, gamePlayUI.gItem);
@@ -366,6 +370,13 @@ public class GameUIController {
         arrPosPiece[row][col].setItem(piece.item);
         piece.clear();
         item.moveToPos(arrPosPiece[row][col].pos, .35f);
+
+        item.addAction(
+                sequence(
+                        delay(.195f),
+                        run(() -> SoundEffects.start(util.rndSoundDrop(), DROP_VOLUME))
+                )
+        );
         break;
       }
     }
@@ -374,11 +385,14 @@ public class GameUIController {
   private void clrLsFilterPiece(List<Piece> filter) {
     for (Piece piece : filter) {
       tmpScore += SCORE_FRUIT;
-      clrPiece(piece);
+      clrPiece(piece, false);
     }
   }
 
   private void clrPieceByVer(Piece piece, Runnable onUpdateBoard) {
+
+    SoundEffects.start("freezing", FREEZING_VOLUME);
+
     //label: anim glass juice
     piece.animGlassJuice(false, false, onUpdateBoard);
 
@@ -416,6 +430,9 @@ public class GameUIController {
   }
 
   private void clrPieceByHor(Piece piece, Runnable onUpdateBoard) {
+
+    SoundEffects.start("freezing", FREEZING_VOLUME);
+
     //label: anim glass juice
     piece.animGlassJuice(true, false, onUpdateBoard);
 
@@ -455,6 +472,9 @@ public class GameUIController {
   }
 
   private void clrPieceByHorAndVer(Piece piece, Runnable onUpdateBoard) {
+
+    SoundEffects.start("freezing", FREEZING_VOLUME);
+
     //label: anim glass juice
     piece.animGlassJuice(true, true, onUpdateBoard);
 
@@ -538,7 +558,7 @@ public class GameUIController {
         if (piece != pStart && piece != pEnd) {
           tmpScore += SCORE_SKILL_JAM + 40;
           piece.setScore(SCORE_SKILL_JAM + 40);
-          clrPiece(piece);
+          clrPiece(piece, true);
         }
       }
   }
@@ -568,6 +588,14 @@ public class GameUIController {
   }
 
   private void skillJam(Piece pCheck, Piece point, Runnable onComplete) {
+
+    gamePlayUI.gBackground.addAction(
+            sequence(
+                    delay(1f),
+                    run(() -> SoundEffects.start("jam", JAM_VOLUME))
+            )
+    );
+
     List<Piece> targets = new ArrayList<>();
     for (Piece[] pieces : arrPosPiece) {
       for (Piece target : pieces)
@@ -594,10 +622,10 @@ public class GameUIController {
 
   }
 
-  private void clrPiece(Piece piece) {
+  private void clrPiece(Piece piece, boolean isSpeciaItem) {
     if (piece.item != null) {
       if (util.chkTypeFruit(piece))
-        piece.item.startAnimFruit();
+        piece.item.startAnimFruit(isSpeciaItem);
       else
         piece.item.remove();
     }
@@ -660,7 +688,7 @@ public class GameUIController {
                         target.setScore(SCORE_SKILL_JAM);
                         pBurn.start(x, y,.5f);
                       }
-                      clrPiece(target);
+                      clrPiece(target, true);
                     }),
                     run(onComplete),
                     run(ray::remove)
@@ -689,7 +717,7 @@ public class GameUIController {
                           nextLevel();
                           //todo: next level
                         }
-                        else {
+                        else if (!isGameOver) {
                           filterAll();
                           updateBoard();
                         }
@@ -736,6 +764,13 @@ public class GameUIController {
     addToGroup(item, gamePlayUI.gItem);
     item.setPosStart(piece.pos);
     item.moveToPos(piece.pos, .2f);
+
+    item.addAction(
+            sequence(
+                    delay(.195f),
+                    run(() -> SoundEffects.start(util.rndSoundDrop(), DROP_VOLUME))
+            )
+    );
   }
   //-------------------action add new item---------------------------------
 
@@ -752,6 +787,7 @@ public class GameUIController {
               moveTo(pStart.pos.x, pStart.pos.y, WRAP_ITEM, fastSlow)
       );
 
+      SoundEffects.start("exchange", EXCHANGE_VOLUME);
       pEnd.item.addAction(
               sequence(
                       moveTo(pEnd.pos.x, pEnd.pos.y, WRAP_ITEM, fastSlow),
@@ -773,6 +809,7 @@ public class GameUIController {
       pStart.item = pEnd.item;
       pEnd.item = tmp;
 
+      SoundEffects.start("exchange", EXCHANGE_VOLUME);
       pStart.item.addAction(
               sequence(
                       moveTo(pStart.pos.x, pStart.pos.y, WRAP_ITEM, fastSlow),
@@ -798,7 +835,7 @@ public class GameUIController {
   private void addSpecialItem(Piece piece, String key) {
 //    System.out.println("Add special");
     Item item = util.getItem(hmItem.get(key));
-    clrPiece(piece);
+    clrPiece(piece, true);
     piece.setItem(item);
     item.setPosition(piece.pos);
     addToGroup(item, gamePlayUI.gItem);
@@ -875,7 +912,7 @@ public class GameUIController {
         pStart.animClock(() -> {});
 
         filterAll();
-        clrPiece(pEnd);
+        clrPiece(pEnd, false);
         updateBoard();
       }
       else if (pEnd.item.type == Type.clock && util.chkTypeFruit(pStart)) {
@@ -886,13 +923,15 @@ public class GameUIController {
         pEnd.animClock(() -> {});
 
         filterAll();
-        clrPiece(pStart);
+        clrPiece(pStart, false);
         updateBoard();
       }
       else if (pStart.item.type == Type.jam && pEnd.item.type == Type.jam) {
 //      System.out.println("jam + jam");
         //todo: effect clear all
 
+        SoundEffects.start("stamp", STAMP_VOLUME);
+        gamePlayUI.showPWonder(2);
         pBurnAll.start(GStage.getWorldWidth()/2, GStage.getWorldHeight()/2, 4f);
         scene.shake();
         pStart.animJam(() -> {});
@@ -1111,6 +1150,9 @@ public class GameUIController {
 
   //label: add time for clock
   private void updateTimeLine(int second) {
+
+    SoundEffects.start("clock", CLOCK_VOLUME);
+
     int temp = timeOut + second;
     if (temp > timeExpired) {
       timeOut = timeExpired;
@@ -1167,6 +1209,9 @@ public class GameUIController {
     gamePlayUI.updateRound(round);
     gamePlayUI.timeLine.reset(1f, 1f);
 
+    if (round == 10 && !util.chkTypeIn(lv, Type.kiwi))
+      lv.add(Type.kiwi);
+
     if (round == 1)
       gamePlayUI.animLbRound(onNextLv);
     else
@@ -1176,6 +1221,10 @@ public class GameUIController {
 
   public void continueWhenWatchAdsGetTime() {
     isGameOver       = false;
+    isPause          = false;
+    isWrap           = false;
+    pieceStart       = null;
+    pieceEnd         = null;
     updateTimeLine(TIME_WATCH_ADS);
   }
 
