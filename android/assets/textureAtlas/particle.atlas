@@ -13,7 +13,7 @@ repeat: none
   index: -1
 013
   rotate: false
-  xy: 1688, 316
+  xy: 1820, 316
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -55,7 +55,7 @@ repeat: none
   index: -1
 2-6
   rotate: false
-  xy: 1622, 316
+  xy: 1754, 316
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -76,21 +76,21 @@ repeat: none
   index: -1
 4
   rotate: false
-  xy: 1886, 316
+  xy: 1688, 316
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 5-3
   rotate: false
-  xy: 1169, 239
+  xy: 1299, 239
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 5-5
   rotate: false
-  xy: 663, 80
+  xy: 408, 80
   size: 38, 38
   orig: 38, 38
   offset: 0, 0
@@ -132,14 +132,14 @@ SL_XiangZ_00_03
   index: -1
 SL_XiangZ_00_04
   rotate: false
-  xy: 1299, 239
+  xy: 1169, 239
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 SL_XiangZ_01_03
   rotate: false
-  xy: 1952, 316
+  xy: 1622, 316
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -156,6 +156,34 @@ awesome
   xy: 604, 316
   size: 499, 194
   orig: 499, 194
+  offset: 0, 0
+  index: -1
+bai01
+  rotate: false
+  xy: 488, 82
+  size: 37, 36
+  orig: 37, 36
+  offset: 0, 0
+  index: -1
+bai02
+  rotate: false
+  xy: 1429, 245
+  size: 37, 24
+  orig: 37, 24
+  offset: 0, 0
+  index: -1
+bai07
+  rotate: false
+  xy: 1039, 159
+  size: 117, 25
+  orig: 117, 25
+  offset: 0, 0
+  index: -1
+bai08
+  rotate: false
+  xy: 909, 148
+  size: 128, 35
+  orig: 128, 35
   offset: 0, 0
   index: -1
 fantastic
@@ -179,44 +207,16 @@ guang02
   orig: 186, 82
   offset: 0, 0
   index: -1
-hong01
-  rotate: false
-  xy: 1429, 244
-  size: 36, 25
-  orig: 36, 25
-  offset: 0, 0
-  index: -1
-hong02
-  rotate: false
-  xy: 743, 83
-  size: 36, 35
-  orig: 36, 35
-  offset: 0, 0
-  index: -1
-hong07
-  rotate: false
-  xy: 1169, 212
-  size: 118, 25
-  orig: 118, 25
-  offset: 0, 0
-  index: -1
-hong08
-  rotate: false
-  xy: 909, 148
-  size: 123, 35
-  orig: 123, 35
-  offset: 0, 0
-  index: -1
 liuxing6
   rotate: false
-  xy: 408, 77
+  xy: 320, 77
   size: 86, 41
   orig: 86, 41
   offset: 0, 0
   index: -1
 liuxing7
   rotate: false
-  xy: 320, 77
+  xy: 1169, 196
   size: 86, 41
   orig: 86, 41
   offset: 0, 0
@@ -237,14 +237,14 @@ spark-alt2
   index: -1
 wsparticle
   rotate: false
-  xy: 1820, 316
+  xy: 1952, 316
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 wsparticle37
   rotate: false
-  xy: 1754, 316
+  xy: 1886, 316
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -258,28 +258,28 @@ wujiaoxing
   index: -1
 wujiaoxing0
   rotate: false
-  xy: 616, 74
+  xy: 1377, 193
   size: 45, 44
   orig: 45, 44
   offset: 0, 0
   index: -1
 yezi
   rotate: false
-  xy: 703, 83
+  xy: 448, 83
   size: 38, 35
   orig: 38, 35
   offset: 0, 0
   index: -1
 yf14
   rotate: false
-  xy: 496, 57
+  xy: 1257, 176
   size: 61, 61
   orig: 61, 61
   offset: 0, 0
   index: -1
 yf2
   rotate: false
-  xy: 559, 57
+  xy: 1320, 176
   size: 55, 61
   orig: 55, 61
   offset: 0, 0

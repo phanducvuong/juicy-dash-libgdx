@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.ss.GMain;
-import com.ss.config.Config;
 import com.ss.config.Type;
 import com.ss.core.action.exAction.GSimpleAction;
 import com.ss.core.effect.SoundEffects;
@@ -66,7 +65,9 @@ public class GameUIController {
                   targetIncrease,
                   tmpScore,              //tmpScore: điểm mỗi khi ăn trái cây để update scorePre
                   countScoreToShowWonder;              //tmpScore: điểm mỗi khi ăn trái cây để update scorePre
-  public boolean  isCompleteRound   = true;
+  public boolean  isCompleteRound         = true;
+  public int      amountItemStar,
+                  amountItemBoom;
 
   private List<Image>     lsRayJam;
   private Particle        pBurnAll;
@@ -74,24 +75,27 @@ public class GameUIController {
 
   public GameUIController(GameScene gameScene) {
 
-    this.gParent            = gameScene.gParent;
-    this.scene              = gameScene;
+    this.gParent                  = gameScene.gParent;
+    this.scene                    = gameScene;
 
-    this.gamePlayUI         = new GamePlayUI(this);
-    this.pauseUI            = new PauseUI(this);
-    this.blackScreen        = new Image(Solid.create(new Color(128/255f, 213/255f, 181/255f, .45f)));
+    this.amountItemStar = AMOUNT_SKILL_JAM;
+    this.amountItemBoom = AMOUNT_SKILL_GLASS_JUICE;
+
+    this.gamePlayUI               = new GamePlayUI(this);
+    this.pauseUI                  = new PauseUI(this);
+    this.blackScreen              = new Image(Solid.create(new Color(128/255f, 213/255f, 181/255f, .45f)));
     this.blackScreen.setSize(GStage.getWorldWidth(), GStage.getWorldHeight());
 
-    this.hmItem             = new HashMap<>();
-    this.lv                 = new ArrayList<>();
-    this.lsRayJam           = new ArrayList<>();
-    this.lsParticleIce      = new ArrayList<>();
-    this.lsParticleBurnJam  = new ArrayList<>();
+    this.hmItem                   = new HashMap<>();
+    this.lv                       = new ArrayList<>();
+    this.lsRayJam                 = new ArrayList<>();
+    this.lsParticleIce            = new ArrayList<>();
+    this.lsParticleBurnJam        = new ArrayList<>();
 
-    this.target             = 0;
-    this.targetIncrease     = TARGET;
-    this.tmpScore           = 0;
-    this.timeExpired        = TIME_START_GAME;
+    this.target                   = 0;
+    this.targetIncrease           = TARGET;
+    this.tmpScore                 = 0;
+    this.timeExpired              = TIME_START_GAME;
 
     //label add ui to scene
     gParent.addActor(gamePlayUI);
@@ -121,8 +125,7 @@ public class GameUIController {
       public void clicked(InputEvent event, float x, float y) {
         super.clicked(event, x, y);
 
-        addItemAt(arrPosPiece[0][1], "item_jam");
-        addItemAt(arrPosPiece[0][2], "item_jam");
+        arrPosPiece[0][0].item.animZoomAndVibration();
 
       }
     });
@@ -566,8 +569,10 @@ public class GameUIController {
   private void clrAll() {
     for (Piece[] pieces : arrPosPiece) {
       for (Piece piece : pieces) {
-        if (piece.item != null)
+        if (piece.item != null) {
+          piece.stopAnimZoomAndVibration();
           piece.clear();
+        }
       }
     }
   }
@@ -698,6 +703,24 @@ public class GameUIController {
     //todo: thêm tiêu điểm vào tại vị trí target
 
     gamePlayUI.gAnimSkill.addActor(ray);
+  }
+
+  public void startAnimZoomAndVibrateAllItem() {
+    for (Piece[] pieces : arrPosPiece) {
+      for (Piece piece  : pieces) {
+        if (util.chkTypeFruit(piece))
+          piece.animZoomAndVibration();
+      }
+    }
+  }
+
+  public void stopAnimZoomAndVibrateAllItem() {
+    for (Piece[] pieces : arrPosPiece) {
+      for (Piece piece  : pieces) {
+        if (util.chkTypeFruit(piece))
+          piece.stopAnimZoomAndVibration();
+      }
+    }
   }
   //-------------------animation || particle-------------------------------
 

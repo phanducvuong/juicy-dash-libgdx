@@ -82,4 +82,20 @@ public class Piece {
     clear();
   }
 
+  public void animZoomAndVibration() {
+    if (item != null) {
+      stopAnimZoomAndVibration();
+      item.animZoomAndVibration();
+    }
+  }
+
+  public void stopAnimZoomAndVibration() {
+    if (item != null) {
+      item.clearActions();
+      item.setRotation(0);
+      item.setScale(1f);
+      item.isStopAnimZoomAndVibrate = true;
+    }
+  }
+
 }

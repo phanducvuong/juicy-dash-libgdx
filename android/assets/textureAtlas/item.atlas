@@ -1,222 +1,236 @@
 
 item.png
-size: 1024,256
+size: 2048,256
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 anim_glass_juice
   rotate: false
-  xy: 2, 10
+  xy: 2, 2
   size: 120, 106
   orig: 120, 106
   offset: 0, 0
   index: -1
 anim_jam
   rotate: false
-  xy: 889, 11
+  xy: 776, 118
   size: 65, 26
   orig: 65, 26
   offset: 0, 0
   index: -1
 apple_l
   rotate: false
-  xy: 502, 2
+  xy: 338, 86
   size: 78, 58
   orig: 78, 58
   offset: 0, 0
   index: -1
 apple_r
   rotate: false
-  xy: 740, 42
+  xy: 1829, 181
   size: 77, 65
   orig: 77, 65
   offset: 0, 0
   index: -1
 banana_l
   rotate: false
-  xy: 958, 53
+  xy: 1991, 197
   size: 31, 49
   orig: 31, 49
   offset: 0, 0
   index: -1
 banana_r
   rotate: false
-  xy: 284, 2
+  xy: 1908, 128
   size: 84, 55
   orig: 84, 55
   offset: 0, 0
   index: -1
 flare
   rotate: false
-  xy: 2, 118
+  xy: 2, 110
   size: 136, 136
   orig: 136, 136
   offset: 0, 0
   index: -1
 grape_l
   rotate: false
-  xy: 124, 2
+  xy: 1908, 185
   size: 81, 61
   orig: 81, 61
   offset: 0, 0
   index: -1
 grape_r
   rotate: false
-  xy: 585, 22
+  xy: 713, 105
   size: 61, 39
   orig: 61, 39
   offset: 0, 0
   index: -1
 ice_apple
   rotate: false
-  xy: 548, 154
+  xy: 663, 146
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 ice_banana
   rotate: false
-  xy: 344, 154
+  xy: 459, 146
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 ice_grape
   rotate: false
-  xy: 242, 154
+  xy: 357, 146
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 ice_kiwi
   rotate: false
-  xy: 446, 154
+  xy: 561, 146
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 ice_orange
   rotate: false
-  xy: 650, 154
+  xy: 765, 146
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 ice_strawberry
   rotate: false
-  xy: 140, 154
+  xy: 255, 146
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 item_apple
   rotate: false
-  xy: 502, 62
+  xy: 1498, 156
   size: 81, 90
   orig: 81, 90
   offset: 0, 0
   index: -1
 item_banana
   rotate: false
-  xy: 329, 63
+  xy: 1239, 157
   size: 88, 89
   orig: 88, 89
   offset: 0, 0
   index: -1
+item_boom
+  rotate: false
+  xy: 1664, 168
+  size: 91, 78
+  orig: 91, 78
+  offset: 0, 0
+  index: -1
 item_clock
   rotate: false
-  xy: 752, 162
+  xy: 867, 154
   size: 92, 92
   orig: 92, 92
   offset: 0, 0
   index: -1
 item_glass_juice
   rotate: false
-  xy: 668, 58
+  xy: 1757, 152
   size: 70, 94
   orig: 70, 94
   offset: 0, 0
   index: -1
 item_grape
   rotate: false
-  xy: 846, 161
+  xy: 961, 153
   size: 87, 93
   orig: 87, 93
   offset: 0, 0
   index: -1
 item_jam
   rotate: false
-  xy: 140, 68
+  xy: 1050, 162
   size: 95, 84
   orig: 95, 84
   offset: 0, 0
   index: -1
 item_kiwi
   rotate: false
-  xy: 935, 158
+  xy: 1329, 150
   size: 84, 96
   orig: 84, 96
   offset: 0, 0
   index: -1
 item_orange
   rotate: false
-  xy: 419, 59
+  xy: 1415, 153
   size: 81, 93
   orig: 81, 93
   offset: 0, 0
   index: -1
+item_star
+  rotate: false
+  xy: 140, 125
+  size: 113, 121
+  orig: 113, 121
+  offset: 0, 0
+  index: -1
 item_strawberry
   rotate: false
-  xy: 585, 63
+  xy: 1581, 157
   size: 81, 89
   orig: 81, 89
   offset: 0, 0
   index: -1
 item_walnut
   rotate: false
-  xy: 237, 65
+  xy: 1147, 159
   size: 90, 87
   orig: 90, 87
   offset: 0, 0
   index: -1
 kiwi_l
   rotate: false
-  xy: 819, 34
+  xy: 495, 72
   size: 68, 72
   orig: 68, 72
   offset: 0, 0
   index: -1
 kiwi_r
   rotate: false
-  xy: 889, 39
+  xy: 565, 81
   size: 67, 63
   orig: 67, 63
   offset: 0, 0
   index: -1
 orange_l
   rotate: false
-  xy: 207, 2
+  xy: 418, 83
   size: 75, 61
   orig: 75, 61
   offset: 0, 0
   index: -1
 orange_r
   rotate: false
-  xy: 914, 104
+  xy: 634, 92
   size: 77, 52
   orig: 77, 52
   offset: 0, 0
   index: -1
 strawberry_l
   rotate: false
-  xy: 752, 109
+  xy: 255, 93
   size: 81, 51
   orig: 81, 51
   offset: 0, 0
   index: -1
 strawberry_r
   rotate: false
-  xy: 835, 108
+  xy: 1829, 128
   size: 77, 51
   orig: 77, 51
   offset: 0, 0

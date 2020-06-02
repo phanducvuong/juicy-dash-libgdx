@@ -139,7 +139,7 @@ public class Leaderboard extends GScreen {
     Group parentGroup = new Group();
     GStage.addToLayer(GLayer.ui, parentGroup);
 
-    lbAtlas = GAssetsManager.getTextureAtlas("leaderboard.atlas");
+    lbAtlas     = GAssetsManager.getTextureAtlas("leaderboard.atlas");
     commonAtlas = GAssetsManager.getTextureAtlas("common.atlas");
     GAssetsManager.getTextureAtlas("play.atlas");
 
@@ -215,8 +215,6 @@ public class Leaderboard extends GScreen {
     firebaseService.crashLog("leaderboard");
     firebaseService.trackScreen("Leaderboard");
   }
-
-
 
   private void initRegister(){
     if(registerGroup!=null){

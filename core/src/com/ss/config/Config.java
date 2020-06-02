@@ -62,6 +62,8 @@ public class Config {
   public static final float   WRAP_ITEM                   = .25f;
   public static final float   TIME_DELAY_TO_CHECK_ALL     = .35f;
   public static final float   TIME_SLIDE                  = .3f;
+  public static final int     AMOUNT_SKILL_JAM            = 1;
+  public static final int     AMOUNT_SKILL_GLASS_JUICE    = 2;
 
   //label: score item
 //  public static final int     SCORE_FRUIT               = 40;
@@ -72,7 +74,7 @@ public class Config {
   public static final int     SCORE_SKILL_GLASS_JUICE     = 100;
 
   //label: volume sound
-  public static final float   MUSIC_VOLUME                = .5f;
+  public static final float   MUSIC_VOLUME                = .8f;
   public static final float   CLICK_VOLUME                = 1f;
   public static final float   LASER_OFF_VOLUME            = 1f;
   public static final float   FREEZING_VOLUME             = .4f;

@@ -32,6 +32,13 @@ bg_round
   orig: 492, 189
   offset: 0, 0
   index: -1
+bg_skill
+  rotate: false
+  xy: 1643, 995
+  size: 270, 118
+  orig: 270, 118
+  offset: 0, 0
+  index: -1
 bg_table
   rotate: false
   xy: 2, 48
@@ -55,49 +62,56 @@ dash_top
   index: -1
 i_games
   rotate: false
-  xy: 704, 98
+  xy: 842, 240
   size: 136, 140
   orig: 136, 140
   offset: 0, 0
   index: -1
 icon_exit
   rotate: false
-  xy: 1781, 998
+  xy: 1781, 878
   size: 115, 115
   orig: 115, 115
   offset: 0, 0
   index: -1
 icon_home
   rotate: false
-  xy: 704, 240
+  xy: 842, 382
   size: 136, 140
   orig: 136, 140
   offset: 0, 0
   index: -1
 icon_pause
   rotate: false
-  xy: 842, 126
+  xy: 980, 410
   size: 108, 112
   orig: 108, 112
   offset: 0, 0
   index: -1
+icon_rank
+  rotate: false
+  xy: 842, 98
+  size: 136, 140
+  orig: 136, 140
+  offset: 0, 0
+  index: -1
 icon_restart
   rotate: false
-  xy: 1643, 973
+  xy: 704, 382
   size: 136, 140
   orig: 136, 140
   offset: 0, 0
   index: -1
 icon_sound_off
   rotate: false
-  xy: 842, 240
+  xy: 1643, 853
   size: 136, 140
   orig: 136, 140
   offset: 0, 0
   index: -1
 icon_sound_on
   rotate: false
-  xy: 704, 382
+  xy: 704, 240
   size: 136, 140
   orig: 136, 140
   offset: 0, 0
@@ -111,7 +125,7 @@ icon_start
   index: -1
 icon_tutorial
   rotate: false
-  xy: 842, 382
+  xy: 704, 98
   size: 136, 140
   orig: 136, 140
   offset: 0, 0

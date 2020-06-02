@@ -67,8 +67,8 @@ scaling0: 1.0
 timelineCount: 1
 timeline0: 0.0
 - X Scale - 
-lowMin: 123.0
-lowMax: 123.0
+lowMin: 128.0
+lowMax: 128.0
 highMin: 3000.0
 highMax: 3000.0
 relative: false
@@ -160,7 +160,7 @@ behind: false
 premultipliedAlpha: false
 spriteMode: single
 - Image Paths -
-hong08.png
+bai08.png
 
 
 r
@@ -241,8 +241,8 @@ scaling0: 1.0
 timelineCount: 1
 timeline0: 0.0
 - X Scale - 
-lowMin: 118.0
-lowMax: 118.0
+lowMin: 117.0
+lowMax: 117.0
 highMin: 3000.0
 highMax: 3000.0
 relative: false
@@ -325,7 +325,7 @@ behind: false
 premultipliedAlpha: false
 spriteMode: single
 - Image Paths -
-hong07.png
+bai07.png
 
 
 1_clone
@@ -364,7 +364,16 @@ active: false
 - X Offset - 
 active: false
 - Y Offset - 
-active: false
+active: true
+lowMin: 1.0
+lowMax: 1.0
+highMin: 0.0
+highMax: 0.0
+relative: false
+scalingCount: 1
+scaling0: 1.0
+timelineCount: 1
+timeline0: 0.0
 - Spawn Shape - 
 shape: point
 - Spawn Width - 
@@ -388,8 +397,8 @@ scaling0: 1.0
 timelineCount: 1
 timeline0: 0.0
 - X Scale - 
-lowMin: 36.0
-lowMax: 36.0
+lowMin: 37.0
+lowMax: 37.0
 highMin: 254.0
 highMax: 254.0
 relative: false
@@ -405,8 +414,8 @@ timeline2: 0.1949807
 timeline3: 1.0
 - Y Scale - 
 active: true
-lowMin: 25.0
-lowMax: 25.0
+lowMin: 24.0
+lowMax: 24.0
 highMin: 254.0
 highMax: 254.0
 relative: false
@@ -482,7 +491,7 @@ behind: false
 premultipliedAlpha: false
 spriteMode: single
 - Image Paths -
-hong01.png
+bai02.png
 
 
 2_clone
@@ -522,8 +531,8 @@ active: false
 active: false
 - Y Offset - 
 active: true
-lowMin: 0.9
-lowMax: 0.9
+lowMin: 0.0
+lowMax: 0.0
 highMin: 0.0
 highMax: 0.0
 relative: false
@@ -554,8 +563,8 @@ scaling0: 1.0
 timelineCount: 1
 timeline0: 0.0
 - X Scale - 
-lowMin: 36.0
-lowMax: 36.0
+lowMin: 37.0
+lowMax: 37.0
 highMin: 234.0
 highMax: 234.0
 relative: false
@@ -571,8 +580,8 @@ timeline2: 0.1949807
 timeline3: 1.0
 - Y Scale - 
 active: true
-lowMin: 35.0
-lowMax: 35.0
+lowMin: 36.0
+lowMax: 36.0
 highMin: 234.0
 highMax: 234.0
 relative: false
@@ -648,7 +657,7 @@ behind: false
 premultipliedAlpha: false
 spriteMode: single
 - Image Paths -
-hong02.png
+bai01.png
 
 
 star boom

@@ -18,7 +18,6 @@ import com.ss.GMain;
 import com.ss.config.C;
 import com.ss.config.Config;
 import com.ss.controller.GameUIController;
-import com.ss.core.action.exAction.GSimpleAction;
 import com.ss.core.effect.SoundEffects;
 import com.ss.core.util.GStage;
 import com.ss.core.util.GUI;
@@ -69,6 +68,14 @@ public class GamePlayUI extends Group {
   private Group     gAnimLbRound;
   private Label     animLbRound;
   private Image     black;
+
+  private Group     gItemStar,
+                    gItemBoom;
+  private Label     lbAmountItemStar,
+                    lbAmountBoom;
+
+  private boolean   isChooseJam               = false,
+                    isChooseGlass             = false;
 
   private Particle  pWonder,
                     pLovely,
@@ -235,18 +242,57 @@ public class GamePlayUI extends Group {
     bgTable.setPosition(CENTER_X, CENTER_Y + Config.OFFSET_Y_BG_TABLE, Align.center);
     gBackground.addActor(bgTable);
 
+    //label: skill item
+    Image bgSkill   = GUI.createImage(GMain.bgAtlas, "bg_skill");
+    bgSkill.setPosition(bgTable.getX(), bgTable.getY() - bgSkill.getHeight());
+    gBackground.addActor(bgSkill);
+
+    //label: skill star
+    gItemStar   = new Group();
+    Image iStar = GUI.createImage(GMain.itemAtlas, "item_star");
+    gItemStar.setSize(iStar.getWidth(), iStar.getHeight());
+    gItemStar.setOrigin(Align.center);
+    gItemStar.setPosition(bgSkill.getX() + bgSkill.getWidth()/2 - gItemStar.getWidth() - 5,
+            bgSkill.getY() + bgSkill.getHeight()/2 - gItemStar.getHeight()/2 - 10);
+    gItemStar.addActor(iStar);
+    gBackground.addActor(gItemStar);
+
+    lbAmountItemStar = new Label(controller.amountItemStar+"", new Label.LabelStyle(Config.greenFont, null));
+    lbAmountItemStar.setFontScale(.6f);
+    lbAmountItemStar.setPosition(iStar.getX() + iStar.getWidth()/2 - 15, iStar.getY() + iStar.getHeight()/2);
+    gItemStar.addActor(lbAmountItemStar);
+
+    //label: skill boom
+    gItemBoom   = new Group();
+    Image iBoom = GUI.createImage(GMain.itemAtlas, "item_boom");
+    gItemBoom.setSize(iBoom.getWidth(), iBoom.getHeight());
+    gItemBoom.setOrigin(Align.center);
+    gItemBoom.setPosition(bgSkill.getX() + bgSkill.getWidth()/2 + 20,
+            bgSkill.getY() + bgSkill.getHeight()/2 - gItemBoom.getHeight()/2 - 10);
+    gItemBoom.addActor(iBoom);
+    gBackground.addActor(gItemBoom);
+
+    lbAmountBoom = new Label(controller.amountItemBoom+"", new Label.LabelStyle(Config.greenFont, null));
+    lbAmountBoom.setFontScale(.6f);
+    lbAmountBoom.setPosition(iBoom.getX() + iBoom.getWidth()/2, iBoom.getY() + iBoom.getHeight()/2);
+    gItemBoom.addActor(lbAmountBoom);
+
+    //label: lbRound
     lbRound = new Label(locale.get("txt_round"), new Label.LabelStyle(Config.whiteFont, null));
     lbRound.setFontScale(1.2f);
-    lbRound.setPosition(bgTable.getX(), bgTable.getY() - lbRound.getHeight() - 48);
+    lbRound.setPosition(bgSkill.getX() + bgSkill.getWidth()/2 - lbRound.getWidth()/2 - 40,
+                        bgSkill.getY() - lbRound.getHeight() - 30);
     gBackground.addActor(lbRound);
+
+    //label: event click
 
   }
 
   private void initIcon() {
     iPause = GUI.createImage(GMain.bgAtlas, "icon_pause");
+    iPause.setScale(.8f);
     iPause.setOrigin(Align.center);
-    iPause.setPosition(lbRound.getX() + lbRound.getWidth()/2 - iPause.getWidth()/2 + 20,
-                       lbRound.getY() - iPause.getHeight() * 1.25f);
+    iPause.setPosition(CENTER_X*2 - iPause.getWidth() - 10, gScore.getY() - iPause.getHeight() - 50);
     gBackground.addActor(iPause);
 
     //label: event click

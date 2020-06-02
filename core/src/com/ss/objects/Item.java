@@ -10,13 +10,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
 import com.ss.GMain;
 import com.ss.config.Type;
-import com.ss.core.action.exAction.GSimpleAction;
 import com.ss.core.effect.SoundEffects;
-import com.ss.core.util.GStage;
 import com.ss.core.util.GUI;
 import com.ss.gameLogic.effects.Particle;
 import com.ss.ui.GamePlayUI;
-import com.ss.utils.Bezier;
 import com.ss.utils.Util;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
@@ -34,7 +31,9 @@ public class Item extends Group {
   private Group     gAnimFruit;
   public  Type      type;
   public  String    name;
-  public  boolean   isAlive = false;
+  public  boolean   isAlive                  = false,
+                    isStopAnimZoomAndVibrate = true;
+  private float     timeAnimZoomAndVibrate   = 0;
 
   public Item(String region, Type type, Group gLbScore) {
 
@@ -227,8 +226,8 @@ public class Item extends Group {
     fruit.setOrigin(Align.topLeft);
     fruit.addAction(
             sequence(
-                    Actions.scaleBy(0, -.1f, .2f, fastSlow),
-                    Actions.scaleBy(0, .1f, .2f, fastSlow)
+                    Actions.scaleBy(0, -.1f, .15f, fastSlow),
+                    Actions.scaleBy(0, .1f, .15f, fastSlow)
             )
     );
   }
@@ -666,6 +665,13 @@ public class Item extends Group {
     );
   }
 
+  //label: anim zoom in and vibrate
+  public void animZoomAndVibration() {
+    isStopAnimZoomAndVibrate = false;
+    timeAnimZoomAndVibrate   = 1f;
+    this.setScale(1.1f);
+  }
+
   public void animJam(Runnable onComplete) {
     fruit.setVisible(false);
     flare.setVisible(false);
@@ -802,4 +808,24 @@ public class Item extends Group {
     lbScore.setText("+" + score);
   }
 
+  @Override
+  public void act(float delta) {
+    super.act(delta);
+
+    if (!isStopAnimZoomAndVibrate && timeAnimZoomAndVibrate > 0) {
+      timeAnimZoomAndVibrate = 0;
+      this.setOrigin(Align.center);
+      this.addAction(
+              sequence(
+                      Actions.rotateBy(10, .15f, fastSlow),
+                      Actions.rotateBy(-20, .15f, fastSlow),
+                      Actions.rotateBy(20, .15f, fastSlow),
+                      Actions.rotateBy(-10, .15f, fastSlow),
+                      delay(.75f),
+                      run(() -> timeAnimZoomAndVibrate = 1f)
+              )
+      );
+    }
+
+  }
 }

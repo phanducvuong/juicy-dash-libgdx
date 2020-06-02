@@ -33,6 +33,7 @@ public class StartUI extends Group {
   private Image dashBottom,
                 dashTop,
                 title,
+                btnRank,
                 btnStart;
 
   public StartUI(StartUIController controller) {
@@ -90,6 +91,7 @@ public class StartUI extends Group {
     btnStart.setPosition(CENTER_X - btnStart.getWidth()/2, CENTER_Y*2 - btnStart.getHeight() - 80);
     gBackground.addActor(btnStart);
 
+    //label: btnSound
     Image soundOn = GUI.createImage(GMain.bgAtlas, "icon_sound_on");
     soundOn.setScale(1.1f);
     soundOn.setOrigin(Align.center);
@@ -103,12 +105,21 @@ public class StartUI extends Group {
     soundOff.setVisible(false);
     gBackground.addActor(soundOff);
 
+    //label: btnGames
     Image btnGames = GUI.createImage(GMain.bgAtlas, "i_games");
     btnGames.setScale(.8f);
     btnGames.setOrigin(Align.center);
     btnGames.setPosition(soundOn.getX() + soundOn.getWidth()/2 - btnGames.getWidth()/2,
             soundOn.getY() - soundOn.getHeight());
     gBackground.addActor(btnGames);
+
+    //label: btnRank
+    Image btnRank = GUI.createImage(GMain.bgAtlas, "icon_rank");
+    btnRank.setScale(.8f);
+    btnRank.setOrigin(Align.center);
+    btnRank.setPosition(soundOn.getX() + soundOn.getWidth()/2 - btnGames.getWidth()/2,
+            soundOn.getY() + soundOn.getHeight());
+    gBackground.addActor(btnRank);
 
     //label: event click
     imgClick(soundOn, () -> {
@@ -134,6 +145,10 @@ public class StartUI extends Group {
     imgClick(btnStart, () -> {
       resetAnimObject();
       controller.scene.setScreen(GMain.inst.gameScene);
+    });
+
+    imgClick(btnRank, () -> {
+
     });
 
   }
