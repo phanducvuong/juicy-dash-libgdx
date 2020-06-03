@@ -6,6 +6,7 @@ import com.ss.gameLogic.effects.Particle;
 import com.ss.objects.Item;
 import com.ss.objects.Piece;
 
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,6 +52,25 @@ public class Util {
     return type == Type.clock ||
            type == Type.jam   ||
            type == Type.glass_fruit;
+  }
+
+  public Piece getPieceByCoordinate(float x, float y, Piece[][] pieces) {
+    for (Piece[] ps : pieces) {
+      for (Piece piece : ps)
+        if (x >= piece.pos.x && x <= piece.pos.x + WIDTH_PIECE &&
+            y >= piece.pos.y && y <= piece.pos.y + HEIGHT_PIECE)
+          return piece;
+    }
+    return null;
+  }
+
+  public List<Piece> getRallyPieceBy(int row, int col, Piece[][] pieces) {
+    List<Piece> tmp = new ArrayList<>();
+    for (int i=row; i<row+3; i++) {
+      for (int j=col; j<col+3; j++)
+        tmp.add(pieces[i][j]);
+    }
+    return tmp;
   }
 
   public Type getType(int id) {

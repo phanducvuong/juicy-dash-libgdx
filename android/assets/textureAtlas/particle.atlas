@@ -13,28 +13,35 @@ repeat: none
   index: -1
 013
   rotate: false
-  xy: 1820, 316
+  xy: 645, 54
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 03412
   rotate: false
-  xy: 1105, 499
+  xy: 1363, 499
   size: 254, 11
   orig: 254, 11
   offset: 0, 0
   index: -1
 038
   rotate: false
-  xy: 1625, 382
+  xy: 1363, 239
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
+11-13
+  rotate: false
+  xy: 1362, 190
+  size: 47, 47
+  orig: 47, 47
+  offset: 0, 0
+  index: -1
 13-2
   rotate: false
-  xy: 1524, 287
+  xy: 320, 25
   size: 96, 93
   orig: 96, 93
   offset: 0, 0
@@ -48,21 +55,21 @@ repeat: none
   index: -1
 14-1
   rotate: false
-  xy: 1235, 369
+  xy: 1493, 369
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 2-6
   rotate: false
-  xy: 1754, 316
+  xy: 579, 54
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 207
   rotate: false
-  xy: 1365, 382
+  xy: 1623, 382
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
@@ -76,70 +83,105 @@ repeat: none
   index: -1
 4
   rotate: false
-  xy: 1688, 316
+  xy: 513, 54
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 5-3
   rotate: false
-  xy: 1299, 239
+  xy: 1039, 120
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 5-5
   rotate: false
-  xy: 408, 80
+  xy: 689, 14
   size: 38, 38
   orig: 38, 38
   offset: 0, 0
   index: -1
+FX_Nature_Leaf_3
+  rotate: false
+  xy: 1169, 124
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
 L002
   rotate: false
-  xy: 1429, 271
+  xy: 418, 9
   size: 93, 109
   orig: 93, 109
   offset: 0, 0
   index: -1
 NPC_BigLong_skill4_1
   rotate: false
-  xy: 1755, 382
+  xy: 1493, 239
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+NPC_Eyu_skill4_1
+  rotate: false
+  xy: 909, 55
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 NPC_JuShou_skill3_2
   rotate: false
-  xy: 1495, 382
+  xy: 1883, 382
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+PC_un_01
+  rotate: false
+  xy: 1883, 252
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 SL_Charge_00_01
   rotate: false
-  xy: 1105, 369
+  xy: 1363, 369
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 SL_XiangZ_00_03
   rotate: false
-  xy: 1039, 186
+  xy: 1753, 382
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 SL_XiangZ_00_04
   rotate: false
-  xy: 1169, 239
+  xy: 1623, 252
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
+SL_XiangZ_01_01
+  rotate: false
+  xy: 1105, 254
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+SL_XiangZ_01_02
+  rotate: false
+  xy: 777, 54
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
 SL_XiangZ_01_03
   rotate: false
-  xy: 1622, 316
+  xy: 1039, 250
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -160,28 +202,28 @@ awesome
   index: -1
 bai01
   rotate: false
-  xy: 488, 82
+  xy: 729, 16
   size: 37, 36
   orig: 37, 36
   offset: 0, 0
   index: -1
 bai02
   rotate: false
-  xy: 1429, 245
+  xy: 1039, 57
   size: 37, 24
   orig: 37, 24
   offset: 0, 0
   index: -1
 bai07
   rotate: false
-  xy: 1039, 159
+  xy: 1169, 97
   size: 117, 25
   orig: 117, 25
   offset: 0, 0
   index: -1
 bai08
   rotate: false
-  xy: 909, 148
+  xy: 1039, 83
   size: 128, 35
   orig: 128, 35
   offset: 0, 0
@@ -209,14 +251,14 @@ guang02
   index: -1
 liuxing6
   rotate: false
-  xy: 320, 77
+  xy: 601, 11
   size: 86, 41
   orig: 86, 41
   offset: 0, 0
   index: -1
 liuxing7
   rotate: false
-  xy: 1169, 196
+  xy: 513, 11
   size: 86, 41
   orig: 86, 41
   offset: 0, 0
@@ -230,56 +272,56 @@ lovely
   index: -1
 spark-alt2
   rotate: false
-  xy: 1885, 382
+  xy: 1753, 252
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 wsparticle
   rotate: false
-  xy: 1952, 316
+  xy: 843, 54
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 wsparticle37
   rotate: false
-  xy: 1886, 316
+  xy: 711, 54
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 wujiaoxing
   rotate: false
-  xy: 1105, 323
+  xy: 1411, 193
   size: 45, 44
   orig: 45, 44
   offset: 0, 0
   index: -1
 wujiaoxing0
   rotate: false
-  xy: 1377, 193
+  xy: 1458, 193
   size: 45, 44
   orig: 45, 44
   offset: 0, 0
   index: -1
 yezi
   rotate: false
-  xy: 448, 83
+  xy: 1505, 202
   size: 38, 35
   orig: 38, 35
   offset: 0, 0
   index: -1
 yf14
   rotate: false
-  xy: 1257, 176
+  xy: 1299, 191
   size: 61, 61
   orig: 61, 61
   offset: 0, 0
   index: -1
 yf2
   rotate: false
-  xy: 1320, 176
+  xy: 1299, 128
   size: 55, 61
   orig: 55, 61
   offset: 0, 0

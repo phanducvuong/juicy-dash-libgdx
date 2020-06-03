@@ -22,6 +22,9 @@ public class Config {
   public static final FileHandle LOVELY                   = Gdx.files.internal("particles/lovely.p");
   public static final FileHandle NEW_ROUND                = Gdx.files.internal("particles/new_round.p");
   public static final FileHandle WIND                     = Gdx.files.internal("particles/wind.p");
+  public static final FileHandle FALL_LEAF                = Gdx.files.internal("particles/fall_leaf.p");
+  public static final FileHandle BOOM                     = Gdx.files.internal("particles/boom.p");
+  public static final FileHandle SKILL_STAR               = Gdx.files.internal("particles/skill_star.p");
 
   //label: load json
   private static final FileHandle JSON_GAMES              = Gdx.files.internal("other_games.json");
@@ -62,14 +65,14 @@ public class Config {
   public static final float   WRAP_ITEM                   = .25f;
   public static final float   TIME_DELAY_TO_CHECK_ALL     = .35f;
   public static final float   TIME_SLIDE                  = .3f;
-  public static final int     AMOUNT_SKILL_JAM            = 1;
-  public static final int     AMOUNT_SKILL_GLASS_JUICE    = 2;
+  public static final int     AMOUNT_SKILL_STAR           = 5;
+  public static final int     AMOUNT_SKILL_BOOM           = 5;
 
   //label: score item
 //  public static final int     SCORE_FRUIT               = 40;
   public static final int     SCORE_GLASS_JUICE           = 60;
-  public static final int     SCORE_JAM                   = 70;
-  public static final int     SCORE_CLOCK                 = 15;
+  public static final int     SCORE_JAM                   = 80;
+  public static final int     SCORE_CLOCK                 = 70;
   public static final int     SCORE_SKILL_JAM             = 120;
   public static final int     SCORE_SKILL_GLASS_JUICE     = 100;
 

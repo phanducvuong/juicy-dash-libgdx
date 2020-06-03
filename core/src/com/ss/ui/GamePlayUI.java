@@ -22,6 +22,7 @@ import com.ss.core.effect.SoundEffects;
 import com.ss.core.util.GStage;
 import com.ss.core.util.GUI;
 import com.ss.gameLogic.effects.Particle;
+import com.ss.objects.Piece;
 import com.ss.utils.Button;
 import com.ss.utils.Clipping;
 import com.ss.utils.Solid;
@@ -71,16 +72,18 @@ public class GamePlayUI extends Group {
 
   private Group     gItemStar,
                     gItemBoom;
+  private Image     itemStar, itemBoom;             //start anim boom and star when user click item boom | item star
   private Label     lbAmountItemStar,
                     lbAmountBoom;
 
-  private boolean   isChooseJam               = false,
-                    isChooseGlass             = false;
+  public boolean    isChooseBoom             = false,
+                    isChooseStar             = false;
 
   private Particle  pWonder,
                     pLovely,
                     pNewRound,
                     pWind;
+  public Particle   pBoom, pFallLeaf, pStar;
 
   public GamePlayUI(GameUIController controller) {
 
@@ -93,18 +96,24 @@ public class GamePlayUI extends Group {
 
     this.controller   = controller;
 
+    //label: init particle
     this.pWonder      = new Particle(gAnimSkill, Config.WONDER, GMain.particleAtlas);
     this.pWonder.initLsEmitter();
 
     this.pLovely      = new Particle(gAnimSkill, Config.LOVELY, GMain.particleAtlas);
     this.pNewRound    = new Particle(gAnimSkill, Config.NEW_ROUND, GMain.particleAtlas);
     this.pWind        = new Particle(gAnimSkill, Config.WIND, GMain.particleAtlas);
+    this.pBoom        = new Particle(gAnimSkill, Config.BOOM, GMain.particleAtlas);
+    this.pFallLeaf    = new Particle(gAnimSkill, Config.FALL_LEAF, GMain.particleAtlas);
+    this.pStar        = new Particle(gAnimSkill, Config.SKILL_STAR, GMain.particleAtlas);
 
     this.addActor(gBackground);
     this.addActor(gItem);
     this.addActor(gAnimLb);
     this.addActor(gAnimSkill);
     this.addActor(gPopup);
+
+    this.setSize(CENTER_X*2, CENTER_Y*2);
 
     this.black = new Image(Solid.create(new Color(0/255f, 0/255f, 0/255f, .35f)));
     this.black.setSize(CENTER_X*2, CENTER_Y*2);
@@ -262,6 +271,10 @@ public class GamePlayUI extends Group {
     lbAmountItemStar.setPosition(iStar.getX() + iStar.getWidth()/2 - 15, iStar.getY() + iStar.getHeight()/2);
     gItemStar.addActor(lbAmountItemStar);
 
+    itemStar = GUI.createImage(GMain.itemAtlas, "item_star");
+    itemStar.setOrigin(Align.topLeft);
+    itemStar.setPosition(gItemStar.getX(), gItemStar.getY());
+
     //label: skill boom
     gItemBoom   = new Group();
     Image iBoom = GUI.createImage(GMain.itemAtlas, "item_boom");
@@ -277,6 +290,10 @@ public class GamePlayUI extends Group {
     lbAmountBoom.setPosition(iBoom.getX() + iBoom.getWidth()/2, iBoom.getY() + iBoom.getHeight()/2);
     gItemBoom.addActor(lbAmountBoom);
 
+    itemBoom = GUI.createImage(GMain.itemAtlas, "item_boom");
+    itemBoom.setOrigin(Align.center);
+    itemBoom.setPosition(gItemBoom.getX(), gItemBoom.getY());
+
     //label: lbRound
     lbRound = new Label(locale.get("txt_round"), new Label.LabelStyle(Config.whiteFont, null));
     lbRound.setFontScale(1.2f);
@@ -285,6 +302,65 @@ public class GamePlayUI extends Group {
     gBackground.addActor(lbRound);
 
     //label: event click
+    gItemBoom.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        super.clicked(event, x, y);
+
+        if (controller.amountItemBoom == 0) {
+          //todo: show ads
+        }
+        else {
+          if (!isChooseBoom) {
+            isChooseBoom = true;
+            isChooseStar = false;
+            controller.unlockClick = true;
+
+            gItemStar.setScale(1f);
+            gItemBoom.setScale(1.1f);
+            controller.startAnimZoomAndVibrateOnBoard();
+          }
+          else {
+            isChooseBoom = false;
+            controller.unlockClick = false;
+
+            gItemBoom.setScale(1f);
+            controller.stopAnimZoomAndVibrateOnBoard();
+          }
+        }
+
+      }
+    });
+
+    gItemStar.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        super.clicked(event, x, y);
+
+        if (controller.amountItemStar == 0) {
+          //todo: show ads
+        }
+        else {
+          if (!isChooseStar) {
+            isChooseStar = true;
+            isChooseBoom = false;
+            controller.unlockClick = true;
+
+            gItemStar.setScale(1.1f);
+            gItemBoom.setScale(1f);
+            controller.startAnimZoomAndVibrateOnBoard();
+          }
+          else {
+            isChooseStar = false;
+            controller.unlockClick = false;
+
+            gItemStar.setScale(1f);
+            controller.stopAnimZoomAndVibrateOnBoard();
+          }
+        }
+
+      }
+    });
 
   }
 
@@ -571,9 +647,82 @@ public class GamePlayUI extends Group {
     pLovely.start(CENTER_X, CENTER_Y, 2.5f);
   }
 
+  public void animItemBoom(Vector2 pos, Runnable onComplete) {
+    gAnimSkill.addActor(itemBoom);
+    itemBoom.setPosition(pos.x + Config.WIDTH_PIECE/2 - itemBoom.getWidth()/2,
+                         pos.y + Config.HEIGHT_PIECE/2 - itemBoom.getHeight()/2);
+    itemBoom.addAction(
+            sequence(
+                    parallel(
+                            sequence(
+                                    Actions.rotateBy(10, .075f, fastSlow),
+                                    Actions.rotateBy(-20, .075f, fastSlow),
+                                    Actions.rotateBy(20, .075f, fastSlow),
+                                    Actions.rotateBy(-20, .075f, fastSlow),
+                                    Actions.rotateBy(20, .075f, fastSlow),
+                                    Actions.rotateBy(-20, .075f, fastSlow),
+                                    Actions.rotateBy(20, .075f, fastSlow),
+                                    Actions.rotateBy(-20, .075f, fastSlow),
+                                    Actions.rotateTo(0, .075f, fastSlow)
+                            ),
+                            scaleTo(2.5f, 2.5f, .65f, linear),
+                            alpha(0f, .85f, linear)
+                    ),
+                    run(onComplete),
+                    run(() -> {
+                      itemBoom.setScale(1f);
+                      itemBoom.getColor().a = 1f;
+                      itemBoom.remove();
+                    })
+            )
+    );
+  }
+
+  public void animItemStar(Vector2 pos, Runnable onComplete) {
+
+    gAnimSkill.addActor(itemStar);
+    itemStar.setPosition(pos.x - 50, pos.y - 30);
+    itemStar.addAction(
+            sequence(
+                    parallel(
+                            Actions.rotateBy(-40, .5f, fastSlow),
+                            scaleTo(1.75f, 1.75f, .5f, fastSlow)
+
+                    ),
+                    parallel(
+                            Actions.rotateBy(60, .35f, swingOut),
+                            scaleTo(1f, 1f, .25f, fastSlow),
+                            alpha(0f, .5f, linear)
+
+                    ),
+                    run(() -> itemStar.setVisible(false)),
+                    run(onComplete),
+                    run(() -> {
+                      itemStar.setVisible(true);
+                      itemStar.setRotation(0);
+                      itemStar.setScale(1f);
+                      itemStar.getColor().a = 1f;
+                      itemStar.remove();
+                    })
+            )
+    );
+  }
+
   //--------------------------------------animation game play---------------------------------------
 
   //--------------------------------------reset-----------------------------------------------------
+
+  public void updateAmountSkill() {
+    isChooseBoom           = false;
+    isChooseStar           = false;
+    controller.unlockClick = false;
+
+    gItemBoom.setScale(1f);
+    gItemStar.setScale(1f);
+    setTouchableItemSkill(Touchable.disabled);
+    lbAmountBoom.setText(controller.amountItemBoom);
+    lbAmountItemStar.setText(controller.amountItemStar);
+  }
 
   private void resetLbComplete() {
     gLbComplete.getColor().a = 0f;
@@ -656,6 +805,11 @@ public class GamePlayUI extends Group {
     );
   }
   //--------------------------------------anim click------------------------------------------------
+
+  public void setTouchableItemSkill(Touchable touchable) {
+    gItemBoom.setTouchable(touchable);
+    gItemStar.setTouchable(touchable);
+  }
 
   @Override
   public void act(float delta) {

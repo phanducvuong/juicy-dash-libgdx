@@ -1,12 +1,12 @@
 package com.ss.controller;
 
 import static com.badlogic.gdx.math.Interpolation.*;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
@@ -25,13 +25,11 @@ import com.ss.ui.PauseUI;
 import com.ss.utils.Solid;
 import com.ss.utils.Util;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
-
 import static com.ss.config.Config.*;
 
 public class GameUIController {
@@ -51,6 +49,7 @@ public class GameUIController {
 
   public boolean  isWrap      = true,
                   isGameOver  = false,
+                  unlockClick = false,   //unlock click gamePlayUI
                   isPause     = false;
   private Piece   pieceStart, pieceEnd;
 
@@ -78,8 +77,8 @@ public class GameUIController {
     this.gParent                  = gameScene.gParent;
     this.scene                    = gameScene;
 
-    this.amountItemStar = AMOUNT_SKILL_JAM;
-    this.amountItemBoom = AMOUNT_SKILL_GLASS_JUICE;
+    this.amountItemStar           = AMOUNT_SKILL_STAR;
+    this.amountItemBoom           = AMOUNT_SKILL_BOOM;
 
     this.gamePlayUI               = new GamePlayUI(this);
     this.pauseUI                  = new PauseUI(this);
@@ -125,7 +124,7 @@ public class GameUIController {
       public void clicked(InputEvent event, float x, float y) {
         super.clicked(event, x, y);
 
-        arrPosPiece[0][0].item.animZoomAndVibration();
+//        gamePlayUI.animItemStar(arrPosPiece[0][0].pos, () -> {});
 
       }
     });
@@ -138,12 +137,6 @@ public class GameUIController {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         super.clicked(event, x, y);
-
-//        isPause = true;
-//        blackScreen.setSize(GStage.getWorldWidth(), GStage.getWorldHeight());
-//        gParent.addActor(blackScreen);
-//        gParent.addActor(pauseUI);
-//        pauseUI.showPause();
 
         wonder.changeSprite(0);
         wonder.start(gamePlayUI.CENTER_X, gamePlayUI.CENTER_Y, 2.5f);
@@ -222,7 +215,7 @@ public class GameUIController {
       public void dragStart(InputEvent event, float x, float y, int pointer) {
         super.dragStart(event, x, y, pointer);
 
-        if (!isGameOver)
+        if (!isGameOver && !unlockClick)
           pieceStart = util.inRange(arrPosPiece, new Vector2(x, y));
 
       }
@@ -231,7 +224,7 @@ public class GameUIController {
       public void drag(InputEvent event, float x, float y, int pointer) {
         super.drag(event, x, y, pointer);
 
-        if (!isGameOver && !isPause) {
+        if (!isGameOver && !isPause && !unlockClick) {
           pieceEnd = util.inRange(arrPosPiece, new Vector2(x, y));
           if (!isWrap && pieceStart != null && pieceEnd != null && pieceEnd != pieceStart) {
 //          util.log("start: ", pieceStart);
@@ -240,7 +233,9 @@ public class GameUIController {
             if ((pieceStart.row == pieceEnd.row && (pieceStart.col == pieceEnd.col+1 || pieceStart.col == pieceEnd.col-1)) ||
                 (pieceStart.col == pieceEnd.col && (pieceStart.row == pieceEnd.row+1 || pieceStart.row == pieceEnd.row-1))) {
               swap(pieceStart, pieceEnd);
+
               isWrap = true;
+              gamePlayUI.setTouchableItemSkill(Touchable.disabled);
             }
           }
         }
@@ -255,10 +250,12 @@ public class GameUIController {
       public void clicked(InputEvent event, float x, float y) {
         super.clicked(event, x, y);
 
-        if (!isGameOver) {
-          Vector2 pos = new Vector2(x, y);
-          Piece pieceClick = util.inRange(arrPosPiece, pos);
-//        System.out.println("CLICK: " + pieceClick.pos);
+        if (unlockClick) {
+          Piece piece = util.getPieceByCoordinate(x, y, arrPosPiece);
+          if (piece != null && gamePlayUI.isChooseBoom)
+            skillBoom(piece);
+          else if (piece != null && gamePlayUI.isChooseStar)
+            skillStar(piece);
         }
 
       }
@@ -627,12 +624,92 @@ public class GameUIController {
 
   }
 
-  private void clrPiece(Piece piece, boolean isSpeciaItem) {
+  private void skillBoom(Piece piece) {
+    amountItemBoom -= 1;
+    int row = piece.row,
+        col = piece.col;
+
+    List<Piece> lsPieceAffectBoom = getPieceAffectBoom(row, col);
+    if (lsPieceAffectBoom != null) {
+      //label: show particle boom
+      gamePlayUI.animItemBoom(piece.pos, () -> {
+        for (Piece p : lsPieceAffectBoom) {
+          if (p.item.type == Type.clock) {
+            tmpScore += SCORE_CLOCK;
+            updateTimeLine(ADD_SECOND);
+          }
+          else if (p.item.type == Type.glass_fruit)
+            tmpScore += SCORE_GLASS_JUICE;
+          else if (p.item.type == Type.jam)
+            tmpScore += SCORE_JAM;
+          else
+            tmpScore += SCORE_FRUIT;
+
+          p.stopAnimZoomAndVibration();
+          clrPiece(p, false);
+        }
+
+        Vector2 posShowBoom = lsPieceAffectBoom.get(4).pos;
+        gamePlayUI.pBoom.start(posShowBoom.x + WIDTH_PIECE/2, posShowBoom.y + HEIGHT_PIECE/2, .5f);
+        scene.shake();
+
+        gamePlayUI.updateAmountSkill();
+        stopAnimZoomAndVibrateOnBoard();
+        updateBoard();
+      });
+    }
+  }
+
+  private void skillStar(Piece piece) {
+    gamePlayUI.addAction(
+            sequence(
+                    delay(.625f),
+                    run(() -> {
+                      piece.stopAnimZoomAndVibration();
+                      clrPiece(piece, false);
+                      gamePlayUI.pStar.start(piece.pos.x + WIDTH_PIECE/2,
+                              piece.pos.y + HEIGHT_PIECE/2, .35f);
+                    })
+            )
+    );
+    gamePlayUI.animItemStar(piece.pos, () -> {
+      amountItemStar -= 1;
+      gamePlayUI.updateAmountSkill();
+      stopAnimZoomAndVibrateOnBoard();
+      updateBoard();
+    });
+  }
+
+  private List<Piece> getPieceAffectBoom(int row, int col) {
+    if (row == 0 && col == 0)
+      return util.getRallyPieceBy(row, col, arrPosPiece);
+    else if (row == ROW-1 && col == 0)
+      return util.getRallyPieceBy(row-2, col, arrPosPiece);
+    else if (row == ROW-1 && col == COL-1)
+      return util.getRallyPieceBy(row-2, col-2, arrPosPiece);
+    else if (row == 0 && col == COL-1)
+      return util.getRallyPieceBy(row, col-2, arrPosPiece);
+    else if (row == 0 && col > 0 && col < COL-1)
+      return util.getRallyPieceBy(row, col-1, arrPosPiece);
+    else if (row > 0 && row < ROW-1 && col == 0)
+      return util.getRallyPieceBy(row-1, col, arrPosPiece);
+    else if (row == ROW-1 && col > 0 && col < COL-1)
+      return util.getRallyPieceBy(row-2, col-1, arrPosPiece);
+    else if (row > 0 && row < ROW-1 && col == COL-1)
+      return util.getRallyPieceBy(row-1, col-2, arrPosPiece);
+    else if (row > 0 && row < ROW-1 && col > 0 && col < COL-1)
+      return util.getRallyPieceBy(row-1, col-1, arrPosPiece);
+    return null;
+  }
+
+  private void clrPiece(Piece piece, boolean isSpeciaItem) { //isSpecialItem to play sound effect
     if (piece.item != null) {
       if (util.chkTypeFruit(piece))
         piece.item.startAnimFruit(isSpeciaItem);
-      else
+      else {
+        piece.item.animLbScore();
         piece.item.remove();
+      }
     }
     piece.clear();
   }
@@ -705,7 +782,7 @@ public class GameUIController {
     gamePlayUI.gAnimSkill.addActor(ray);
   }
 
-  public void startAnimZoomAndVibrateAllItem() {
+  public void startAnimZoomAndVibrateOnBoard() {
     for (Piece[] pieces : arrPosPiece) {
       for (Piece piece  : pieces) {
         if (util.chkTypeFruit(piece))
@@ -714,7 +791,7 @@ public class GameUIController {
     }
   }
 
-  public void stopAnimZoomAndVibrateAllItem() {
+  public void stopAnimZoomAndVibrateOnBoard() {
     for (Piece[] pieces : arrPosPiece) {
       for (Piece piece  : pieces) {
         if (util.chkTypeFruit(piece))
@@ -874,6 +951,7 @@ public class GameUIController {
 //      System.out.println("x2 time");
         //todo: x2 time
         updateTimeLine(ADD_SECOND*2);
+        tmpScore += SCORE_CLOCK*2;
 
         pStart.animClock(() -> {});
         pEnd.animClock(this::updateBoard);
@@ -883,6 +961,7 @@ public class GameUIController {
 //      System.out.println("x1 time, jam");
         //todo: x1 time
         updateTimeLine(ADD_SECOND);
+        tmpScore += SCORE_CLOCK;
 
         Piece point;
         Piece pClock;
@@ -909,6 +988,7 @@ public class GameUIController {
 //      System.out.println("x1 time, glass juice");
         //todo: x1 time
         updateTimeLine(ADD_SECOND);
+        tmpScore += SCORE_CLOCK;
 
         if (pStart.row == pEnd.row) {
           if (pStart.item.type == Type.glass_fruit) {
@@ -931,6 +1011,7 @@ public class GameUIController {
 //      System.out.println("x1 time, normal item");
         //todo: x1 time
         updateTimeLine(ADD_SECOND);
+        tmpScore += SCORE_CLOCK;
 
         pStart.animClock(() -> {});
 
@@ -942,6 +1023,7 @@ public class GameUIController {
 //      System.out.println("x1 time, normal item");
         //todo: x1 time
         updateTimeLine(ADD_SECOND);
+        tmpScore += SCORE_CLOCK;
 
         pEnd.animClock(() -> {});
 
@@ -1243,6 +1325,7 @@ public class GameUIController {
   }
 
   public void continueWhenWatchAdsGetTime() {
+    unlockClick      = false;
     isGameOver       = false;
     isPause          = false;
     isWrap           = false;
@@ -1261,6 +1344,7 @@ public class GameUIController {
   }
 
   public void resetGame() {
+    unlockClick             = false;
     isCompleteRound         = true;
     timeExpired             = TIME_START_GAME;
     target                  = 0;
@@ -1272,6 +1356,8 @@ public class GameUIController {
     dtScore                 = 0;
     sumScoreEachTurn        = 0;
     countScoreToShowWonder  = 0;
+
+    gamePlayUI.setTouchableItemSkill(Touchable.disabled);
   }
 
   public void newGame() {
@@ -1307,6 +1393,8 @@ public class GameUIController {
     isWrap     = false;
     pieceStart = null;
     pieceEnd   = null;
+
+    gamePlayUI.setTouchableItemSkill(Touchable.enabled);
   }
 
   //------------------------------------show/hide combo and popup-----------------------------------
