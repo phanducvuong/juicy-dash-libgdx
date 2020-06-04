@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.ss.GMain;
@@ -35,7 +36,7 @@ public class GamePlayUI extends Group {
   private       GameUIController controller;
   private       I18NBundle       locale = C.lang.locale;
 
-  public        Group            gBackground, gItem, gAnimLb, gAnimSkill, gPopup;
+  public        Group            gBackground, gItem, gAnimLb, gAnimSkill, gPopup, gTutorial;
   public static Image            bgTable;
   private       Label            lbRound;
 
@@ -71,10 +72,12 @@ public class GamePlayUI extends Group {
   private Image     black;
 
   private Group     gItemStar,
-                    gItemBoom;
-  private Image     itemStar, itemBoom;             //start anim boom and star when user click item boom | item star
+                    gItemBoom,
+                    gFlareSkillItem;
+  private Image     itemStar, itemBoom, flare;             //start anim boom and star when user click item boom | item star
   private Label     lbAmountItemStar,
-                    lbAmountBoom;
+                    lbAmountBoom,
+                    lbTutorialSkill;
 
   public boolean    isChooseBoom             = false,
                     isChooseStar             = false;
@@ -93,6 +96,7 @@ public class GamePlayUI extends Group {
     this.gAnimSkill   = new Group();
     this.gAnimLb      = new Group();
     this.gPopup       = new Group();
+    this.gTutorial    = new Group();
 
     this.controller   = controller;
 
@@ -112,6 +116,7 @@ public class GamePlayUI extends Group {
     this.addActor(gAnimLb);
     this.addActor(gAnimSkill);
     this.addActor(gPopup);
+    this.addActor(gTutorial);
 
     this.setSize(CENTER_X*2, CENTER_Y*2);
 
@@ -126,6 +131,11 @@ public class GamePlayUI extends Group {
     initPopupAdsTime();
     initPopupGameOver();
     initAnimLbRound();
+    initTutorial();
+
+  }
+
+  private void initTutorial() {
 
   }
 
@@ -247,9 +257,24 @@ public class GamePlayUI extends Group {
     bg.setOrigin(Align.center);
     gBackground.addActor(bg);
 
+    //label: flare item skill
+    gFlareSkillItem = new Group();
+    flare = GUI.createImage(GMain.itemAtlas, "flare_skill");
+    gFlareSkillItem.setSize(flare.getWidth(), flare.getHeight());
+    flare.setOrigin(Align.center);
+    gFlareSkillItem.setPosition(0, -10);
+    gFlareSkillItem.setVisible(false);
+    gFlareSkillItem.addActor(flare);
+    gItem.addActor(gFlareSkillItem);
+
+    lbTutorialSkill = new Label(locale.get("tutorial_skill"), new Label.LabelStyle(Config.whiteFont, null));
+    lbTutorialSkill.setFontScale(.7f);
+    lbTutorialSkill.setPosition(20, flare.getY() + flare.getHeight() - 70);
+    gFlareSkillItem.addActor(lbTutorialSkill);
+
     bgTable = GUI.createImage(GMain.bgAtlas, "bg_table");
     bgTable.setPosition(CENTER_X, CENTER_Y + Config.OFFSET_Y_BG_TABLE, Align.center);
-    gBackground.addActor(bgTable);
+    gItem.addActor(bgTable);
 
     //label: skill item
     Image bgSkill   = GUI.createImage(GMain.bgAtlas, "bg_skill");
@@ -264,7 +289,7 @@ public class GamePlayUI extends Group {
     gItemStar.setPosition(bgSkill.getX() + bgSkill.getWidth()/2 - gItemStar.getWidth() - 5,
             bgSkill.getY() + bgSkill.getHeight()/2 - gItemStar.getHeight()/2 - 10);
     gItemStar.addActor(iStar);
-    gBackground.addActor(gItemStar);
+    gItem.addActor(gItemStar);
 
     lbAmountItemStar = new Label(controller.amountItemStar+"", new Label.LabelStyle(Config.greenFont, null));
     lbAmountItemStar.setFontScale(.6f);
@@ -283,7 +308,7 @@ public class GamePlayUI extends Group {
     gItemBoom.setPosition(bgSkill.getX() + bgSkill.getWidth()/2 + 20,
             bgSkill.getY() + bgSkill.getHeight()/2 - gItemBoom.getHeight()/2 - 10);
     gItemBoom.addActor(iBoom);
-    gBackground.addActor(gItemBoom);
+    gItem.addActor(gItemBoom);
 
     lbAmountBoom = new Label(controller.amountItemBoom+"", new Label.LabelStyle(Config.greenFont, null));
     lbAmountBoom.setFontScale(.6f);
@@ -316,6 +341,15 @@ public class GamePlayUI extends Group {
             isChooseStar = false;
             controller.unlockClick = true;
 
+            gFlareSkillItem.setVisible(true);
+            flare.clearActions();
+            animFlareSkillItem();
+            gAnimSkill.addActor(itemBoom);
+            itemBoom.setPosition(gFlareSkillItem.getX() + gFlareSkillItem.getWidth()/2 - itemBoom.getWidth()/2,
+                                 gFlareSkillItem.getY() + gFlareSkillItem.getHeight()/2 - itemBoom.getHeight()/2);
+
+            itemStar.remove();
+            gBackground.addActor(black);
             gItemStar.setScale(1f);
             gItemBoom.setScale(1.1f);
             controller.startAnimZoomAndVibrateOnBoard();
@@ -324,6 +358,9 @@ public class GamePlayUI extends Group {
             isChooseBoom = false;
             controller.unlockClick = false;
 
+            black.remove();
+            gFlareSkillItem.setVisible(false);
+            itemBoom.remove();
             gItemBoom.setScale(1f);
             controller.stopAnimZoomAndVibrateOnBoard();
           }
@@ -346,6 +383,15 @@ public class GamePlayUI extends Group {
             isChooseBoom = false;
             controller.unlockClick = true;
 
+            gFlareSkillItem.setVisible(true);
+            flare.clearActions();
+            animFlareSkillItem();
+            gAnimSkill.addActor(itemStar);
+            itemStar.setPosition(gFlareSkillItem.getX() + gFlareSkillItem.getWidth()/2 - itemStar.getWidth()/2,
+                                 gFlareSkillItem.getY() + gFlareSkillItem.getHeight()/2 - itemStar.getHeight()/2);
+
+            itemBoom.remove();
+            gBackground.addActor(black);
             gItemStar.setScale(1.1f);
             gItemBoom.setScale(1f);
             controller.startAnimZoomAndVibrateOnBoard();
@@ -354,6 +400,9 @@ public class GamePlayUI extends Group {
             isChooseStar = false;
             controller.unlockClick = false;
 
+            black.remove();
+            itemStar.remove();
+            gFlareSkillItem.setVisible(false);
             gItemStar.setScale(1f);
             controller.stopAnimZoomAndVibrateOnBoard();
           }
@@ -578,6 +627,25 @@ public class GamePlayUI extends Group {
     gPopupGameOver.moveBy(0, 600);
     gPopupGameOver.remove();
   }
+
+  public void showTutorial() {
+//    this.setTouchable(Touchable.disabled);
+    gTutorial.addActor(black);
+
+    Image bgTuto9 = GUI.createImage(GMain.bgAtlas, "bg_tuto_9");
+    bgTuto9.setPosition(controller.arrPosPiece[3][2].pos.x, controller.arrPosPiece[3][2].pos.y);
+    gTutorial.addActor(bgTuto9);
+
+    black.addListener(new DragListener() {
+      @Override
+      public void drag(InputEvent event, float x, float y, int pointer) {
+        super.drag(event, x, y, pointer);
+
+        System.out.println("X: " + x + " Y: " + y);
+
+      }
+    });
+  }
   //--------------------------------------show/hide popup-------------------------------------------
 
   //--------------------------------------animation game play---------------------------------------
@@ -648,6 +716,8 @@ public class GamePlayUI extends Group {
   }
 
   public void animItemBoom(Vector2 pos, Runnable onComplete) {
+    gFlareSkillItem.setVisible(false);
+    black.remove();
     gAnimSkill.addActor(itemBoom);
     itemBoom.setPosition(pos.x + Config.WIDTH_PIECE/2 - itemBoom.getWidth()/2,
                          pos.y + Config.HEIGHT_PIECE/2 - itemBoom.getHeight()/2);
@@ -679,7 +749,8 @@ public class GamePlayUI extends Group {
   }
 
   public void animItemStar(Vector2 pos, Runnable onComplete) {
-
+    gFlareSkillItem.setVisible(false);
+    black.remove();
     gAnimSkill.addActor(itemStar);
     itemStar.setPosition(pos.x - 50, pos.y - 30);
     itemStar.addAction(
@@ -704,6 +775,17 @@ public class GamePlayUI extends Group {
                       itemStar.getColor().a = 1f;
                       itemStar.remove();
                     })
+            )
+    );
+  }
+
+  private void animFlareSkillItem() {
+    if (!gFlareSkillItem.isVisible())
+      return;
+    flare.addAction(
+            sequence(
+                    Actions.rotateBy(10, .25f, linear),
+                    run(this::animFlareSkillItem)
             )
     );
   }

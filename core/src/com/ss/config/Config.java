@@ -8,6 +8,16 @@ import com.ss.core.util.GAssetsManager;
 
 public class Config {
 
+  public static final String itemTutorial[][] = {
+          {"apple", "orange", "banana", "strawberry", "grape", "apple", "orange"},
+          {"orange", "banana", "strawberry", "grape", "apple", "orange", "banana"},
+          {"grape", "apple", "grape", "banana", "strawberry", "banana", "strawberry"},
+          {"orange", "banana", "orange", "apple", "apple", "grape", "grape"},
+          {"strawberry", "grape", "apple", "orange", "banana", "orange", "apple"},
+          {"apple", "orange", "banana", "strawberry", "orange", "apple", "orange"},
+          {"banana", "strawberry", "grape", "apple", "grape", "banana", "strawberry"}
+  };
+
   //label: init font
   public static final BitmapFont whiteFont                = GAssetsManager.getBitmapFont("white_font.fnt");
   public static final BitmapFont greenFont                = GAssetsManager.getBitmapFont("green_font.fnt");
@@ -98,5 +108,7 @@ public class Config {
   public static final float   WIN_VOLUME                  = 1f;
   public static final float   STAMP_VOLUME                = 1f;
   public static final float   LOSE_VOLUME                 = 1f;
+  public static final float   SKILL_BOOM_VOLUME           = 1f;
+  public static final float   SKILL_STAR_VOLUME           = 1f;
 
 }

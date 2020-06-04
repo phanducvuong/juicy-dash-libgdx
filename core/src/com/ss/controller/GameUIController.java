@@ -1,6 +1,8 @@
 package com.ss.controller;
 
 import static com.badlogic.gdx.math.Interpolation.*;
+
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -41,7 +43,7 @@ public class GameUIController {
   public  PauseUI     pauseUI;
   public  Image       blackScreen;
 
-  private Piece[][]                   arrPosPiece = new Piece[ROW][COL];
+  public  Piece[][]                   arrPosPiece = new Piece[ROW][COL];
   private HashMap<String, List<Item>> hmItem;
   private List<Piece>                 lsPieceNullItem = new ArrayList<>();
   private int                         turn = ROW;
@@ -49,7 +51,7 @@ public class GameUIController {
 
   public boolean  isWrap      = true,
                   isGameOver  = false,
-                  unlockClick = false,   //unlock click gamePlayUI
+                  unlockClick = false,   //unlock click gamePlayUI to use skill item
                   isPause     = false;
   private Piece   pieceStart, pieceEnd;
 
@@ -64,7 +66,8 @@ public class GameUIController {
                   targetIncrease,
                   tmpScore,              //tmpScore: điểm mỗi khi ăn trái cây để update scorePre
                   countScoreToShowWonder;              //tmpScore: điểm mỗi khi ăn trái cây để update scorePre
-  public boolean  isCompleteRound         = true;
+  public boolean  isCompleteRound         = true,
+                  isTutorial              = true;
   public int      amountItemStar,
                   amountItemBoom;
 
@@ -129,21 +132,6 @@ public class GameUIController {
       }
     });
 
-    Image addItem = GUI.createImage(GMain.bgAtlas, "icon_pause");
-    icon.setPosition(400, 20);
-//    gParent.addActor(addItem);
-
-    addItem.addListener(new ClickListener() {
-      @Override
-      public void clicked(InputEvent event, float x, float y) {
-        super.clicked(event, x, y);
-
-        wonder.changeSprite(0);
-        wonder.start(gamePlayUI.CENTER_X, gamePlayUI.CENTER_Y, 2.5f);
-
-      }
-    });
-
   }
 
   //------------------init ui---------------------------------------------
@@ -168,7 +156,6 @@ public class GameUIController {
     lv.add(Type.grape);
     lv.add(Type.banana);
     lv.add(Type.apple);
-
   }
 
   private void initPiece() {
@@ -625,6 +612,7 @@ public class GameUIController {
   }
 
   private void skillBoom(Piece piece) {
+    gamePlayUI.setTouchableItemSkill(Touchable.disabled);
     amountItemBoom -= 1;
     int row = piece.row,
         col = piece.col;
@@ -649,6 +637,8 @@ public class GameUIController {
           clrPiece(p, false);
         }
 
+        SoundEffects.start("skill_boom", SKILL_BOOM_VOLUME);
+
         Vector2 posShowBoom = lsPieceAffectBoom.get(4).pos;
         gamePlayUI.pBoom.start(posShowBoom.x + WIDTH_PIECE/2, posShowBoom.y + HEIGHT_PIECE/2, .5f);
         scene.shake();
@@ -661,12 +651,15 @@ public class GameUIController {
   }
 
   private void skillStar(Piece piece) {
+    gamePlayUI.setTouchableItemSkill(Touchable.disabled);
     gamePlayUI.addAction(
             sequence(
                     delay(.625f),
                     run(() -> {
                       piece.stopAnimZoomAndVibration();
                       clrPiece(piece, false);
+
+                      SoundEffects.start("skill_star", SKILL_STAR_VOLUME);
                       gamePlayUI.pStar.start(piece.pos.x + WIDTH_PIECE/2,
                               piece.pos.y + HEIGHT_PIECE/2, .35f);
                     })
@@ -803,8 +796,12 @@ public class GameUIController {
 
   //-------------------action add new item---------------------------------
   private void startNewItem(int row) {
-    if (row >= 0)
-      gamePlayUI.gBackground.addAction(GSimpleAction.simpleAction(this::action));
+    if (row >= 0) {
+      if (isTutorial)
+        gamePlayUI.gBackground.addAction(GSimpleAction.simpleAction(this::actionTutorial));
+      else
+        gamePlayUI.gBackground.addAction(GSimpleAction.simpleAction(this::action));
+    }
     else {
       //todo: fillAll
 //      System.out.println("FINISHED!");
@@ -824,6 +821,7 @@ public class GameUIController {
                       }),
                       run(() -> {
                         if (lsPieceNullItem.size() <= 0) {
+                          gamePlayUI.showTutorial();
                           showWonder();
                           unlockInput();
                           countScoreToShowWonder = 0;
@@ -832,6 +830,26 @@ public class GameUIController {
               )
       );
     }
+  }
+
+  private boolean actionTutorial(float dt, Actor a) {
+    for (Piece piece : lsPieceNullItem) {
+      for (int col=0; col<COL; col++) {
+        if (turn >= 0 && turn < ROW && arrPosPiece[turn][col] == piece) {
+          Item item = util.getItemBy(hmItem, itemTutorial[turn][col]);
+          addNewItemBy(piece, item);
+        }
+      }
+    }
+
+    gamePlayUI.gBackground.addAction(
+            sequence(
+                    delay(.05f),
+                    run(this::nextRow)
+            )
+    );
+
+    return true;
   }
 
   private boolean action(float dt, Actor a) {
@@ -856,6 +874,20 @@ public class GameUIController {
   private void nextRow() {
     turn--;
     startNewItem(turn);
+  }
+
+  private void addNewItemBy(Piece piece, Item item) {
+    piece.setItem(item);
+    addToGroup(item, gamePlayUI.gItem);
+    item.setPosStart(piece.pos);
+    item.moveToPos(piece.pos, .2f);
+
+    item.addAction(
+            sequence(
+                    delay(.195f),
+                    run(() -> SoundEffects.start(util.rndSoundDrop(), DROP_VOLUME))
+            )
+    );
   }
 
   private void addNewItem(Piece piece) {
@@ -1343,7 +1375,7 @@ public class GameUIController {
     //todo: show popup game over
   }
 
-  public void resetGame() {
+  private void resetGame() {
     unlockClick             = false;
     isCompleteRound         = true;
     timeExpired             = TIME_START_GAME;
@@ -1367,7 +1399,7 @@ public class GameUIController {
     nextLevel();
   }
 
-  public void refactoryAllItemInGame() {
+  private void refactoryAllItemInGame() {
     gParent.clearActions();
     gamePlayUI.clearActionAllObject();
     clrAll();

@@ -1,236 +1,243 @@
 
 item.png
-size: 2048,256
+size: 1024,512
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 anim_glass_juice
   rotate: false
-  xy: 2, 2
+  xy: 2, 5
   size: 120, 106
   orig: 120, 106
   offset: 0, 0
   index: -1
 anim_jam
   rotate: false
-  xy: 776, 118
+  xy: 362, 260
   size: 65, 26
   orig: 65, 26
   offset: 0, 0
   index: -1
 apple_l
   rotate: false
-  xy: 338, 86
+  xy: 866, 354
   size: 78, 58
   orig: 78, 58
   offset: 0, 0
   index: -1
 apple_r
   rotate: false
-  xy: 1829, 181
+  xy: 531, 248
   size: 77, 65
   orig: 77, 65
   offset: 0, 0
   index: -1
 banana_l
   rotate: false
-  xy: 1991, 197
+  xy: 966, 458
   size: 31, 49
   orig: 31, 49
   offset: 0, 0
   index: -1
 banana_r
   rotate: false
-  xy: 1908, 128
+  xy: 124, 6
   size: 84, 55
   orig: 84, 55
   offset: 0, 0
   index: -1
 flare
   rotate: false
-  xy: 2, 110
+  xy: 2, 113
   size: 136, 136
   orig: 136, 136
   offset: 0, 0
   index: -1
+flare_skill
+  rotate: false
+  xy: 2, 251
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
 grape_l
   rotate: false
-  xy: 1908, 185
+  xy: 448, 249
   size: 81, 61
   orig: 81, 61
   offset: 0, 0
   index: -1
 grape_r
   rotate: false
-  xy: 713, 105
+  xy: 353, 219
   size: 61, 39
   orig: 61, 39
   offset: 0, 0
   index: -1
 ice_apple
   rotate: false
-  xy: 663, 146
+  xy: 579, 407
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 ice_banana
   rotate: false
-  xy: 459, 146
+  xy: 375, 407
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 ice_grape
   rotate: false
-  xy: 357, 146
+  xy: 260, 284
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 ice_kiwi
   rotate: false
-  xy: 561, 146
+  xy: 477, 407
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 ice_orange
   rotate: false
-  xy: 765, 146
+  xy: 681, 407
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 ice_strawberry
   rotate: false
-  xy: 255, 146
+  xy: 140, 149
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 item_apple
   rotate: false
-  xy: 1498, 156
+  xy: 531, 315
   size: 81, 90
   orig: 81, 90
   offset: 0, 0
   index: -1
 item_banana
   rotate: false
-  xy: 1239, 157
+  xy: 237, 24
   size: 88, 89
   orig: 88, 89
   offset: 0, 0
   index: -1
 item_boom
   rotate: false
-  xy: 1664, 168
+  xy: 260, 204
   size: 91, 78
   orig: 91, 78
   offset: 0, 0
   index: -1
 item_clock
   rotate: false
-  xy: 867, 154
+  xy: 783, 415
   size: 92, 92
   orig: 92, 92
   offset: 0, 0
   index: -1
 item_glass_juice
   rotate: false
-  xy: 1757, 152
+  xy: 697, 311
   size: 70, 94
   orig: 70, 94
   offset: 0, 0
   index: -1
 item_grape
   rotate: false
-  xy: 961, 153
+  xy: 877, 414
   size: 87, 93
   orig: 87, 93
   offset: 0, 0
   index: -1
 item_jam
   rotate: false
-  xy: 1050, 162
+  xy: 140, 63
   size: 95, 84
   orig: 95, 84
   offset: 0, 0
   index: -1
 item_kiwi
   rotate: false
-  xy: 1329, 150
+  xy: 362, 288
   size: 84, 96
   orig: 84, 96
   offset: 0, 0
   index: -1
 item_orange
   rotate: false
-  xy: 1415, 153
+  xy: 448, 312
   size: 81, 93
   orig: 81, 93
   offset: 0, 0
   index: -1
 item_star
   rotate: false
-  xy: 140, 125
+  xy: 260, 386
   size: 113, 121
   orig: 113, 121
   offset: 0, 0
   index: -1
 item_strawberry
   rotate: false
-  xy: 1581, 157
+  xy: 614, 316
   size: 81, 89
   orig: 81, 89
   offset: 0, 0
   index: -1
 item_walnut
   rotate: false
-  xy: 1147, 159
+  xy: 242, 115
   size: 90, 87
   orig: 90, 87
   offset: 0, 0
   index: -1
 kiwi_l
   rotate: false
-  xy: 495, 72
+  xy: 334, 130
   size: 68, 72
   orig: 68, 72
   offset: 0, 0
   index: -1
 kiwi_r
   rotate: false
-  xy: 565, 81
+  xy: 327, 2
   size: 67, 63
   orig: 67, 63
   offset: 0, 0
   index: -1
 orange_l
   rotate: false
-  xy: 418, 83
+  xy: 334, 67
   size: 75, 61
   orig: 75, 61
   offset: 0, 0
   index: -1
 orange_r
   rotate: false
-  xy: 634, 92
+  xy: 848, 300
   size: 77, 52
   orig: 77, 52
   offset: 0, 0
   index: -1
 strawberry_l
   rotate: false
-  xy: 255, 93
+  xy: 783, 362
   size: 81, 51
   orig: 81, 51
   offset: 0, 0
   index: -1
 strawberry_r
   rotate: false
-  xy: 1829, 128
+  xy: 769, 309
   size: 77, 51
   orig: 77, 51
   offset: 0, 0

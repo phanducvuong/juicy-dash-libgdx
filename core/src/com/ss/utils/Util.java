@@ -147,6 +147,17 @@ public class Util {
     return "chew_"+rnd;
   }
 
+  public Item getItemBy(HashMap<String, List<Item>> hm, String key) {
+    List<Item> ls = hm.get("item_" + key);
+    for (Item item : ls) {
+      if (!item.isAlive) {
+        item.isAlive = true;
+        return item;
+      }
+    }
+    return null;
+  }
+
   public Item getRndItem(HashMap<String, List<Item>> hm, List<Type> types) {
     int d = types.size();
     int rnd = (int) Math.floor(Math.random() * d);

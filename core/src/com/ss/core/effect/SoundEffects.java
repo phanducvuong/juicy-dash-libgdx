@@ -37,6 +37,8 @@ public class SoundEffects {
   private static FileHandle win           = Gdx.files.internal("sound/win.mp3");
   private static FileHandle stamp         = Gdx.files.internal("sound/stamp.mp3");
   private static FileHandle lose          = Gdx.files.internal("sound/lose.mp3");
+  private static FileHandle skill_boom    = Gdx.files.internal("sound/skill_boom.mp3");
+  private static FileHandle skill_star    = Gdx.files.internal("sound/skill_star.mp3");
 
   public static boolean isMuteSound = false;
   public static boolean isMuteMusic = false;
@@ -74,6 +76,8 @@ public class SoundEffects {
     sounds.put("win", Gdx.audio.newSound(win));
     sounds.put("stamp", Gdx.audio.newSound(stamp));
     sounds.put("lose", Gdx.audio.newSound(lose));
+    sounds.put("skill_boom", Gdx.audio.newSound(skill_boom));
+    sounds.put("skill_star", Gdx.audio.newSound(skill_star));
 
   }
 
