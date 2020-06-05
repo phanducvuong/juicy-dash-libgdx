@@ -18,6 +18,7 @@ import com.ss.controller.StartUIController;
 import com.ss.core.effect.SoundEffects;
 import com.ss.core.util.GStage;
 import com.ss.core.util.GUI;
+import com.ss.scenes.LDBFactory;
 import com.ss.utils.Solid;
 
 public class StartUI extends Group {
@@ -34,7 +35,9 @@ public class StartUI extends Group {
                 dashTop,
                 title,
                 btnRank,
+                btnGames,
                 btnStart;
+  private Image soundOn, soundOff;
 
   public StartUI(StartUIController controller) {
 
@@ -52,19 +55,6 @@ public class StartUI extends Group {
     SoundEffects.startMusic();
     initBg();
 
-    Image icon = GUI.createImage(GMain.bgAtlas, "icon_pause");
-    icon.setPosition(CENTER_X + 100, 20);
-//    gBackground.addActor(icon);
-
-    icon.addListener(new ClickListener() {
-      @Override
-      public void clicked(InputEvent event, float x, float y) {
-        super.clicked(event, x, y);
-
-        showCrossPanel();
-
-      }
-    });
   }
 
   private void initBg() {
@@ -92,13 +82,13 @@ public class StartUI extends Group {
     gBackground.addActor(btnStart);
 
     //label: btnSound
-    Image soundOn = GUI.createImage(GMain.bgAtlas, "icon_sound_on");
+    soundOn = GUI.createImage(GMain.bgAtlas, "icon_sound_on");
     soundOn.setScale(1.1f);
     soundOn.setOrigin(Align.center);
     soundOn.setPosition(CENTER_X*2 - soundOn.getWidth() - 20, 180);
     gBackground.addActor(soundOn);
 
-    Image soundOff = GUI.createImage(GMain.bgAtlas, "icon_sound_off");
+    soundOff = GUI.createImage(GMain.bgAtlas, "icon_sound_off");
     soundOff.setScale(1.1f);
     soundOff.setOrigin(Align.center);
     soundOff.setPosition(soundOn.getX(), soundOn.getY());
@@ -106,7 +96,7 @@ public class StartUI extends Group {
     gBackground.addActor(soundOff);
 
     //label: btnGames
-    Image btnGames = GUI.createImage(GMain.bgAtlas, "i_games");
+    btnGames = GUI.createImage(GMain.bgAtlas, "i_games");
     btnGames.setScale(.8f);
     btnGames.setOrigin(Align.center);
     btnGames.setPosition(soundOn.getX() + soundOn.getWidth()/2 - btnGames.getWidth()/2,
@@ -114,7 +104,7 @@ public class StartUI extends Group {
     gBackground.addActor(btnGames);
 
     //label: btnRank
-    Image btnRank = GUI.createImage(GMain.bgAtlas, "icon_rank");
+    btnRank = GUI.createImage(GMain.bgAtlas, "icon_rank");
     btnRank.setScale(.8f);
     btnRank.setOrigin(Align.center);
     btnRank.setPosition(soundOn.getX() + soundOn.getWidth()/2 - btnGames.getWidth()/2,
@@ -148,7 +138,7 @@ public class StartUI extends Group {
     });
 
     imgClick(btnRank, () -> {
-
+      controller.scene.setScreen(LDBFactory.getLDB());
     });
 
   }
@@ -214,8 +204,14 @@ public class StartUI extends Group {
   }
 
   private void showCrossPanel() {
+    crossPanel.remove();
+    crossPanel.setScale(0);
+    crossPanel.getColor().a = 0f;
+    crossPanel.clearActions();
+
     gPopup.addActor(blackScreen);
     gPopup.addActor(crossPanel);
+
     crossPanel.addAction(
             parallel(
                     scaleTo(1f, 1f, .25f, fastSlow),
@@ -224,4 +220,14 @@ public class StartUI extends Group {
     );
   }
 
+  public void setVisibleIconSound() {
+    if (!SoundEffects.isMuteSound) {
+      soundOn.setVisible(true);
+      soundOff.setVisible(false);
+    }
+    else {
+      soundOn.setVisible(false);
+      soundOff.setVisible(true);
+    }
+  }
 }

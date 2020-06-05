@@ -1,0 +1,125 @@
+
+leaderboard.png
+size: 2048,2048
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+bg
+  rotate: false
+  xy: 2, 659
+  size: 720, 1280
+  orig: 720, 1280
+  offset: 0, 0
+  index: -1
+btn_yellow
+  rotate: false
+  xy: 1802, 1848
+  size: 218, 91
+  orig: 218, 91
+  offset: 0, 0
+  index: -1
+loading
+  rotate: false
+  xy: 1288, 1564
+  size: 161, 161
+  orig: 161, 161
+  offset: 0, 0
+  index: -1
+panel
+  rotate: false
+  xy: 724, 1033
+  size: 562, 906
+  orig: 562, 906
+  offset: 0, 0
+  index: -1
+panel_register
+  rotate: false
+  xy: 2, 329
+  size: 569, 328
+  orig: 569, 328
+  offset: 0, 0
+  index: -1
+rank_0
+  rotate: false
+  xy: 573, 550
+  size: 75, 107
+  orig: 75, 107
+  offset: 0, 0
+  index: -1
+rank_1
+  rotate: false
+  xy: 1288, 1455
+  size: 75, 107
+  orig: 75, 107
+  offset: 0, 0
+  index: -1
+rank_2
+  rotate: false
+  xy: 1451, 1618
+  size: 75, 107
+  orig: 75, 107
+  offset: 0, 0
+  index: -1
+rank_overlay
+  rotate: false
+  xy: 724, 672
+  size: 200, 28
+  orig: 200, 28
+  offset: 0, 0
+  index: -1
+ribbon
+  rotate: false
+  xy: 2, 187
+  size: 512, 140
+  orig: 512, 140
+  offset: 0, 0
+  index: -1
+row_overlay
+  rotate: false
+  xy: 1288, 1727
+  size: 400, 61
+  orig: 400, 61
+  offset: 0, 0
+  index: -1
+tag
+  rotate: false
+  xy: 2, 2
+  size: 216, 82
+  orig: 216, 82
+  offset: 0, 0
+  index: -1
+textinput
+  rotate: false
+  xy: 724, 798
+  size: 558, 70
+  orig: 558, 70
+  offset: 0, 0
+  index: -1
+tittle_notice
+  rotate: false
+  xy: 724, 870
+  size: 512, 161
+  orig: 512, 161
+  offset: 0, 0
+  index: -1
+tittle_notice_vi
+  rotate: false
+  xy: 1288, 1790
+  size: 512, 149
+  orig: 512, 149
+  offset: 0, 0
+  index: -1
+topscore
+  rotate: false
+  xy: 724, 702
+  size: 342, 94
+  orig: 342, 94
+  offset: 0, 0
+  index: -1
+topscore_vi
+  rotate: false
+  xy: 2, 86
+  size: 342, 99
+  orig: 342, 99
+  offset: 0, 0
+  index: -1

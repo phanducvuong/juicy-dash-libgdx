@@ -24,7 +24,7 @@ import java.util.List;
 
 public class CrossPanel extends Group {
 
-  private Image blackScreen;
+  private Image   blackScreen;
 
   public CrossPanel(Image blackScreen) {
 
@@ -145,17 +145,15 @@ public class CrossPanel extends Group {
   }
 
   private void animEscape(Image btn) {
+    blackScreen.remove();
+    btn.setTouchable(Touchable.enabled);
     this.addAction(
             sequence(
                     parallel(
                             scaleTo(0f, 0f, .75f, fastSlow),
                             alpha(0f, .2f, linear)
                     ),
-                    run(() -> {
-                      btn.setTouchable(Touchable.enabled);
-                      blackScreen.remove();
-                      this.remove();
-                    })
+                    run(this::remove)
             )
     );
   }

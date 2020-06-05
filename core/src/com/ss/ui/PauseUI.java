@@ -152,6 +152,7 @@ public class PauseUI extends Group {
   }
 
   public void showPause() {
+    setVisibleIconSound();
     gPause.addAction(
             sequence(
                     parallel(
@@ -202,6 +203,17 @@ public class PauseUI extends Group {
     btnHome.setTouchable(Touchable.enabled);
     btnSoundOn.setTouchable(Touchable.enabled);
     btnSoundOff.setTouchable(Touchable.enabled);
+  }
+
+  private void setVisibleIconSound() {
+    if (!SoundEffects.isMuteSound) {
+      btnSoundOff.setVisible(false);
+      btnSoundOn.setVisible(true);
+    }
+    else {
+      btnSoundOff.setVisible(true);
+      btnSoundOn.setVisible(false);
+    }
   }
 
 }

@@ -86,7 +86,7 @@ public class GamePlayUI extends Group {
                     pLovely,
                     pNewRound,
                     pWind;
-  public Particle   pBoom, pFallLeaf, pStar;
+  public  Particle  pBoom, pFallLeaf, pStar;
 
   public GamePlayUI(GameUIController controller) {
 
@@ -131,11 +131,6 @@ public class GamePlayUI extends Group {
     initPopupAdsTime();
     initPopupGameOver();
     initAnimLbRound();
-    initTutorial();
-
-  }
-
-  private void initTutorial() {
 
   }
 
@@ -626,25 +621,6 @@ public class GamePlayUI extends Group {
     gPopupGameOver.getColor().a = 0f;
     gPopupGameOver.moveBy(0, 600);
     gPopupGameOver.remove();
-  }
-
-  public void showTutorial() {
-//    this.setTouchable(Touchable.disabled);
-    gTutorial.addActor(black);
-
-    Image bgTuto9 = GUI.createImage(GMain.bgAtlas, "bg_tuto_9");
-    bgTuto9.setPosition(controller.arrPosPiece[3][2].pos.x, controller.arrPosPiece[3][2].pos.y);
-    gTutorial.addActor(bgTuto9);
-
-    black.addListener(new DragListener() {
-      @Override
-      public void drag(InputEvent event, float x, float y, int pointer) {
-        super.drag(event, x, y, pointer);
-
-        System.out.println("X: " + x + " Y: " + y);
-
-      }
-    });
   }
   //--------------------------------------show/hide popup-------------------------------------------
 

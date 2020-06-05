@@ -1,23 +1,20 @@
 package com.ss;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.platform.IPlatform;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.ss.config.Config;
 import com.ss.core.effect.SoundEffects;
 import com.ss.core.exSprite.particle.GParticleSystem;
 import com.ss.core.util.GAssetsManager;
 import com.ss.core.util.GDirectedGame;
-import com.ss.core.util.GScreen;
 import com.ss.core.util.GStage;
 import com.ss.core.util.GStage.StageBorder;
 import com.ss.scenes.GameScene;
 import com.ss.config.C;
 import com.ss.scenes.StartScene;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
 
 public class GMain extends GDirectedGame {
 
@@ -60,18 +57,16 @@ public class GMain extends GDirectedGame {
 
   public void create() {
 
-//    if (!pref.getBoolean("isNewbie")) {
+    pref = Gdx.app.getPreferences("juice_dash");
+    if (!pref.getBoolean("isNewbie")) {
 
-      SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.US);
-      String day                 = formatter.format(Calendar.getInstance().getTime());
+      pref.putBoolean("isNewbie", true);
+      pref.putInteger("amount_item_star", Config.AMOUNT_SKILL_STAR);
+      pref.putInteger("amount_item_boom", Config.AMOUNT_SKILL_BOOM);
+      pref.putBoolean("is_tutorial", true);
+      pref.flush();
 
-//      pref.putBoolean("isNewbie", true);
-//      pref.putLong("money", Config.MONEY_NEWBIE);
-//      pref.putString("day", day);
-//      pref.putInteger("spin", Config.SPIN_TIME);
-//      pref.flush();
-
-//    }
+    }
 
     initLocalNotification();
     SoundEffects.initSound();

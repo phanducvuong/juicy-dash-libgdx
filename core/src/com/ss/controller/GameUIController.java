@@ -24,6 +24,7 @@ import com.ss.objects.Piece;
 import com.ss.scenes.GameScene;
 import com.ss.ui.GamePlayUI;
 import com.ss.ui.PauseUI;
+import com.ss.ui.TutorialUI;
 import com.ss.utils.Solid;
 import com.ss.utils.Util;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
@@ -41,10 +42,11 @@ public class GameUIController {
   public  GameScene   scene;
   private GamePlayUI  gamePlayUI;
   public  PauseUI     pauseUI;
+  private TutorialUI  tutorialUI;
   public  Image       blackScreen;
 
   public  Piece[][]                   arrPosPiece = new Piece[ROW][COL];
-  private HashMap<String, List<Item>> hmItem;
+  public  HashMap<String, List<Item>> hmItem;
   private List<Piece>                 lsPieceNullItem = new ArrayList<>();
   private int                         turn = ROW;
   private List<Type>                  lv;
@@ -66,8 +68,10 @@ public class GameUIController {
                   targetIncrease,
                   tmpScore,              //tmpScore: điểm mỗi khi ăn trái cây để update scorePre
                   countScoreToShowWonder;              //tmpScore: điểm mỗi khi ăn trái cây để update scorePre
+
   public boolean  isCompleteRound         = true,
-                  isTutorial              = true;
+                  isTutorial;
+
   public int      amountItemStar,
                   amountItemBoom;
 
@@ -80,11 +84,13 @@ public class GameUIController {
     this.gParent                  = gameScene.gParent;
     this.scene                    = gameScene;
 
-    this.amountItemStar           = AMOUNT_SKILL_STAR;
-    this.amountItemBoom           = AMOUNT_SKILL_BOOM;
+    this.amountItemStar           = GMain.pref.getInteger("amount_item_star");
+    this.amountItemBoom           = GMain.pref.getInteger("amount_item_boom");
+    this.isTutorial               = GMain.pref.getBoolean("is_tutorial");
 
     this.gamePlayUI               = new GamePlayUI(this);
     this.pauseUI                  = new PauseUI(this);
+    this.tutorialUI               = new TutorialUI(this);
     this.blackScreen              = new Image(Solid.create(new Color(128/255f, 213/255f, 181/255f, .45f)));
     this.blackScreen.setSize(GStage.getWorldWidth(), GStage.getWorldHeight());
 
@@ -214,8 +220,6 @@ public class GameUIController {
         if (!isGameOver && !isPause && !unlockClick) {
           pieceEnd = util.inRange(arrPosPiece, new Vector2(x, y));
           if (!isWrap && pieceStart != null && pieceEnd != null && pieceEnd != pieceStart) {
-//          util.log("start: ", pieceStart);
-//          util.log("end: ", pieceEnd);
 
             if ((pieceStart.row == pieceEnd.row && (pieceStart.col == pieceEnd.col+1 || pieceStart.col == pieceEnd.col-1)) ||
                 (pieceStart.col == pieceEnd.col && (pieceStart.row == pieceEnd.row+1 || pieceStart.row == pieceEnd.row-1))) {
@@ -617,6 +621,8 @@ public class GameUIController {
     int row = piece.row,
         col = piece.col;
 
+    util.saveData(amountItemStar, "amount_item_boom");
+
     List<Piece> lsPieceAffectBoom = getPieceAffectBoom(row, col);
     if (lsPieceAffectBoom != null) {
       //label: show particle boom
@@ -667,6 +673,7 @@ public class GameUIController {
     );
     gamePlayUI.animItemStar(piece.pos, () -> {
       amountItemStar -= 1;
+      util.saveData(amountItemStar, "amount_item_star");
       gamePlayUI.updateAmountSkill();
       stopAnimZoomAndVibrateOnBoard();
       updateBoard();
@@ -821,7 +828,9 @@ public class GameUIController {
                       }),
                       run(() -> {
                         if (lsPieceNullItem.size() <= 0) {
-                          gamePlayUI.showTutorial();
+                          //todo: show tutorial
+                          if (isTutorial)
+                            tutorialUI.showTutorial();
                           showWonder();
                           unlockInput();
                           countScoreToShowWonder = 0;
@@ -907,7 +916,7 @@ public class GameUIController {
   //-------------------action add new item---------------------------------
 
   //-------------------swap and reverse item-------------------------------
-  private void swap(Piece pStart, Piece pEnd) {
+  public void swap(Piece pStart, Piece pEnd) {
 
     if (pStart.item != null && pEnd.item != null) {
       Item tmp    = pStart.item;
@@ -1455,6 +1464,10 @@ public class GameUIController {
 
   private void addToGroup(Item item, Group group) {
     group.addActor(item);
+  }
+
+  public void setTouchableGamePlayUI(Touchable touchable) {
+    gamePlayUI.setTouchable(touchable);
   }
 
 }

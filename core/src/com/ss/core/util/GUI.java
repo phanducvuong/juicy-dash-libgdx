@@ -36,7 +36,10 @@ public class GUI {
 
   public static Button createTextButtonEx(TextureRegion texture, BitmapFont font, String text, int textOffsetX, int  textOffsetY){
     return GUI.createTextButtonWithShadowEx(texture, font, text, Color.WHITE, Color.BROWN, 1f, textOffsetX, textOffsetY);
+  }
 
+  public static Button createTextButtonEx(TextureRegion texture, BitmapFont font, String text, float fontScale, int textOffsetX, int  textOffsetY){
+    return GUI.createTextButtonWithShadowEx(texture, font, text, Color.WHITE, Color.BROWN, fontScale, textOffsetX, textOffsetY);
   }
 
   public static Button createTextButton(TextureRegion texture, BitmapFont font, String text){

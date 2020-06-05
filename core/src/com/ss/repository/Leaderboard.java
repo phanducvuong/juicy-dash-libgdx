@@ -68,7 +68,6 @@ public class Leaderboard extends GScreen {
   }
 
   private                   TextureAtlas                      lbAtlas;
-  private                   TextureAtlas                      commonAtlas;
   private                   Group                             loadingGroup;
   private                   Group                             childGroup;
   private                   Group                             registerGroup;
@@ -139,61 +138,63 @@ public class Leaderboard extends GScreen {
     Group parentGroup = new Group();
     GStage.addToLayer(GLayer.ui, parentGroup);
 
-    lbAtlas     = GAssetsManager.getTextureAtlas("leaderboard.atlas");
-    commonAtlas = GAssetsManager.getTextureAtlas("common.atlas");
-    GAssetsManager.getTextureAtlas("play.atlas");
+    lbAtlas = GAssetsManager.getTextureAtlas("leaderboard.atlas");
+    GAssetsManager.finishLoading();
 
-    Image bg = GUI.createImage(commonAtlas, "bg");
+    Image bg = GUI.createImage(lbAtlas, "bg");
     assert bg != null;
-   // bg.setScale(1.2f);
     parentGroup.addActor(bg);
     bg.setOrigin(Align.center);
-    bg.setPosition(GStage.getWorldWidth()/2,GStage.getWorldHeight()/2,Align.center);
-
-    Gdx.app.log("bg size", bg.getWidth() + " " + bg.getHeight());
-   // bg.setSize(GStage.getWorldWidth(), GStage.getWorldHeight());
+    bg.setPosition(GStage.getWorldWidth()/2,GStage.getWorldHeight()/2, Align.center);
+    bg.setSize(GStage.getWorldWidth(), GStage.getWorldHeight());
 
     childGroup = new Group();
     parentGroup.addActor(childGroup);
 
+    //label: anim child group
     //childGroup.setScale(0);
-    childGroup.setOrigin(Align.center);
-    childGroup.setPosition(GStage.getWorldWidth()/2+110, GStage.getWorldHeight()/2+50-1000);
-    childGroup.addAction(Actions.moveTo(GStage.getWorldWidth()/2+110, GStage.getWorldHeight()/2+50,0.8f, Interpolation.swingOut));
+//    childGroup.setOrigin(Align.center);
+//    childGroup.setPosition(GStage.getWorldWidth()/2 - childGroup.getWidth()/2);
+//    childGroup.setPosition(GStage.getWorldWidth()/2+110, GStage.getWorldHeight()/2+50-1000);
+//    childGroup.addAction(Actions.moveTo(GStage.getWorldWidth()/2+110, GStage.getWorldHeight()/2+50,0.8f, Interpolation.swingOut));
 
     initTag();
 
-    Image img = GUI.createImage(lbAtlas, "panel");
-    assert img != null;
-    childGroup.addActor(img);
-    img.setPosition(0, 0, Align.center);
+    Image panel = GUI.createImage(lbAtlas, "panel");
+    assert panel != null;
+    childGroup.addActor(panel);
+    panel.setPosition(0, 0);
+    childGroup.setSize(panel.getWidth(), panel.getHeight());
+    childGroup.setPosition(GStage.getWorldWidth()/2 + 30, GStage.getWorldHeight()/2, Align.center);
 
     Image ribbon = GUI.createImage(lbAtlas, "ribbon");
     assert ribbon != null;
     childGroup.addActor(ribbon);
-    ribbon.setPosition(0, -280, Align.center);
+    ribbon.setPosition(panel.getX() + panel.getWidth()/2 - ribbon.getWidth()/2,
+                       panel.getY() - ribbon.getHeight()/2);
 
     Image title = GUI.createImageLocalize(lbAtlas, "topscore");
     assert title != null;
     childGroup.addActor(title);
-    title.setPosition(0, -340, Align.center);
+    title.setPosition(ribbon.getX() + ribbon.getWidth()/2 - title.getWidth()/2,
+                      ribbon.getY() + ribbon.getHeight()/2 - title.getHeight()/2 - 30);
 
     Image rank_overlay = GUI.createImage(lbAtlas, "rank_overlay");
     assert rank_overlay != null;
     childGroup.addActor(rank_overlay);
-    rank_overlay.setPosition(0, -275, Align.center);
-    rank_overlay.setScaleY(0.8f);
+    rank_overlay.setPosition(ribbon.getX() + ribbon.getWidth()/2 - rank_overlay.getWidth()/2,
+                             ribbon.getY() + ribbon.getHeight() - 30);
 
     Label rank_txt = guiService.getWhiteText(localizeService.formatLocalizeText(RANK_PREFIX, RANK_POSTFIX[mode]) , Color.WHITE, 0.75f);
     rank_txt.setAlignment(Align.center);
     childGroup.addActor(rank_txt);
-    rank_txt.setPosition(0, -280, Align.center);
+    rank_txt.setPosition(rank_overlay.getX() + rank_overlay.getWidth()/2 - rank_txt.getWidth()/2,
+                         rank_overlay.getY() + rank_overlay.getHeight()/2 - rank_txt.getHeight()/2);
 
-
-    Button btn_exit = GUI.createButtonLocalize(commonAtlas, "btn_exit");
+    Button btn_exit = GUI.createButtonLocalize(GMain.bgAtlas, "icon_exit");
     assert btn_exit != null;
     parentGroup.addActor(btn_exit);
-    btn_exit.setPosition(GStage.getWorldWidth()-50, 50, Align.center);
+    btn_exit.setPosition(GStage.getWorldWidth() - btn_exit.getWidth() - 5, 5);
     btn_exit.addListener(new ClickListener(){
       @Override
       public void clicked(InputEvent event, float x, float y) {
@@ -237,14 +238,14 @@ public class Leaderboard extends GScreen {
     childGroup2.setPosition(GStage.getWorldWidth()/2, GStage.getWorldHeight()/2);
     childGroup2.addAction(Actions.scaleTo(1,1,0.6f, Interpolation.swingOut));
 
-    Image img = GUI.createImage(commonAtlas, "panel");
+    Image img = GUI.createImage(lbAtlas, "panel");
     assert img != null;
     childGroup2.addActor(img);
     img.setOrigin(Align.center);
     img.setScale(1.3f);
     img.setPosition(0, 0, Align.center);
 
-    Image title = GUI.createImageLocalize(commonAtlas, "tittle_notice");
+    Image title = GUI.createImageLocalize(lbAtlas, "tittle_notice");
     assert title != null;
     childGroup2.addActor(title);
     title.setPosition(0, -220, Align.center);
@@ -269,7 +270,7 @@ public class Leaderboard extends GScreen {
     userNameTf.setWidth(250);
     userNameTf.setPosition(100, 30, Align.center);
 
-    Button btn_ok = GUI.createTextButton(commonAtlas.findRegion("btn_yellow"), guiService.whiteFont(), "OK");//GUI.createButtonLocalize(commonAtlas, "btn_resume");
+    Button btn_ok = GUI.createTextButton(lbAtlas.findRegion("btn_yellow"), guiService.whiteFont(), "OK");//GUI.createButtonLocalize(commonAtlas, "btn_resume");
     childGroup2.addActor(btn_ok);
     btn_ok.setPosition(0, 140, Align.center);
     btn_ok.addListener(new ClickListener(){
@@ -338,9 +339,9 @@ public class Leaderboard extends GScreen {
   private void initTag(){
 
     for(int i=0;i<3;i++) {
-      Button btn_tag = GUI.createTextButtonEx(lbAtlas.findRegion("tag"), guiService.whiteFont(), topTypeStr[i], 0, -10);
-      childGroup.addActor(btn_tag);
-      btn_tag.setPosition((i==tagSelectedID)?-720:-670, i*100 - 200);
+      Button btn_tag = GUI.createTextButtonEx(lbAtlas.findRegion("tag"), guiService.whiteFont(), topTypeStr[i],.35f, 50, -10);
+//      childGroup.addActor(btn_tag);
+      btn_tag.setPosition((i==tagSelectedID)?-100:-70, i*100 + 100);
 
       btn_tags[i] = btn_tag;
       final int type = i;
@@ -348,10 +349,9 @@ public class Leaderboard extends GScreen {
         @Override
         public void clicked(InputEvent event, float x, float y) {
 //          GSound.playSound("click.mp3");
-
           tagSelectedID = type;
           for(int j=0;j<3;j++){
-            btn_tags[j].setPosition((type==j)?-720:-670, j*100 - 200);
+            btn_tags[j].setPosition((type==j)?-100:-70, j*100 + 100);
           }
 
           OnLeaderboardTagChange(type);
@@ -362,10 +362,8 @@ public class Leaderboard extends GScreen {
     //OnLeaderboardTagChange(0);
   }
 
-
   private void OnLeaderboardTagChange(int type){
     showLoadingGroup(localizeService.getLocalizeText(LDB_NOTICE4), false);
-
 
     PlayerData.getLeaderboard(type, mode, () -> showLoadingGroup(localizeService.getLocalizeText(LDB_NOTICE5), true), () -> {
       removeLoadingGroup();
@@ -376,9 +374,9 @@ public class Leaderboard extends GScreen {
   }
 
   private void getMeScore(int type){
-    PlayerData.getPosition(type, mode, () -> {
-
-    }, () -> populateMeData(PlayerData.tmpRet));
+    PlayerData.getPosition(type, mode,
+            () -> {},
+            () -> populateMeData(PlayerData.tmpRet));
   }
 
   private void removeLoadingGroup(){
@@ -410,7 +408,7 @@ public class Leaderboard extends GScreen {
     rank_txt.setPosition(GStage.getWorldWidth() / 2, GStage.getWorldHeight() / 2, Align.center);
 
     if(okButton){
-      Button btn_ok = GUI.createTextButton(commonAtlas.findRegion("btn_yellow"), guiService.whiteFont(), localizeService.getLocalizeText(ACCEPT));//GUI.createButtonLocalize(commonAtlas, "btn_resume");
+      Button btn_ok = GUI.createTextButton(lbAtlas.findRegion("btn_yellow"), guiService.whiteFont(), localizeService.getLocalizeText(ACCEPT));//GUI.createButtonLocalize(commonAtlas, "btn_resume");
       loadingGroup.addActor(btn_ok);
       btn_ok.setPosition(GStage.getWorldWidth() / 2, GStage.getWorldHeight() / 2 + 100, Align.center);
       btn_ok.addListener(new ClickListener(){
@@ -424,7 +422,7 @@ public class Leaderboard extends GScreen {
       });
     }
     else {
-      Image loading = GUI.createImage(commonAtlas, "loading");
+      Image loading = GUI.createImage(lbAtlas, "loading");
       assert loading != null;
       loading.setOrigin(Align.center);
       loadingGroup.addActor(loading);
@@ -437,13 +435,11 @@ public class Leaderboard extends GScreen {
   private void initScroll(){
 
     table = new Table();
-
-    int panelW = 1000;
-    int panelH = 400;
+    float panelW = childGroup.getWidth();
+    float panelH = 700;
     scroll = new ScrollPane(table);
-
     scroll.setSize(panelW, panelH);
-    scroll.setPosition(0, -220, Align.bottom);
+    scroll.setPosition(250, 90, Align.bottom);
     childGroup.addActor(scroll);
     //scroll.setDebug(true);
     //table.setDebug(true);
@@ -454,7 +450,6 @@ public class Leaderboard extends GScreen {
   private void populateMeData(JsonValue me){
     if(meGroup != null){
       meGroup.remove();
-
     }
     meGroup = new Group();
     Image panel = GUI.createImage(lbAtlas, "row_overlay");
@@ -483,12 +478,11 @@ public class Leaderboard extends GScreen {
     valuetxt.setPosition(870, 30, Align.right);
 
     childGroup.addActor(meGroup);
-    meGroup.setPosition(-467, 237, Align.left);
+    meGroup.setPosition(0, 237, Align.left);
   }
 
   private void populateData(JsonValue list){
     table.clearChildren();
-    table.pad(10).defaults().expandX().space(4);
 
     for(int i=list.size-1;i>=0; i--) {
       JsonValue it = list.get(i);
@@ -497,37 +491,34 @@ public class Leaderboard extends GScreen {
       assert panel != null;
       item.addActor(panel);
       item.setSize(panel.getWidth(), panel.getHeight());
-      item.setHeight(panel.getHeight()+2);
-      panel.setPosition(0,0,Align.bottomLeft);
+      panel.setPosition(20,0);
 
       if(i<3){
-        Image rankIcon = GUI.createImage(lbAtlas, "rank"+i);
+        Image rankIcon = GUI.createImage(lbAtlas, "rank_"+i);
         assert rankIcon != null;
         item.addActor(rankIcon);
-        rankIcon.setPosition(45,30,Align.left);
+        rankIcon.setPosition(-10,-10);
       }else {
-        Label rankId = guiService.getWhiteText((i+1)+".", Color.WHITE, 0.9f);
+        Label rankId = guiService.getWhiteText((i+1)+".", Color.WHITE, .5f);
         item.addActor(rankId);
-        rankId.setAlignment(Align.right);
-        rankId.setPosition(100, 30, Align.right);
+        rankId.setPosition(30, panel.getY() + panel.getHeight()/2 - rankId.getHeight()/2 - 5);
       }
 
-
-      Label upgradeName = guiService.getWhiteText(it.getString("name"), Color.WHITE, 0.8f);
+      Label upgradeName = guiService.getWhiteText(it.getString("name"), Color.WHITE, .5f);
       item.addActor(upgradeName);
       upgradeName.setAlignment(Align.left);
-      upgradeName.setPosition(125, 30, Align.left);
+      upgradeName.setPosition(80, panel.getY() + panel.getHeight()/2 - 5, Align.left);
 
 
-      Label valueTxt = guiService.getWhiteText(it.getLong("score")+ localizeService.getLocalizeText(SSCORE), Color.WHITE, 0.8f);
+      Label valueTxt = guiService.getWhiteText(it.getLong("score")+ localizeService.getLocalizeText(SSCORE), Color.WHITE, .5f);
       item.addActor(valueTxt);
       valueTxt.setAlignment(Align.right);
-      valueTxt.setPosition(870, 30, Align.right);
+      valueTxt.setPosition(panel.getX() + panel.getWidth(), 25, Align.right);
 
       table.row();
-      table.add(item).expandX().fillX();
-
+      table.add(item).expand().center().fill().padBottom(30);
     }
+
     scroll.layout();
     scroll.setScrollPercentY(1f);
     scroll.updateVisualScroll();
@@ -562,17 +553,17 @@ public class Leaderboard extends GScreen {
 //        pref.flush();
       isRegister = pref.getBoolean("isRegister", false);
       if(isRegister){
-        id = pref.getString("id", "");
-        name = pref.getString("name", "Player");
-        token = pref.getString("token", "");
-        avatar = pref.getInteger("avatar", 0);
+        id      = pref.getString("id", "");
+        name    = pref.getString("name", "Player");
+        token   = pref.getString("token", "");
+        avatar  = pref.getInteger("avatar", 0);
       }else{
-        id = RandomString.MD5_Hash(RandomString.getAlphaNumericString(32));
-        token = RandomString.MD5_Hash(RandomString.getAlphaNumericString(32));
-        name = "Player";
-        avatar = 0;
+        id      = RandomString.MD5_Hash(RandomString.getAlphaNumericString(32));
+        token   = RandomString.MD5_Hash(RandomString.getAlphaNumericString(32));
+        name    = "Player";
+        avatar  = 0;
       }
-      isInited = true;
+      isInited  = true;
     }
 
     public static void save(){
@@ -583,8 +574,8 @@ public class Leaderboard extends GScreen {
       pref.putInteger("avatar", avatar);
       pref.putBoolean("isRegister", isRegister);
       pref.flush();
-
     }
+
     static void getMe(Runnable failed, Runnable successed) {
       new Thread(() -> {
         if (!isInited)

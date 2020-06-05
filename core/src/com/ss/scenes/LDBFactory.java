@@ -20,7 +20,7 @@ public class LDBFactory {
 
   private static class GService implements Leaderboard.GUIService {
 
-    BitmapFont whiteFont = GAssetsManager.getBitmapFont("rank_font.fnt");
+    BitmapFont whiteFont = GAssetsManager.getBitmapFont("green_font.fnt");
 
     @Override
     public Label getWhiteText(String text, Color color, float scale) {
@@ -65,7 +65,7 @@ public class LDBFactory {
 
     @Override
     public GScreen backScreen() {
-      return GMain.inst.gameScene;
+      return GMain.inst.startScene;
     }
 
   }
@@ -79,7 +79,7 @@ public class LDBFactory {
 
     @Override
     public long getCurrentScore(int rank) {
-      return GMain.pref.getLong("money");
+      return 0;
     }
 
   }

@@ -31,19 +31,19 @@ public class HttpRequest {
             StringBuilder sb = new StringBuilder();
             String line;
             while ((line = rd.readLine()) != null) {
-                sb.append(line);
+              sb.append(line);
             }
             rd.close();
             result = sb.toString();
         } catch (Exception e) {
-            e.printStackTrace();
+          e.printStackTrace();
         }
         return result;
     }
     public static JsonValue SendGetRequestJson(String url){
         String data = SendGetRequest(url);
-        Gdx.app.log("", url);
-        Gdx.app.log("", data);
+        Gdx.app.log("URL: ", url);
+        Gdx.app.log("DATA: ", data);
         if(data==null)
             return null;
         try {

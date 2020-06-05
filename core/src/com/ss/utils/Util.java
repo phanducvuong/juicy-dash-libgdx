@@ -1,6 +1,7 @@
 package com.ss.utils;
 
 import com.badlogic.gdx.math.Vector2;
+import com.ss.GMain;
 import com.ss.config.Type;
 import com.ss.gameLogic.effects.Particle;
 import com.ss.objects.Item;
@@ -331,6 +332,21 @@ public class Util {
     else
       System.out.println("EMPTY");
 //    System.out.println(piece.item.getPos());
+  }
+
+  public void saveData(boolean value, String key) {
+    GMain.pref.putBoolean(key, value);
+    GMain.pref.flush();
+  }
+
+  public void saveData(long value, String key) {
+    GMain.pref.putLong(key, value);
+    GMain.pref.flush();
+  }
+
+  public void saveData(int value, String key) {
+    GMain.pref.putInteger(key, value);
+    GMain.pref.flush();
   }
 
   public void log(Piece piece) {
