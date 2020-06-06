@@ -33,10 +33,13 @@ public class Util {
       case 3: r = "item_orange"; break;
       case 4: r = "item_apple"; break;
       case 5: r = "item_strawberry"; break;
-      case 6: r = "item_glass_juice"; break;
-      case 7: r = "item_jam"; break;
-      case 8: r = "item_walnut"; break;
-      case 9: r = "item_clock"; break;
+      case 6: r = "item_lemon"; break;
+      case 7: r = "item_tomato"; break;
+      case 8: r = "item_blueberry"; break;
+      case 9: r = "item_glass_juice"; break;
+      case 10: r = "item_jam"; break;
+      case 11: r = "item_walnut"; break;
+      case 12: r = "item_clock"; break;
     }
     return r;
 
@@ -78,16 +81,19 @@ public class Util {
 
     Type t = Type.blank;
     switch (id) {
-      case 0: t = Type.grape; break;
-      case 1: t = Type.banana; break;
-      case 2: t = Type.kiwi; break;
-      case 3: t = Type.orange; break;
-      case 4: t = Type.apple; break;
-      case 5: t = Type.strawberry; break;
-      case 6: t = Type.glass_fruit; break;
-      case 7: t = Type.jam; break;
-      case 8: t = Type.walnut; break;
-      case 9: t = Type.clock; break;
+      case 0:  t = Type.grape; break;
+      case 1:  t = Type.banana; break;
+      case 2:  t = Type.kiwi; break;
+      case 3:  t = Type.orange; break;
+      case 4:  t = Type.apple; break;
+      case 5:  t = Type.strawberry; break;
+      case 6:  t = Type.lemon; break;
+      case 7:  t = Type.tomato; break;
+      case 8:  t = Type.blueberry; break;
+      case 9:  t = Type.glass_fruit; break;
+      case 10: t = Type.jam; break;
+      case 11: t = Type.walnut; break;
+      case 12: t = Type.clock; break;
     }
     return t;
 
@@ -349,8 +355,132 @@ public class Util {
     GMain.pref.flush();
   }
 
+  //-----------------------------------------find item is able match in board-----------------------
+  public boolean findItemIsMatchInBoard(Piece[][] pieces) {
+    for (int i=0; i<ROW; i++) {
+      for (int j=0; j<COL; j++) {
+        if (chkSpecialItem(pieces[i][j].getType())) {
+          return true;
+        }
+        else if (j-3 >= 0 && (chkTypeBy(pieces[i][j], pieces[i][j-1], pieces[i][j-3]) ||
+                         chkTypeBy(pieces[i][j], pieces[i][j-2], pieces[i][j-3]))) {
+//          log(pieces[i][j]);
+          return true;
+        } //kiểm tra từ bên phải sang trái theo chiều ngang
+        else if (j+3 < COL && (chkTypeBy(pieces[i][j], pieces[i][j+1], pieces[i][j+3]) ||
+                               chkTypeBy(pieces[i][j], pieces[i][j+2], pieces[i][j+3]))) {
+//          log(pieces[i][j]);
+          return true;
+        } //kiểm tra từ bên trái sang phải theo chiều ngang
+        else if (i-3 >= 0 && (chkTypeBy(pieces[i][j], pieces[i-1][j], pieces[i-3][j]) ||
+                              chkTypeBy(pieces[i][j], pieces[i-2][j], pieces[i-3][j]))) {
+//          log(pieces[i][j]);
+          return true;
+        } //kiểm tra từ pOrigin đi lên theo chiều dọc
+        else if (i+3 < ROW && (chkTypeBy(pieces[i][j], pieces[i+1][j], pieces[i+3][j]) ||
+                               chkTypeBy(pieces[i][j], pieces[i+2][j], pieces[i+3][j]))) {
+//          log(pieces[i][j]);
+          return true;
+        } //kiểm tra từ pOrigin đi xuống theo chiều dọc
+        else if (i-2 >= 0 && j-1 >=0 &&
+                (chkTypeBy(pieces[i][j], pieces[i-1][j], pieces[i-2][j-1])    ||
+                 chkTypeBy(pieces[i][j], pieces[i-1][j-1], pieces[i-2][j-1])  ||
+                 chkTypeBy(pieces[i][j], pieces[i-1][j-1], pieces[i-2][j])    ||
+                 chkTypeBy(pieces[i][j-1], pieces[i-1][j-1], pieces[i-2][j])  ||
+                 chkTypeBy(pieces[i][j-1], pieces[i-1][j], pieces[i-2][j])    ||
+                 chkTypeBy(pieces[i][j-1], pieces[i-1][j], pieces[i-2][j-1]))) {
+//          log(pieces[i][j]);
+          return true;
+        }
+        else if (i-2 >= 0 && j+1 < COL &&
+                (chkTypeBy(pieces[i][j], pieces[i-1][j], pieces[i-2][j+1])    ||
+                 chkTypeBy(pieces[i][j], pieces[i-1][j+1], pieces[i-2][j+1])  ||
+                 chkTypeBy(pieces[i][j], pieces[i-1][j+1], pieces[i-2][j])    ||
+                 chkTypeBy(pieces[i][j+1], pieces[i-1][j+1], pieces[i-2][j])  ||
+                 chkTypeBy(pieces[i][j+1], pieces[i-1][j], pieces[i-2][j])    ||
+                 chkTypeBy(pieces[i][j+1], pieces[i-1][j], pieces[i-2][j+1]))) {
+//          log(pieces[i][j]);
+          return true;
+        }
+        else if (i+2 < ROW && j-1 >= 0 &&
+                (chkTypeBy(pieces[i][j], pieces[i+1][j], pieces[i+2][j-1])    ||
+                 chkTypeBy(pieces[i][j], pieces[i+1][j-1], pieces[i+2][j-1])  ||
+                 chkTypeBy(pieces[i][j], pieces[i+1][j-1], pieces[i+2][j])    ||
+                 chkTypeBy(pieces[i][j-1], pieces[i+1][j-1], pieces[i+2][j])  ||
+                 chkTypeBy(pieces[i][j-1], pieces[i+1][j], pieces[i+2][j])    ||
+                 chkTypeBy(pieces[i][j-1], pieces[i+1][j], pieces[i+2][j-1]))) {
+//          log(pieces[i][j]);
+          return true;
+        }
+        else if (i+2 < ROW && j+1 < COL &&
+                (chkTypeBy(pieces[i][j], pieces[i+1][j], pieces[i+2][j+1])    ||
+                 chkTypeBy(pieces[i][j], pieces[i+1][j+1], pieces[i+2][j+1])  ||
+                 chkTypeBy(pieces[i][j], pieces[i+1][j+1], pieces[i+2][j])    ||
+                 chkTypeBy(pieces[i][j+1], pieces[i+1][j+1], pieces[i+2][j])  ||
+                 chkTypeBy(pieces[i][j+1], pieces[i+1][j], pieces[i+2][j])    ||
+                 chkTypeBy(pieces[i][j+1], pieces[i+1][j], pieces[i+2][j+1]))) {
+//          log(pieces[i][j]);
+          return true;
+        }
+        else if (i-1 >= 0 && j-2 >= 0 &&
+                (chkTypeBy(pieces[i][j], pieces[i-1][j-1], pieces[i-1][j-2])  ||
+                 chkTypeBy(pieces[i][j], pieces[i][j-1], pieces[i-1][j-2])   ||
+                 chkTypeBy(pieces[i][j], pieces[i][j-2], pieces[i-1][j-1])    ||
+                 chkTypeBy(pieces[i-1][j], pieces[i][j-1], pieces[i-1][j-2])  ||
+                 chkTypeBy(pieces[i-1][j], pieces[i-1][j-1], pieces[i][j-2])  ||
+                 chkTypeBy(pieces[i-1][j], pieces[i][j-1], pieces[i][j-2]))) {
+//          log(pieces[i][j]);
+          return true;
+        } //kiểm tra từ pOrigin theo đường chéo row-1 && col-2
+        else if (i-1 >= 0 && j+2 < COL &&
+                (chkTypeBy(pieces[i][j], pieces[i-1][j+1], pieces[i-1][j+2])  ||
+                 chkTypeBy(pieces[i][j], pieces[i][j+1], pieces[i-1][j+2])    ||
+                 chkTypeBy(pieces[i][j], pieces[i-1][j+1], pieces[i][j+2])   ||
+                 chkTypeBy(pieces[i-1][j], pieces[i][j+1], pieces[i-1][j+2])  ||
+                 chkTypeBy(pieces[i-1][j], pieces[i-1][j+1], pieces[i][j+2])  ||
+                 chkTypeBy(pieces[i-1][j], pieces[i][j+1], pieces[i][j+2]))) {
+//          log(pieces[i][j]);
+          return true;
+        } //kiểm tra từ pOrigin theo đường chéo row-1 && col+2
+        else if (i+1 < ROW && j-2 >= 0 &&
+                (chkTypeBy(pieces[i][j], pieces[i+1][j-1], pieces[i+1][j-2])  ||
+                 chkTypeBy(pieces[i][j], pieces[i][j-1], pieces[i+1][j-2])    ||
+                 chkTypeBy(pieces[i][j], pieces[i+1][j-1], pieces[i][j-2])   ||
+                 chkTypeBy(pieces[i+1][j], pieces[i][j-1], pieces[i+1][j-2])  ||
+                 chkTypeBy(pieces[i+1][j], pieces[i+1][j-1], pieces[i][j-2])  ||
+                 chkTypeBy(pieces[i+1][j], pieces[i][j-1], pieces[i][j-2]))) {
+//          log(pieces[i][j]);
+          return true;
+        } //kiểm tra từ pOrigin theo đường chéo row+1 && col-2
+        else if (i+1 < ROW && j+2 < COL &&
+                (chkTypeBy(pieces[i][j], pieces[i+1][j+1], pieces[i+1][j+2])  ||
+                 chkTypeBy(pieces[i][j], pieces[i][j+1], pieces[i+1][j+2])    ||
+                 chkTypeBy(pieces[i][j], pieces[i][j+2], pieces[i+1][j+1])   ||
+                 chkTypeBy(pieces[i+1][j], pieces[i][j+1], pieces[i+1][j+2])  ||
+                 chkTypeBy(pieces[i+1][j], pieces[i+1][j+1], pieces[i][j+2])  ||
+                 chkTypeBy(pieces[i+1][j], pieces[i][j+1], pieces[i][j+2]))) {
+//          log(pieces[i][j]);
+          return true;
+        } //kiểm tra từ pOrigin theo đường chéo row+1 && col+2
+      }
+    }
+    return false;
+  }
+
+  private boolean chkTypeBy(Piece pOrigin, Piece p1, Piece p2) {
+    return pOrigin.getType() == p1.getType() &&
+           pOrigin.getType() == p2.getType();
+  }
+
+  //-----------------------------------------find item is able match in board-----------------------
+
   public void log(Piece piece) {
     System.out.println("ROW: " + piece.row + " COL: " + piece.col);
+  }
+
+  public void log(Piece ...pieces) {
+    for (Piece piece : pieces)
+      log(piece);
   }
 
 //  public void log(List<HashMap<String, List<Piece>>> ls) {

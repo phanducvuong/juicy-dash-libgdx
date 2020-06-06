@@ -79,6 +79,13 @@ public class GamePlayUI extends Group {
                     lbAmountBoom,
                     lbTutorialSkill;
 
+  private Group     gPopupAdsSkill;
+  private Image     imgPopupAdsSkillBoom,
+                    imgPopupAdsSkillStar,
+                    imgBtnXPopupSkill;
+  private Label     lbAdsSkill;
+  private Button    btnOKPopupAdsSkill;
+
   public boolean    isChooseBoom             = false,
                     isChooseStar             = false;
 
@@ -129,6 +136,7 @@ public class GamePlayUI extends Group {
     initIcon();
     initLbLvUp();
     initPopupAdsTime();
+    initPopupAdsSkill();
     initPopupGameOver();
     initAnimLbRound();
 
@@ -328,7 +336,8 @@ public class GamePlayUI extends Group {
         super.clicked(event, x, y);
 
         if (controller.amountItemBoom == 0) {
-          //todo: show ads
+          setTxtAndIconPopupAdsSkillWhenShow(false);
+          showPopupSkill();
         }
         else {
           if (!isChooseBoom) {
@@ -371,6 +380,8 @@ public class GamePlayUI extends Group {
 
         if (controller.amountItemStar == 0) {
           //todo: show ads
+          setTxtAndIconPopupAdsSkillWhenShow(true);
+          showPopupSkill();
         }
         else {
           if (!isChooseStar) {
@@ -465,6 +476,68 @@ public class GamePlayUI extends Group {
         showPopupGameOver();
       }
     });
+  }
+
+  private void initPopupAdsSkill() {
+    gPopupAdsSkill = new Group();
+    Image bg = GUI.createImage(GMain.popupAtlas, "pop_ads_time");
+    gPopupAdsSkill.setSize(bg.getWidth(), bg.getHeight());
+    gPopupAdsSkill.setOrigin(Align.center);
+    gPopupAdsSkill.setPosition(CENTER_X, CENTER_Y, Align.center);
+    gPopupAdsSkill.addActor(bg);
+
+    lbAdsSkill = new Label(locale.format("ads_reward_skill", Config.ADS_SKILL_STAR),
+                           new Label.LabelStyle(Config.whiteFont, null));
+    lbAdsSkill.setAlignment(Align.center);
+    lbAdsSkill.setPosition(bg.getX() + bg.getWidth()/2,
+                           bg.getY() + bg.getHeight()/2 - 120,  Align.center);
+    gPopupAdsSkill.addActor(lbAdsSkill);
+
+    imgPopupAdsSkillStar = GUI.createImage(GMain.itemAtlas, "item_star");
+    imgPopupAdsSkillStar.setPosition(bg.getX() + bg.getWidth()/2,
+                                     bg.getY() + bg.getHeight()/2 + 50, Align.center);
+    gPopupAdsSkill.addActor(imgPopupAdsSkillStar);
+
+    imgPopupAdsSkillBoom = GUI.createImage(GMain.itemAtlas, "item_boom");
+    imgPopupAdsSkillBoom.setPosition(bg.getX() + bg.getWidth()/2,
+                                     bg.getY() + bg.getHeight()/2 + 50, Align.center);
+    imgPopupAdsSkillBoom.setVisible(false);
+    gPopupAdsSkill.addActor(imgPopupAdsSkillBoom);
+
+    btnOKPopupAdsSkill = new Button(GMain.popupAtlas, "btn_ok_ads_time", locale.get("txt_ads_time"), Config.greenFont);
+    btnOKPopupAdsSkill.setFontScale(.8f);
+    btnOKPopupAdsSkill.movebyLb(0, -15);
+    btnOKPopupAdsSkill.setPosition(bg.getX() + bg.getWidth()/2 - btnOKPopupAdsSkill.getWidth()/2,
+                                   bg.getY() + bg.getHeight() - btnOKPopupAdsSkill.getHeight() - 50);
+    gPopupAdsSkill.addActor(btnOKPopupAdsSkill);
+
+    imgBtnXPopupSkill = GUI.createImage(GMain.bgAtlas, "icon_exit");
+    imgBtnXPopupSkill.setPosition(bg.getX() + bg.getWidth() - 25, -imgBtnXPopupSkill.getHeight()/2);
+    gPopupAdsSkill.addActor(imgBtnXPopupSkill);
+
+    gPopupAdsSkill.getColor().a = 0f;
+    gPopupAdsSkill.setScale(0f);
+
+    //label: even click
+    btnClick(btnOKPopupAdsSkill, () -> {
+      //todo: if ads success
+      if (imgPopupAdsSkillStar.isVisible())
+        System.out.println("STAR");
+      else
+        System.out.println("BOOM");
+    });
+
+    imgBtnXPopupSkill.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        super.clicked(event, x, y);
+
+        imgBtnXPopupSkill.setTouchable(Touchable.disabled);
+        hidePopupSkill();
+
+      }
+    });
+
   }
 
   private void initPopupGameOver() {
@@ -621,6 +694,41 @@ public class GamePlayUI extends Group {
     gPopupGameOver.getColor().a = 0f;
     gPopupGameOver.moveBy(0, 600);
     gPopupGameOver.remove();
+  }
+
+  private void showPopupSkill() {
+    gPopupAdsSkill.clearActions();
+    gPopupAdsSkill.getColor().a = 0f;
+    gPopupAdsSkill.setScale(0f);
+    gPopupAdsSkill.remove();
+
+    gPopup.addActor(black);
+    gPopup.addActor(gPopupAdsSkill);
+    gPopupAdsSkill.addAction(
+            sequence(
+                    parallel(
+                            scaleTo(1f, 1f, .25f, fastSlow),
+                            alpha(1f, .35f, linear)
+                    ),
+                    run(() -> {
+                      btnOKPopupAdsSkill.setTouchable(Touchable.enabled);
+                      imgBtnXPopupSkill.setTouchable(Touchable.enabled);
+                    })
+            )
+    );
+  }
+
+  private void hidePopupSkill() {
+    black.remove();
+    gPopupAdsSkill.addAction(
+            sequence(
+                    parallel(
+                            scaleTo(0f, 0f, .5f, fastSlow),
+                            alpha(0f, .25f, linear)
+                    ),
+                    run(() -> gPopupAdsSkill.remove())
+            )
+    );
   }
   //--------------------------------------show/hide popup-------------------------------------------
 
@@ -805,6 +913,19 @@ public class GamePlayUI extends Group {
     pLovely.remove();
     pWonder.remove();
     gBackground.clearActions();
+  }
+
+  private void setTxtAndIconPopupAdsSkillWhenShow(boolean isStar) {
+    if (isStar) {
+      lbAdsSkill.setText(locale.format("ads_reward_skill", Config.ADS_SKILL_STAR));
+      imgPopupAdsSkillStar.setVisible(true);
+      imgPopupAdsSkillBoom.setVisible(false);
+    }
+    else {
+      lbAdsSkill.setText(locale.format("ads_reward_skill", Config.ADS_SKILL_BOOM));
+      imgPopupAdsSkillStar.setVisible(false);
+      imgPopupAdsSkillBoom.setVisible(true);
+    }
   }
 
   //--------------------------------------reset-----------------------------------------------------

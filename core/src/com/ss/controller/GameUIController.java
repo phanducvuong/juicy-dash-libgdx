@@ -44,7 +44,7 @@ public class GameUIController {
   public  PauseUI     pauseUI;
   private TutorialUI  tutorialUI;
   public  Image       blackScreen;
-
+  
   public  Piece[][]                   arrPosPiece = new Piece[ROW][COL];
   public  HashMap<String, List<Item>> hmItem;
   private List<Piece>                 lsPieceNullItem = new ArrayList<>();
@@ -128,6 +128,8 @@ public class GameUIController {
     Particle wonder = new Particle(gParent, WONDER, GMain.particleAtlas);
     wonder.initLsEmitter();
 
+    Item item = util.getItemBy(hmItem, "walnut");
+
     icon.addListener(new ClickListener() {
       @Override
       public void clicked(InputEvent event, float x, float y) {
@@ -157,11 +159,11 @@ public class GameUIController {
   }
 
   private void initLv() {
-    lv.add(Type.strawberry);
     lv.add(Type.orange);
-    lv.add(Type.grape);
     lv.add(Type.banana);
     lv.add(Type.apple);
+    lv.add(Type.grape);
+    lv.add(Type.strawberry);
   }
 
   private void initPiece() {
@@ -833,6 +835,7 @@ public class GameUIController {
                             tutorialUI.showTutorial();
                           showWonder();
                           unlockInput();
+                          findItemIsAbleMatchInBoard();
                           countScoreToShowWonder = 0;
                         }
                       })
@@ -1257,6 +1260,13 @@ public class GameUIController {
 
   }
 
+  private void findItemIsAbleMatchInBoard() {
+    if (util.findItemIsMatchInBoard(arrPosPiece))
+      System.out.println("CAN");
+    else
+      System.out.println("CAN'T");
+  }
+
   //-------------------check logic-----------------------------------------
 
   public void updateLbTimeLine() {
@@ -1355,7 +1365,7 @@ public class GameUIController {
     gamePlayUI.updateRound(round);
     gamePlayUI.timeLine.reset(1f, 1f);
 
-    if (round == 10 && !util.chkTypeIn(lv, Type.kiwi))
+    if (round == 3 && !util.chkTypeIn(lv, Type.kiwi))
       lv.add(Type.kiwi);
 
     if (round == 1)

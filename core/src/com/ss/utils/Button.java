@@ -37,4 +37,8 @@ public class Button extends Group {
     lb.setFontScale(sclX, sclY);
   }
 
+  public void setFontScale(float scl) {
+    lb.setFontScale(scl);
+  }
+
 }
