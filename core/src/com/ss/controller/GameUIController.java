@@ -117,13 +117,9 @@ public class GameUIController {
 
     //label: test animation
 
-    Image animJam = GUI.createImage(GMain.itemAtlas, "anim_jam");
-    animJam.setOrigin(0, animJam.getHeight()/2);
-//    gParent.addActor(animJam);
-
     Image icon = GUI.createImage(GMain.bgAtlas, "icon_pause");
     icon.setPosition(500, 20);
-    gParent.addActor(icon);
+//    gParent.addActor(icon);
 
     Particle wonder = new Particle(gParent, WONDER, GMain.particleAtlas);
     wonder.initLsEmitter();
@@ -135,7 +131,7 @@ public class GameUIController {
       public void clicked(InputEvent event, float x, float y) {
         super.clicked(event, x, y);
 
-//        gamePlayUI.animItemStar(arrPosPiece[0][0].pos, () -> {});
+        addSpecialItemAtRndPos();
 
       }
     });
@@ -245,10 +241,14 @@ public class GameUIController {
 
         if (unlockClick) {
           Piece piece = util.getPieceByCoordinate(x, y, arrPosPiece);
-          if (piece != null && gamePlayUI.isChooseBoom)
+          if (piece != null && gamePlayUI.isChooseBoom) {
+            gamePlayUI.isChooseBoom = false;
             skillBoom(piece);
-          else if (piece != null && gamePlayUI.isChooseStar)
+          }
+          else if (piece != null && gamePlayUI.isChooseStar) {
+            gamePlayUI.isChooseStar = false;
             skillStar(piece);
+          }
         }
 
       }
@@ -623,7 +623,7 @@ public class GameUIController {
     int row = piece.row,
         col = piece.col;
 
-    util.saveData(amountItemStar, "amount_item_boom");
+    util.saveData(amountItemBoom, "amount_item_boom");
 
     List<Piece> lsPieceAffectBoom = getPieceAffectBoom(row, col);
     if (lsPieceAffectBoom != null) {
@@ -984,6 +984,20 @@ public class GameUIController {
     item.setPosition(piece.pos);
     addToGroup(item, gamePlayUI.gItem);
   }
+
+  private void addSpecialItemAtRndPos() {
+    int row     = (int) Math.round(Math.random() * (ROW - 1));
+    int col     = (int) Math.round(Math.random() * (COL -1));
+    int idItem  = (int) (Math.round(Math.random() * 1));
+
+    String key;
+    if (idItem == 0)
+      key = "item_glass_juice";
+    else
+      key = "item_jam";
+
+    addItemAt(arrPosPiece[row][col], key);
+  }
   //-------------------special item----------------------------------------
 
   //-------------------check logic-----------------------------------------
@@ -1261,10 +1275,10 @@ public class GameUIController {
   }
 
   private void findItemIsAbleMatchInBoard() {
-    if (util.findItemIsMatchInBoard(arrPosPiece))
-      System.out.println("CAN");
-    else
+    if (!util.findItemIsMatchInBoard(arrPosPiece)) {
       System.out.println("CAN'T");
+      addSpecialItemAtRndPos();
+    }
   }
 
   //-------------------check logic-----------------------------------------
@@ -1382,6 +1396,7 @@ public class GameUIController {
     isWrap           = false;
     pieceStart       = null;
     pieceEnd         = null;
+
     updateTimeLine(TIME_WATCH_ADS);
   }
 
@@ -1409,6 +1424,7 @@ public class GameUIController {
     countScoreToShowWonder  = 0;
 
     gamePlayUI.setTouchableItemSkill(Touchable.disabled);
+    gamePlayUI.hidePopupSkill();
   }
 
   public void newGame() {
@@ -1441,9 +1457,10 @@ public class GameUIController {
   }
 
   private void unlockInput() {
-    isWrap     = false;
-    pieceStart = null;
-    pieceEnd   = null;
+    unlockClick = false;
+    isWrap      = false;
+    pieceStart  = null;
+    pieceEnd    = null;
 
     gamePlayUI.setTouchableItemSkill(Touchable.enabled);
   }

@@ -1,6 +1,7 @@
 package com.ss.scenes;
 
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.ss.GMain;
 import com.ss.controller.StartUIController;
 import com.ss.core.util.GLayer;
 import com.ss.core.util.GScreen;
@@ -27,6 +28,7 @@ public class StartScene extends GScreen {
   public void init() {
     GStage.addToLayer(GLayer.ui, gParent);
     controller.animStartScene();
+    GMain.platform.ShowBanner(false);
   }
 
   @Override

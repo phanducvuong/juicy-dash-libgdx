@@ -27,6 +27,7 @@ import com.ss.objects.Piece;
 import com.ss.utils.Button;
 import com.ss.utils.Clipping;
 import com.ss.utils.Solid;
+import com.ss.utils.Util;
 
 public class GamePlayUI extends Group {
 
@@ -336,6 +337,9 @@ public class GamePlayUI extends Group {
         super.clicked(event, x, y);
 
         if (controller.amountItemBoom == 0) {
+          controller.unlockClick = true;
+
+          resetSkillItem();
           setTxtAndIconPopupAdsSkillWhenShow(false);
           showPopupSkill();
         }
@@ -380,6 +384,9 @@ public class GamePlayUI extends Group {
 
         if (controller.amountItemStar == 0) {
           //todo: show ads
+          controller.unlockClick = true;
+
+          resetSkillItem();
           setTxtAndIconPopupAdsSkillWhenShow(true);
           showPopupSkill();
         }
@@ -464,8 +471,14 @@ public class GamePlayUI extends Group {
     //label: even click
     btnClick(btnOkAdsTime, () -> {
       //todo: get free 30s when ads success
-      hidePopupAdsTime();
-      controller.continueWhenWatchAdsGetTime();
+      if (GMain.platform.isVideoRewardReady()) {
+        GMain.platform.ShowVideoReward((success -> {
+          if (success) {
+            hidePopupAdsTime();
+            controller.continueWhenWatchAdsGetTime();
+          }
+        }));
+      }
     });
 
     btnX.addListener(new ClickListener() {
@@ -521,10 +534,32 @@ public class GamePlayUI extends Group {
     //label: even click
     btnClick(btnOKPopupAdsSkill, () -> {
       //todo: if ads success
-      if (imgPopupAdsSkillStar.isVisible())
+      if (imgPopupAdsSkillStar.isVisible()) {
         System.out.println("STAR");
-      else
+        if (GMain.platform.isVideoRewardReady())
+          GMain.platform.ShowVideoReward((success -> {
+            if (success) {
+              controller.amountItemStar = Config.ADS_SKILL_STAR;
+              Util.inst().saveData(controller.amountItemStar, "amount_item_star");
+              updateAmountSkill();
+              hidePopupSkill();
+              setTouchableItemSkill(Touchable.enabled);
+            }
+          }));
+      }
+      else {
         System.out.println("BOOM");
+        if (GMain.platform.isVideoRewardReady())
+          GMain.platform.ShowVideoReward((success -> {
+            if (success) {
+              controller.amountItemBoom = Config.ADS_SKILL_BOOM;
+              Util.inst().saveData(controller.amountItemBoom, "amount_item_boom");
+              updateAmountSkill();
+              hidePopupSkill();
+              setTouchableItemSkill(Touchable.enabled);
+            }
+          }));
+      }
     });
 
     imgBtnXPopupSkill.addListener(new ClickListener() {
@@ -603,11 +638,15 @@ public class GamePlayUI extends Group {
     //label: event click
     imgClick(btnRestart, () -> {
       //todo: restart game
+      GMain.platform.ShowFullscreen();
+
       hidePopupGameOver();
       controller.newGame();
     });
 
     imgClick(btnHome, () -> {
+      GMain.platform.ShowFullscreen();
+
       controller.scene.setScreen(GMain.inst.startScene);
       controller.blackScreen.remove();
       controller.isPause = false;
@@ -718,7 +757,8 @@ public class GamePlayUI extends Group {
     );
   }
 
-  private void hidePopupSkill() {
+  public void hidePopupSkill() {
+    controller.unlockClick = false;
     black.remove();
     gPopupAdsSkill.addAction(
             sequence(
@@ -881,7 +921,6 @@ public class GamePlayUI extends Group {
   public void updateAmountSkill() {
     isChooseBoom           = false;
     isChooseStar           = false;
-    controller.unlockClick = false;
 
     gItemBoom.setScale(1f);
     gItemStar.setScale(1f);
@@ -926,6 +965,19 @@ public class GamePlayUI extends Group {
       imgPopupAdsSkillStar.setVisible(false);
       imgPopupAdsSkillBoom.setVisible(true);
     }
+  }
+
+  private void resetSkillItem() {
+    isChooseStar      = false;
+    isChooseBoom      = false;
+
+    black.remove();
+    gFlareSkillItem.setVisible(false);
+    itemBoom.remove();
+    itemStar.remove();
+    gItemStar.setScale(1f);
+    gItemBoom.setScale(1f);
+    controller.stopAnimZoomAndVibrateOnBoard();
   }
 
   //--------------------------------------reset-----------------------------------------------------

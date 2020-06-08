@@ -55,7 +55,7 @@ public class Config {
   public static final long    TARGET_INCREASE             = 1000;
   public static final long    MAX_TARGET_INCREASE         = 10000;
   public static final int     ADD_SECOND                  = 15;
-  public static final int     TIME_START_GAME             = 3600;
+  public static final int     TIME_START_GAME             = 120;
   public static final int     TIME_DECREASE               = 10;
   public static final int     TIME_WATCH_ADS              = 30;
   public static final int     MIN_TIME_EXPIRED            = 70;
@@ -80,7 +80,7 @@ public class Config {
 
   //label: watch ads to get item
   public static final int     ADS_SKILL_STAR              = 2;
-  public static final int     ADS_SKILL_BOOM              = 2;
+  public static final int     ADS_SKILL_BOOM              = 1;
 
   //label: score item
 //  public static final int     SCORE_FRUIT               = 40;

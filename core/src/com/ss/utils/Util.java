@@ -389,7 +389,7 @@ public class Util {
                  chkTypeBy(pieces[i][j-1], pieces[i-1][j-1], pieces[i-2][j])  ||
                  chkTypeBy(pieces[i][j-1], pieces[i-1][j], pieces[i-2][j])    ||
                  chkTypeBy(pieces[i][j-1], pieces[i-1][j], pieces[i-2][j-1]))) {
-//          log(pieces[i][j]);
+          log(pieces[i][j]);
           return true;
         }
         else if (i-2 >= 0 && j+1 < COL &&

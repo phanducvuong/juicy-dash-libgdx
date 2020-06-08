@@ -801,7 +801,7 @@ public class Item extends Group {
     else if (type == Type.jam)
       lbScore.setText("+" + SCORE_JAM);
     else if (type == Type.clock)
-      lbScore.setText("+" + SCORE_CLOCK);
+      lbScore.setText("+" + ADD_SECOND);
   }
 
   public void setScoreLb(int score) {
