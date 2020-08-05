@@ -40,8 +40,8 @@ public class CrossPanel extends Group {
     this.getColor().a = 0f;
     this.setScale(0);
 
-    Label lbTitle = new Label(C.lang.locale.get("other_games"), new Label.LabelStyle(Config.brownFont, null));
-    lbTitle.setFontScale(.85f);
+    Label lbTitle = new Label(C.lang.locale.get("other_games"), new Label.LabelStyle(Config.whiteFont, null));
+    lbTitle.setFontScale(1.75f);
     lbTitle.setAlignment(Align.center);
     lbTitle.setPosition(bgCross.getX() + bgCross.getWidth()/2 - lbTitle.getWidth()/2, 40);
     this.addActor(lbTitle);
@@ -62,10 +62,10 @@ public class CrossPanel extends Group {
       gBox.addActor(box);
 
       if (i <= 1)
-        gBox.setPosition(bgCross.getX() + 50 + (box.getWidth() + 55)*i, bgCross.getY() + 170);
+        gBox.setPosition(bgCross.getX() + 90 + (box.getWidth() + 55)*i, bgCross.getY() + 190);
       else
-        gBox.setPosition(bgCross.getX() + 50 + (box.getWidth() + 55)*(3-i),
-                         bgCross.getY() + box.getHeight() + 220);
+        gBox.setPosition(bgCross.getX() + 90 + (box.getWidth() + 55)*(3-i),
+                         bgCross.getY() + box.getHeight() + 260);
 
       lsBoxGames.add(gBox);
     }
@@ -94,8 +94,8 @@ public class CrossPanel extends Group {
           Group gIcon = lsBoxGames.get(loadedItems.indexOf(item));
           Image actor = new Image(new TextureRegionDrawable(item.getItemTexture()));
           actor.setOrigin(Align.center);
-          actor.setSize(150, 180);
-          actor.setScale(1f, -1f);
+          actor.setScale(.8f, -.9f);
+//          actor.setSize(150, 160);
           actor.setPosition(gIcon.getWidth()/2 - actor.getWidth()/2, 8);
           gIcon.addActor(actor);
           gIcon.getChildren().get(0).setZIndex(1000);
@@ -126,7 +126,7 @@ public class CrossPanel extends Group {
       }
     }, loadItems);
 
-    Image btnX = GUI.createImage(GMain.bgAtlas, "icon_exit");
+    Image btnX = GUI.createImage(GMain.popupAtlas, "btn_x_popup");
     btnX.setOrigin(Align.center);
     btnX.setPosition(bgCross.getX() + bgCross.getWidth() - btnX.getWidth() + 60, -50);
     this.addActor(btnX);

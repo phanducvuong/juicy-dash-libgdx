@@ -51,8 +51,9 @@ public class Item extends Group {
       createAnimFruit();
       createAnimIce();
     }
-    else
+    else {
       createAnimSpecialItem();
+    }
 
   }
 

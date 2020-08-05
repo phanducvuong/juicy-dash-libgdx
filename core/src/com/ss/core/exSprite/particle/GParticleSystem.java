@@ -31,6 +31,12 @@ public class GParticleSystem extends Pool implements Disposable {
       registerParticleSystemUpdate();
    }
 
+   /*
+   * var1   : name particle
+   * var2   : atlas particle
+   * var3   : default 1
+   * var4   : default 1
+   * */
    public GParticleSystem(String var1, int var2, int var3) {
       super(var2, var3);
       this.defaultGroup = GLayer.ui.getGroup();

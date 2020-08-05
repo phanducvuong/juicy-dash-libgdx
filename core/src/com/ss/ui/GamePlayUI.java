@@ -20,6 +20,7 @@ import com.ss.config.C;
 import com.ss.config.Config;
 import com.ss.controller.GameUIController;
 import com.ss.core.effect.SoundEffects;
+import com.ss.core.exSprite.particle.GParticleSystem;
 import com.ss.core.util.GStage;
 import com.ss.core.util.GUI;
 import com.ss.gameLogic.effects.Particle;
@@ -282,7 +283,7 @@ public class GamePlayUI extends Group {
 
     //label: skill item
     Image bgSkill   = GUI.createImage(GMain.bgAtlas, "bg_skill");
-    bgSkill.setPosition(bgTable.getX(), bgTable.getY() - bgSkill.getHeight());
+    bgSkill.setPosition(bgTable.getX(), bgTable.getY() - bgSkill.getHeight() - 10);
     gBackground.addActor(bgSkill);
 
     //label: skill star
@@ -290,8 +291,8 @@ public class GamePlayUI extends Group {
     Image iStar = GUI.createImage(GMain.itemAtlas, "item_star");
     gItemStar.setSize(iStar.getWidth(), iStar.getHeight());
     gItemStar.setOrigin(Align.center);
-    gItemStar.setPosition(bgSkill.getX() + bgSkill.getWidth()/2 - gItemStar.getWidth() - 5,
-            bgSkill.getY() + bgSkill.getHeight()/2 - gItemStar.getHeight()/2 - 10);
+    gItemStar.setPosition(bgSkill.getX() + bgSkill.getWidth()/2 - gItemStar.getWidth() - 20,
+            bgSkill.getY() + bgSkill.getHeight()/2 - gItemStar.getHeight()/2 - 5);
     gItemStar.addActor(iStar);
     gItem.addActor(gItemStar);
 
@@ -309,14 +310,14 @@ public class GamePlayUI extends Group {
     Image iBoom = GUI.createImage(GMain.itemAtlas, "item_boom");
     gItemBoom.setSize(iBoom.getWidth(), iBoom.getHeight());
     gItemBoom.setOrigin(Align.center);
-    gItemBoom.setPosition(bgSkill.getX() + bgSkill.getWidth()/2 + 20,
-            bgSkill.getY() + bgSkill.getHeight()/2 - gItemBoom.getHeight()/2 - 10);
+    gItemBoom.setPosition(bgSkill.getX() + bgSkill.getWidth()/2 + 15,
+            bgSkill.getY() + bgSkill.getHeight()/2 - gItemBoom.getHeight()/2 - 5);
     gItemBoom.addActor(iBoom);
     gItem.addActor(gItemBoom);
 
     lbAmountBoom = new Label(controller.amountItemBoom+"", new Label.LabelStyle(Config.greenFont, null));
     lbAmountBoom.setFontScale(.6f);
-    lbAmountBoom.setPosition(iBoom.getX() + iBoom.getWidth()/2, iBoom.getY() + iBoom.getHeight()/2);
+    lbAmountBoom.setPosition(iBoom.getX() + iBoom.getWidth()/2 + 10, iBoom.getY() + iBoom.getHeight()/2);
     gItemBoom.addActor(lbAmountBoom);
 
     itemBoom = GUI.createImage(GMain.itemAtlas, "item_boom");
@@ -448,7 +449,7 @@ public class GamePlayUI extends Group {
     Label lbAdsTime = new Label(locale.get("quote_ads_time"), new Label.LabelStyle(Config.whiteFont, null));
     lbAdsTime.setAlignment(Align.center);
     lbAdsTime.setFontScale(1.1f, 1.2f);
-    lbAdsTime.setPosition(bg.getX() + bg.getWidth()/2 - lbAdsTime.getWidth()/2,
+    lbAdsTime.setPosition(bg.getX() + bg.getWidth()/2 - lbAdsTime.getWidth()/2 + 10,
                           bg.getY() + bg.getHeight()/2 - 100);
     gPopupAdsTime.addActor(lbAdsTime);
 
@@ -456,14 +457,16 @@ public class GamePlayUI extends Group {
                                      locale.get("txt_ads_time"), Config.greenFont);
     btnOkAdsTime.setPosition(bg.getX() + bg.getWidth()/2 - btnOkAdsTime.getWidth()/2,
                              bg.getY() + bg.getHeight()/2 + btnOkAdsTime.getHeight()*2);
-    btnOkAdsTime.movebyLb(0, -15);
-    btnOkAdsTime.setFontScale(.85f, .85f);
+    btnOkAdsTime.movebyLb(10, -12);
+    btnOkAdsTime.setScale(1.25f);
+    btnOkAdsTime.setFontScale(.7f, .7f);
     gPopupAdsTime.addActor(btnOkAdsTime);
 
-    Image btnX = GUI.createImage(GMain.bgAtlas, "icon_exit");
+    Image btnX = GUI.createImage(GMain.popupAtlas, "btn_x_popup");
     btnX.setScale(.9f);
     btnX.setOrigin(Align.center);
-    btnX.setPosition(bg.getX() + bg.getWidth() - btnX.getWidth()/2,bg.getX() - btnX.getHeight()/2);
+    btnX.setScale(.8f);
+    btnX.setPosition(bg.getX() + bg.getWidth() - btnX.getWidth()/2 - 60,bg.getX() - btnX.getHeight()/2 + 70);
     gPopupAdsTime.addActor(btnX);
 
     gPopupAdsTime.setScale(0f);
@@ -519,13 +522,14 @@ public class GamePlayUI extends Group {
 
     btnOKPopupAdsSkill = new Button(GMain.popupAtlas, "btn_ok_ads_time", locale.get("txt_ads_time"), Config.greenFont);
     btnOKPopupAdsSkill.setFontScale(.8f);
-    btnOKPopupAdsSkill.movebyLb(0, -15);
+    btnOKPopupAdsSkill.movebyLb(10, -15);
     btnOKPopupAdsSkill.setPosition(bg.getX() + bg.getWidth()/2 - btnOKPopupAdsSkill.getWidth()/2,
-                                   bg.getY() + bg.getHeight() - btnOKPopupAdsSkill.getHeight() - 50);
+                                   bg.getY() + bg.getHeight() - btnOKPopupAdsSkill.getHeight() - 70);
     gPopupAdsSkill.addActor(btnOKPopupAdsSkill);
 
-    imgBtnXPopupSkill = GUI.createImage(GMain.bgAtlas, "icon_exit");
-    imgBtnXPopupSkill.setPosition(bg.getX() + bg.getWidth() - 25, -imgBtnXPopupSkill.getHeight()/2);
+    imgBtnXPopupSkill = GUI.createImage(GMain.popupAtlas, "btn_x_popup");
+    imgBtnXPopupSkill.setScale(.8f);
+    imgBtnXPopupSkill.setPosition(bg.getX() + bg.getWidth() - 110, -imgBtnXPopupSkill.getHeight()/2 + 70);
     gPopupAdsSkill.addActor(imgBtnXPopupSkill);
 
     gPopupAdsSkill.getColor().a = 0f;
@@ -535,7 +539,7 @@ public class GamePlayUI extends Group {
     btnClick(btnOKPopupAdsSkill, () -> {
       //todo: if ads success
       if (imgPopupAdsSkillStar.isVisible()) {
-        System.out.println("STAR");
+//        System.out.println("STAR");
         if (GMain.platform.isVideoRewardReady())
           GMain.platform.ShowVideoReward((success -> {
             if (success) {
@@ -548,7 +552,7 @@ public class GamePlayUI extends Group {
           }));
       }
       else {
-        System.out.println("BOOM");
+//        System.out.println("BOOM");
         if (GMain.platform.isVideoRewardReady())
           GMain.platform.ShowVideoReward((success -> {
             if (success) {
@@ -583,43 +587,48 @@ public class GamePlayUI extends Group {
     gPopupGameOver.setPosition(CENTER_X - gPopupGameOver.getWidth()/2, CENTER_Y - gPopupGameOver.getHeight()/2);
     gPopupGameOver.addActor(bg);
 
-    Label lbGameOver = new Label(locale.get("game_over"), new Label.LabelStyle(Config.brownFont, null));
-    lbGameOver.setAlignment(Align.center);
-    lbGameOver.setPosition(bg.getX() + bg.getWidth()/2 - lbGameOver.getWidth()/2,
-                           bg.getY() + 80);
-    gPopupGameOver.addActor(lbGameOver);
+//    Label lbGameOver = new Label(locale.get("game_over"), new Label.LabelStyle(Config.brownFont, null));
+//    lbGameOver.setAlignment(Align.center);
+//    lbGameOver.setPosition(bg.getX() + bg.getWidth()/2 - lbGameOver.getWidth()/2,
+//                           bg.getY() + 80);
+//    gPopupGameOver.addActor(lbGameOver);
+
+    Image ribbonGameOver = GUI.createImage(GMain.popupAtlas, "ribbon_game_over");
+    ribbonGameOver.setPosition(bg.getX() + bg.getWidth()/2 - ribbonGameOver.getWidth()/2,
+                                  bg.getY() + 40);
+    gPopupGameOver.addActor(ribbonGameOver);
 
     Label lbRound = new Label(locale.get("txt_round"), new Label.LabelStyle(Config.greenFont, null));
     lbRound.setFontScale(.6f);
-    lbRound.setPosition(bg.getX() + 60, bg.getY() + 270);
+    lbRound.setPosition(bg.getX() + 80, bg.getY() + 220);
     gPopupGameOver.addActor(lbRound);
 
     lbRoundGameOver = new Label(controller.round+"", new Label.LabelStyle(Config.greenFont, null));
     lbRoundGameOver.setFontScale(.6f);
     lbRoundGameOver.setAlignment(Align.right);
-    lbRoundGameOver.setPosition(lbRound.getX() + bg.getWidth() - 120 - lbRoundGameOver.getWidth(), lbRound.getY());
+    lbRoundGameOver.setPosition(lbRound.getX() + bg.getWidth() - 160 - lbRoundGameOver.getWidth(), lbRound.getY());
     gPopupGameOver.addActor(lbRoundGameOver);
 
     Label lbScore = new Label(locale.get("txt_score") + ":", new Label.LabelStyle(Config.greenFont, null));
     lbScore.setFontScale(.6f);
-    lbScore.setPosition(lbRound.getX(), lbRound.getY() + 80);
+    lbScore.setPosition(lbRound.getX(), lbRound.getY() + 100);
     gPopupGameOver.addActor(lbScore);
 
     lbScoreGameOver = new Label("15000000", new Label.LabelStyle(Config.greenFont, null));
     lbScoreGameOver.setFontScale(.6f);
     lbScoreGameOver.setAlignment(Align.right);
-    lbScoreGameOver.setPosition(lbScore.getX() + bg.getWidth() - 120 - lbScoreGameOver.getWidth(), lbScore.getY());
+    lbScoreGameOver.setPosition(lbScore.getX() + bg.getWidth() - 160 - lbScoreGameOver.getWidth(), lbScore.getY());
     gPopupGameOver.addActor(lbScoreGameOver);
 
     Label lbGoal = new Label(locale.get("txt_goal") + ":", new Label.LabelStyle(Config.greenFont, null));
     lbGoal.setFontScale(.6f);
-    lbGoal.setPosition(lbScore.getX(), lbScore.getY() + 80);
+    lbGoal.setPosition(lbScore.getX(), lbScore.getY() + 100);
     gPopupGameOver.addActor(lbGoal);
 
     lbGoalGameOver = new Label("15000000", new Label.LabelStyle(Config.greenFont, null));
     lbGoalGameOver.setFontScale(.6f);
     lbGoalGameOver.setAlignment(Align.right);
-    lbGoalGameOver.setPosition(lbGoal.getX() + bg.getWidth() - 120 - lbGoalGameOver.getWidth(), lbGoal.getY());
+    lbGoalGameOver.setPosition(lbGoal.getX() + bg.getWidth() - 160 - lbGoalGameOver.getWidth(), lbGoal.getY());
     gPopupGameOver.addActor(lbGoalGameOver);
 
     Image btnRestart = GUI.createImage(GMain.bgAtlas, "icon_restart");

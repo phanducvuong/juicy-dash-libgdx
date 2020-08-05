@@ -55,6 +55,8 @@ public class StartUI extends Group {
     SoundEffects.startMusic();
     initBg();
 
+    System.out.println("JSON: " + Config.OTHER_GAME_STRING);
+
   }
 
   private void initBg() {
@@ -68,17 +70,17 @@ public class StartUI extends Group {
     gBackground.addActor(title);
 
     dashTop = GUI.createImage(GMain.bgAtlas, "dash_top");
-    dashTop.setPosition(CENTER_X - dashTop.getWidth()/2, CENTER_Y - dashTop.getHeight()/2 - 80);
+    dashTop.setPosition(CENTER_X - dashTop.getWidth()/2, CENTER_Y - dashTop.getHeight()/2 - 200);
     gBackground.addActor(dashTop);
 
     dashBottom = GUI.createImage(GMain.bgAtlas, "dash_bottom");
-    dashBottom.setPosition(dashTop.getX() + 128, dashTop.getY() + dashTop.getHeight() - 120);
+    dashBottom.setPosition(dashTop.getX(), dashTop.getY() + dashTop.getHeight() - 120);
     gBackground.addActor(dashBottom);
 
     btnStart = GUI.createImage(GMain.bgAtlas, "icon_start");
     btnStart.setScale(1.3f);
     btnStart.setOrigin(Align.center);
-    btnStart.setPosition(CENTER_X - btnStart.getWidth()/2, CENTER_Y*2 - btnStart.getHeight() - 80);
+    btnStart.setPosition(CENTER_X - btnStart.getWidth()/2, CENTER_Y*2 - btnStart.getHeight() - 120);
     gBackground.addActor(btnStart);
 
     //label: btnSound
@@ -167,13 +169,13 @@ public class StartUI extends Group {
 
   public void animObjectStart() {
     title.addAction(
-            moveTo(CENTER_X - title.getWidth()/2, 150, .5f, swingOut)
+            moveTo(CENTER_X - title.getWidth()/2, 100, .85f, bounceOut)
     );
 
     dashBottom.addAction(
             sequence(
                     delay(.75f),
-                    Actions.moveBy(-50, 20, .35f, slowFast),
+                    Actions.moveBy(-20, 25, .35f, slowFast),
                     delay(.05f),
                     run(() -> animBtnStart(btnStart))
             )
@@ -188,7 +190,7 @@ public class StartUI extends Group {
     btnStart.clearActions();
 
     dashBottom.clearActions();
-    dashBottom.setPosition(dashTop.getX() + 128, dashTop.getY() + dashTop.getHeight() - 120);
+    dashBottom.setPosition(dashTop.getX(), dashTop.getY() + dashTop.getHeight() - 120);
   }
 
   private void animBtnStart(Image btn) {

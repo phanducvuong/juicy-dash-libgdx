@@ -38,28 +38,28 @@ public class Config {
 
   //label: load json
   private static final FileHandle JSON_GAMES              = Gdx.files.internal("other_games.json");
-  public  static final String     OTHER_GAME_STRING       = GMain.platform.GetConfigStringValue("", JSON_GAMES.readString());
+  public  static final String     OTHER_GAME_STRING       = GMain.platform.GetConfigStringValue("OTHER_GAME_STRING", JSON_GAMES.readString());
 
   //label: count item match to show wonder
-  public static final int     WONDER_LOVELY               = 8;
-  public static final int     WONDER_FANTASTIC            = 12;
-  public static final int     WONDER_AWESOME              = 15;
-  public static final int     WONDER_AMAZING              = 20;
+  public static final int     WONDER_LOVELY               = GMain.platform.GetConfigIntValue("WONDER_LOVELY", 8);
+  public static final int     WONDER_FANTASTIC            = GMain.platform.GetConfigIntValue("WONDER_FANTASTIC", 12);
+  public static final int     WONDER_AWESOME              = GMain.platform.GetConfigIntValue("WONDER_AWESOME", 15);
+  public static final int     WONDER_AMAZING              = GMain.platform.GetConfigIntValue("WONDER_AMAZING", 20);
 
   //label: amount item
   public static final int     AMOUNT_ITEM_CREATE          = 49;
   public static final int     AMOUNT_ITEM                 = 13;
-  public static final int     SCORE_FRUIT                 = 40;
+  public static final int     SCORE_FRUIT                 = GMain.platform.GetConfigIntValue("SCORE_FRUIT", 40);
   public static final int     NEXT_LEVEL                  = 2;
   public static final long    TARGET                      = 3000;
-  public static final long    TARGET_INCREASE             = 1000;
-  public static final long    MAX_TARGET_INCREASE         = 10000;
-  public static final int     ADD_SECOND                  = 15;
-  public static final int     TIME_START_GAME             = 120;
+  public static final long    TARGET_INCREASE             = GMain.platform.GetConfigIntValue("TARGET_INCREASE", 1000);
+  public static final long    MAX_TARGET_INCREASE         = GMain.platform.GetConfigIntValue("MAX_TARGET_INCREASE", 10000);
+  public static final int     ADD_SECOND                  = GMain.platform.GetConfigIntValue("ADD_SECOND", 15);
+  public static final int     TIME_START_GAME             = GMain.platform.GetConfigIntValue("TIME_START_GAME", 120);
   public static final int     TIME_DECREASE               = 10;
-  public static final int     TIME_WATCH_ADS              = 30;
-  public static final int     MIN_TIME_EXPIRED            = 70;
-  public static final int     TIME_MINUS                  = 10;
+  public static final int     TIME_WATCH_ADS              = GMain.platform.GetConfigIntValue("TIME_WATCH_ADS", 30);
+  public static final int     MIN_TIME_EXPIRED            = GMain.platform.GetConfigIntValue("MIN_TIME_EXPIRED", 70);
+  public static final int     TIME_MINUS                  = GMain.platform.GetConfigIntValue("TIME_MINUS", 10);
 
   //label: game play ui
   public static final float   OFFSET_Y_BG_TABLE           = 110;
@@ -75,20 +75,20 @@ public class Config {
   public static final float   WRAP_ITEM                   = .25f;
   public static final float   TIME_DELAY_TO_CHECK_ALL     = .35f;
   public static final float   TIME_SLIDE                  = .3f;
-  public static final int     AMOUNT_SKILL_STAR           = 5;
-  public static final int     AMOUNT_SKILL_BOOM           = 5;
+  public static final int     AMOUNT_SKILL_STAR           = GMain.platform.GetConfigIntValue("AMOUNT_SKILL_STAR", 5);
+  public static final int     AMOUNT_SKILL_BOOM           = GMain.platform.GetConfigIntValue("AMOUNT_SKILL_BOOM", 5);
 
   //label: watch ads to get item
-  public static final int     ADS_SKILL_STAR              = 2;
-  public static final int     ADS_SKILL_BOOM              = 1;
+  public static final int     ADS_SKILL_STAR              = GMain.platform.GetConfigIntValue("ADS_SKILL_STAR", 4);
+  public static final int     ADS_SKILL_BOOM              = GMain.platform.GetConfigIntValue("ADS_SKILL_BOOM", 2);
 
   //label: score item
 //  public static final int     SCORE_FRUIT               = 40;
-  public static final int     SCORE_GLASS_JUICE           = 60;
-  public static final int     SCORE_JAM                   = 80;
-  public static final int     SCORE_CLOCK                 = 70;
-  public static final int     SCORE_SKILL_JAM             = 120;
-  public static final int     SCORE_SKILL_GLASS_JUICE     = 100;
+  public static final int     SCORE_GLASS_JUICE           = GMain.platform.GetConfigIntValue("SCORE_GLASS_JUICE", 60);
+  public static final int     SCORE_JAM                   = GMain.platform.GetConfigIntValue("SCORE_JAM", 80);
+  public static final int     SCORE_CLOCK                 = GMain.platform.GetConfigIntValue("SCORE_CLOCK", 70);
+  public static final int     SCORE_SKILL_JAM             = GMain.platform.GetConfigIntValue("SCORE_SKILL_JAM", 120);
+  public static final int     SCORE_SKILL_GLASS_JUICE     = GMain.platform.GetConfigIntValue("SCORE_SKILL_GLASS_JUICE", 100);
 
   //label: volume sound
   public static final float   MUSIC_VOLUME                = .8f;

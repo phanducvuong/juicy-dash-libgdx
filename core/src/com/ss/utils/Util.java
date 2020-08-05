@@ -27,19 +27,19 @@ public class Util {
 
     String r = "";
     switch (id) {
-      case 0: r = "item_grape"; break;
-      case 1: r = "item_banana"; break;
-      case 2: r = "item_kiwi"; break;
-      case 3: r = "item_orange"; break;
-      case 4: r = "item_apple"; break;
-      case 5: r = "item_strawberry"; break;
-      case 6: r = "item_lemon"; break;
-      case 7: r = "item_tomato"; break;
-      case 8: r = "item_blueberry"; break;
-      case 9: r = "item_glass_juice"; break;
-      case 10: r = "item_jam"; break;
-      case 11: r = "item_walnut"; break;
-      case 12: r = "item_clock"; break;
+      case 0:   r   = "item_grape"; break;
+      case 1:   r   = "item_banana"; break;
+      case 2:   r   = "item_kiwi"; break;
+      case 3:   r   = "item_orange"; break;
+      case 4:   r   = "item_apple"; break;
+      case 5:   r   = "item_strawberry"; break;
+      case 6:   r   = "item_lemon"; break;
+      case 7:   r   = "item_raspberry"; break;
+      case 8:   r   = "item_blueberry"; break;
+      case 9:   r   = "item_glass_juice"; break;
+      case 10:  r   = "item_jam"; break;
+      case 11:  r   = "item_walnut"; break;
+      case 12:  r   = "item_clock"; break;
     }
     return r;
 
@@ -88,7 +88,7 @@ public class Util {
       case 4:  t = Type.apple; break;
       case 5:  t = Type.strawberry; break;
       case 6:  t = Type.lemon; break;
-      case 7:  t = Type.tomato; break;
+      case 7:  t = Type.raspberry; break;
       case 8:  t = Type.blueberry; break;
       case 9:  t = Type.glass_fruit; break;
       case 10: t = Type.jam; break;

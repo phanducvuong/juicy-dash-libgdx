@@ -6,322 +6,322 @@ filter: Nearest,Nearest
 repeat: none
 006
   rotate: false
-  xy: 113, 2
+  xy: 619, 11
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 013
   rotate: false
-  xy: 645, 54
+  xy: 1832, 187
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 03412
   rotate: false
-  xy: 1363, 499
+  xy: 190, 136
   size: 254, 11
   orig: 254, 11
   offset: 0, 0
   index: -1
 038
   rotate: false
-  xy: 1363, 239
+  xy: 1327, 188
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 11-13
   rotate: false
-  xy: 1362, 190
+  xy: 1587, 269
   size: 47, 47
   orig: 47, 47
   offset: 0, 0
   index: -1
 13-2
   rotate: false
-  xy: 320, 25
+  xy: 842, 115
   size: 96, 93
   orig: 96, 93
   offset: 0, 0
   index: -1
 14-0
   rotate: false
-  xy: 190, 57
+  xy: 2, 2
   size: 128, 61
   orig: 128, 61
   offset: 0, 0
   index: -1
 14-1
   rotate: false
-  xy: 1493, 369
+  xy: 190, 6
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 2-6
   rotate: false
-  xy: 579, 54
+  xy: 1766, 187
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 207
   rotate: false
-  xy: 1623, 382
+  xy: 320, 6
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 26-1
   rotate: false
-  xy: 909, 185
+  xy: 1899, 380
   size: 128, 129
   orig: 128, 129
   offset: 0, 0
   index: -1
 4
   rotate: false
-  xy: 513, 54
+  xy: 1700, 187
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 5-3
   rotate: false
-  xy: 1039, 120
+  xy: 582, 79
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 5-5
   rotate: false
-  xy: 689, 14
+  xy: 1028, 106
   size: 38, 38
   orig: 38, 38
   offset: 0, 0
   index: -1
 FX_Nature_Leaf_3
   rotate: false
-  xy: 1169, 124
+  xy: 712, 80
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 L002
   rotate: false
-  xy: 418, 9
+  xy: 1102, 229
   size: 93, 109
   orig: 93, 109
   offset: 0, 0
   index: -1
 NPC_BigLong_skill4_1
   rotate: false
-  xy: 1493, 239
+  xy: 712, 210
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 NPC_Eyu_skill4_1
   rotate: false
-  xy: 909, 55
+  xy: 1457, 188
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 NPC_JuShou_skill3_2
   rotate: false
-  xy: 1883, 382
+  xy: 582, 209
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 PC_un_01
   rotate: false
-  xy: 1883, 252
+  xy: 1197, 188
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 SL_Charge_00_01
   rotate: false
-  xy: 1363, 369
+  xy: 1899, 250
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 SL_XiangZ_00_03
   rotate: false
-  xy: 1753, 382
+  xy: 450, 19
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 SL_XiangZ_00_04
   rotate: false
-  xy: 1623, 252
+  xy: 972, 210
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 SL_XiangZ_01_01
   rotate: false
-  xy: 1105, 254
+  xy: 1641, 253
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 SL_XiangZ_01_02
   rotate: false
-  xy: 777, 54
+  xy: 930, 37
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 SL_XiangZ_01_03
   rotate: false
-  xy: 1039, 250
+  xy: 1634, 187
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 amazing
   rotate: false
-  xy: 2, 120
-  size: 503, 194
-  orig: 503, 194
+  xy: 2, 149
+  size: 578, 188
+  orig: 578, 188
   offset: 0, 0
   index: -1
 awesome
   rotate: false
-  xy: 604, 316
-  size: 499, 194
-  orig: 499, 194
+  xy: 2, 339
+  size: 607, 170
+  orig: 607, 170
   offset: 0, 0
   index: -1
 bai01
   rotate: false
-  xy: 729, 16
+  xy: 580, 7
   size: 37, 36
   orig: 37, 36
   offset: 0, 0
   index: -1
 bai02
   rotate: false
-  xy: 1039, 57
+  xy: 1059, 147
   size: 37, 24
   orig: 37, 24
   offset: 0, 0
   index: -1
 bai07
   rotate: false
-  xy: 1169, 97
+  xy: 940, 146
   size: 117, 25
   orig: 117, 25
   offset: 0, 0
   index: -1
 bai08
   rotate: false
-  xy: 1039, 83
+  xy: 940, 173
   size: 128, 35
   orig: 128, 35
   offset: 0, 0
   index: -1
 fantastic
   rotate: false
-  xy: 2, 316
-  size: 600, 194
-  orig: 600, 194
+  xy: 611, 340
+  size: 589, 169
+  orig: 589, 169
   offset: 0, 0
   index: -1
 feng1
   rotate: false
-  xy: 2, 2
+  xy: 580, 45
   size: 109, 32
   orig: 109, 32
   offset: 0, 0
   index: -1
 guang02
   rotate: false
-  xy: 2, 36
+  xy: 2, 65
   size: 186, 82
   orig: 186, 82
   offset: 0, 0
   index: -1
 liuxing6
   rotate: false
-  xy: 601, 11
+  xy: 940, 103
   size: 86, 41
   orig: 86, 41
   offset: 0, 0
   index: -1
 liuxing7
   rotate: false
-  xy: 513, 11
+  xy: 842, 72
   size: 86, 41
   orig: 86, 41
   offset: 0, 0
   index: -1
 lovely
   rotate: false
-  xy: 507, 120
-  size: 400, 194
-  orig: 400, 194
+  xy: 1202, 318
+  size: 437, 191
+  orig: 437, 191
   offset: 0, 0
   index: -1
 spark-alt2
   rotate: false
-  xy: 1753, 252
+  xy: 842, 210
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 wsparticle
   rotate: false
-  xy: 843, 54
+  xy: 1964, 184
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 wsparticle37
   rotate: false
-  xy: 711, 54
+  xy: 1898, 184
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 wujiaoxing
   rotate: false
-  xy: 1411, 193
+  xy: 1587, 177
   size: 45, 44
   orig: 45, 44
   offset: 0, 0
   index: -1
 wujiaoxing0
   rotate: false
-  xy: 1458, 193
+  xy: 1587, 223
   size: 45, 44
   orig: 45, 44
   offset: 0, 0
   index: -1
 yezi
   rotate: false
-  xy: 1505, 202
+  xy: 1070, 173
   size: 38, 35
   orig: 38, 35
   offset: 0, 0
   index: -1
 yf14
   rotate: false
-  xy: 1299, 191
+  xy: 996, 40
   size: 61, 61
   orig: 61, 61
   offset: 0, 0
   index: -1
 yf2
   rotate: false
-  xy: 1299, 128
+  xy: 132, 2
   size: 55, 61
   orig: 55, 61
   offset: 0, 0

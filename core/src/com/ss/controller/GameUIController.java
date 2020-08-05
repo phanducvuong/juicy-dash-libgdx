@@ -62,12 +62,12 @@ public class GameUIController {
   public  int     round             = 0;
   private float   sclTime;
   public  long    target,
-                  scorePre          = 0; //điểm hiện tại của user
-  private long    dtScore           = 0, //target tăng lên mỗi khi user qua màn (dtScore dùng để tính clipping)
-                  sumScoreEachTurn  = 0, //cộng dồn điểm mỗi khi match => dùng để tính clipping
+                  scorePre          = 0;                //điểm hiện tại của user
+  private long    dtScore           = 0,                //target tăng lên mỗi khi user qua màn (dtScore dùng để tính clipping)
+                  sumScoreEachTurn  = 0,                //cộng dồn điểm mỗi khi match => dùng để tính clipping
                   targetIncrease,
-                  tmpScore,              //tmpScore: điểm mỗi khi ăn trái cây để update scorePre
-                  countScoreToShowWonder;              //tmpScore: điểm mỗi khi ăn trái cây để update scorePre
+                  tmpScore,                             //tmpScore: điểm mỗi khi ăn trái cây để update scorePre
+                  countScoreToShowWonder;               //tmpScore: điểm mỗi khi ăn trái cây để update scorePre
 
   public boolean  isCompleteRound         = true,
                   isTutorial;
@@ -116,7 +116,6 @@ public class GameUIController {
     eventTouchScreen();
 
     //label: test animation
-
     Image icon = GUI.createImage(GMain.bgAtlas, "icon_pause");
     icon.setPosition(500, 20);
 //    gParent.addActor(icon);
@@ -124,13 +123,10 @@ public class GameUIController {
     Particle wonder = new Particle(gParent, WONDER, GMain.particleAtlas);
     wonder.initLsEmitter();
 
-    Item item = util.getItemBy(hmItem, "walnut");
-
     icon.addListener(new ClickListener() {
       @Override
       public void clicked(InputEvent event, float x, float y) {
         super.clicked(event, x, y);
-
         addSpecialItemAtRndPos();
 
       }
@@ -812,8 +808,7 @@ public class GameUIController {
         gamePlayUI.gBackground.addAction(GSimpleAction.simpleAction(this::action));
     }
     else {
-      //todo: fillAll
-//      System.out.println("FINISHED!");
+      //todo: fill all
       gamePlayUI.gBackground.addAction(
               sequence(
                       delay(TIME_DELAY_TO_CHECK_ALL),
@@ -991,10 +986,12 @@ public class GameUIController {
     int idItem  = (int) (Math.round(Math.random() * 1));
 
     String key;
-    if (idItem == 0)
+    if (idItem == 0) {
       key = "item_glass_juice";
-    else
+    }
+    else {
       key = "item_jam";
+    }
 
     addItemAt(arrPosPiece[row][col], key);
   }
@@ -1276,7 +1273,7 @@ public class GameUIController {
 
   private void findItemIsAbleMatchInBoard() {
     if (!util.findItemIsMatchInBoard(arrPosPiece)) {
-      System.out.println("CAN'T");
+//      System.out.println("CAN'T");
       addSpecialItemAtRndPos();
     }
   }

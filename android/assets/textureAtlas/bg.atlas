@@ -6,23 +6,23 @@ filter: Nearest,Nearest
 repeat: none
 arrow
   rotate: false
-  xy: 1599, 884
+  xy: 1940, 1414
   size: 66, 34
   orig: 66, 34
   offset: 0, 0
   index: -1
 bg
   rotate: false
-  xy: 2, 743
+  xy: 2, 754
   size: 720, 1280
   orig: 720, 1280
   offset: 0, 0
   index: -1
 bg_home
   rotate: false
-  xy: 724, 1123
-  size: 700, 900
-  orig: 700, 900
+  xy: 724, 754
+  size: 720, 1280
+  orig: 720, 1280
   offset: 0, 0
   index: -1
 bg_line
@@ -34,155 +34,155 @@ bg_line
   index: -1
 bg_round
   rotate: false
-  xy: 1426, 1248
+  xy: 1446, 1259
   size: 492, 189
   orig: 492, 189
   offset: 0, 0
   index: -1
 bg_skill
   rotate: false
-  xy: 940, 404
-  size: 270, 118
-  orig: 270, 118
+  xy: 1115, 402
+  size: 237, 120
+  orig: 237, 120
   offset: 0, 0
   index: -1
 bg_table
   rotate: false
   xy: 2, 48
-  size: 700, 693
-  orig: 700, 693
+  size: 728, 704
+  orig: 728, 704
   offset: 0, 0
   index: -1
 bg_tuto_2
   rotate: false
-  xy: 1407, 825
+  xy: 1446, 793
   size: 190, 93
   orig: 190, 93
   offset: 0, 0
   index: -1
 bg_tuto_9
   rotate: false
-  xy: 1407, 920
+  xy: 732, 195
   size: 286, 193
   orig: 286, 193
   offset: 0, 0
   index: -1
 dash_bottom
   rotate: false
-  xy: 1426, 1115
-  size: 484, 131
-  orig: 484, 131
+  xy: 732, 390
+  size: 381, 132
+  orig: 381, 132
   offset: 0, 0
   index: -1
 dash_top
   rotate: false
-  xy: 724, 588
-  size: 734, 231
-  orig: 734, 231
+  xy: 1446, 1128
+  size: 367, 129
+  orig: 367, 129
   offset: 0, 0
   index: -1
 i_games
   rotate: false
-  xy: 842, 206
+  xy: 1820, 1000
   size: 136, 140
   orig: 136, 140
   offset: 0, 0
   index: -1
 icon_exit
   rotate: false
-  xy: 1212, 407
+  xy: 1815, 1142
   size: 115, 115
   orig: 115, 115
   offset: 0, 0
   index: -1
 icon_home
   rotate: false
-  xy: 704, 64
+  xy: 1158, 260
   size: 136, 140
   orig: 136, 140
   offset: 0, 0
   index: -1
 icon_pause
   rotate: false
-  xy: 1920, 1325
+  xy: 732, 49
   size: 108, 112
   orig: 108, 112
   offset: 0, 0
   index: -1
 icon_rank
   rotate: false
-  xy: 842, 64
+  xy: 1820, 858
   size: 136, 140
   orig: 136, 140
   offset: 0, 0
   index: -1
 icon_restart
   rotate: false
-  xy: 1695, 973
+  xy: 1682, 986
   size: 136, 140
   orig: 136, 140
   offset: 0, 0
   index: -1
 icon_sound_off
   rotate: false
-  xy: 1460, 541
+  xy: 1359, 612
   size: 136, 140
   orig: 136, 140
   offset: 0, 0
   index: -1
 icon_sound_on
   rotate: false
-  xy: 704, 206
+  xy: 1020, 248
   size: 136, 140
   orig: 136, 140
   offset: 0, 0
   index: -1
 icon_start
   rotate: false
-  xy: 704, 348
+  xy: 1446, 888
   size: 234, 238
   orig: 234, 238
   offset: 0, 0
   index: -1
 icon_tutorial
   rotate: false
-  xy: 1460, 683
+  xy: 1682, 844
   size: 136, 140
   orig: 136, 140
   offset: 0, 0
   index: -1
 line_score
   rotate: false
-  xy: 940, 556
+  xy: 385, 16
   size: 366, 30
   orig: 366, 30
   offset: 0, 0
   index: -1
 line_time
   rotate: false
-  xy: 940, 524
+  xy: 732, 163
   size: 366, 30
   orig: 366, 30
   offset: 0, 0
   index: -1
 popup_start
   rotate: false
-  xy: 1426, 1439
+  xy: 1446, 1450
   size: 581, 584
   orig: 581, 584
   offset: 0, 0
   index: -1
 shadow
   rotate: false
-  xy: 385, 6
+  xy: 1020, 206
   size: 83, 40
   orig: 83, 40
   offset: 0, 0
   index: -1
 title
   rotate: false
-  xy: 724, 821
-  size: 681, 300
-  orig: 681, 300
+  xy: 732, 524
+  size: 625, 228
+  orig: 625, 228
   offset: 0, 0
   index: -1

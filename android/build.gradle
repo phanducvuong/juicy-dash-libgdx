@@ -17,7 +17,7 @@ android {
         exclude 'META-INF/robovm/ios/robovm.xml'
     }
     defaultConfig {
-        applicationId "com.jkstudiogroup.lieng"
+        applicationId "com.matchfruit"
         minSdkVersion 16
         targetSdkVersion 29
         versionCode 1

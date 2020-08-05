@@ -9,10 +9,12 @@ import com.ss.GMain;
 public class DesktopLauncher {
   public static void main (String[] arg) {
     LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-    config.width = 720/2;
-    config.height = 1280/2;
-    config.samples = 2;
-    config.x = 1000;
+
+    config.width    = 720/2;
+    config.height   = 1280/2;
+    config.samples  = 2;
+    config.x        = 1000;
+
     GMain game = new GMain(new IPlatform() {
       @Override
       public void log(String str) {

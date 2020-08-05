@@ -8,10 +8,15 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.I18NBundle;
 import com.ss.GMain;
 import static com.ss.config.Config.*;
+
+import com.ss.config.C;
+import com.ss.config.Config;
 import com.ss.controller.GameUIController;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 import com.ss.core.util.GStage;
@@ -27,11 +32,13 @@ public class TutorialUI extends Group {
 
   private GameUIController controller;
   private Util             util;
+  private I18NBundle       locale       = C.lang.locale;
 
   private Image            black,
                            bgTuto9,
                            bgTuto2;
   private Image            arrowL, arrowR;
+  private Label            lbTutorial;
 
   private Piece            pStart, pEnd;
   private boolean          isAnimArr    = true;
@@ -53,11 +60,15 @@ public class TutorialUI extends Group {
     this.black      = new Image(Solid.create(new Color(0/255f, 0/255f, 0/255f, .35f)));
     this.black.setSize(GStage.getWorldWidth(), GStage.getWorldHeight());
 
+    lbTutorial  = new Label(locale.get("txt_tutorial_9"), new Label.LabelStyle(whiteFont, null));
+    lbTutorial.setPosition(GStage.getWorldWidth()/2 - lbTutorial.getWidth()/2,
+                           GStage.getWorldHeight()/2 - 250);
+
     bgTuto9 = GUI.createImage(GMain.bgAtlas, "bg_tuto_9");
     bgTuto2 = GUI.createImage(GMain.bgAtlas, "bg_tuto_2");
 
-    arrowL = GUI.createImage(GMain.bgAtlas, "arrow");
-    arrowR = GUI.createImage(GMain.bgAtlas, "arrow");
+    arrowL  = GUI.createImage(GMain.bgAtlas, "arrow");
+    arrowR  = GUI.createImage(GMain.bgAtlas, "arrow");
 
     arrowL.setOrigin(Align.center);
     arrowR.setOrigin(Align.center);
@@ -165,13 +176,17 @@ public class TutorialUI extends Group {
     isWrap      = false;
     isTutoGlass = true;
     controller.setTouchableGamePlayUI(Touchable.disabled);
+    lbTutorial.setText(locale.get("txt_tutorial_glass"));
 
     this.addActor(black);
     this.addActor(bgTuto2);
+    this.addActor(lbTutorial);
 
     Vector2 pos = controller.arrPosPiece[4][3].pos;
     bgTuto2.setPosition(pos.x, pos.y);
     bgTuto2.setRotation(0);
+
+    lbTutorial.setPosition(bgTuto2.getX() - 100, bgTuto2.getY() - 200);
 
     arrowL.setPosition(pos.x + WIDTH_PIECE/2 + 15, pos.y + HEIGHT_PIECE/2 - 35);
     arrowR.setRotation(180);
@@ -199,12 +214,15 @@ public class TutorialUI extends Group {
     isWrap  = false;
     isTuto2 = true;
     controller.setTouchableGamePlayUI(Touchable.disabled);
+    lbTutorial.setText(locale.get("txt_tutorial_2"));
 
     this.addActor(black);
     this.addActor(bgTuto2);
+    this.addActor(lbTutorial);
 
     Vector2 pos = controller.arrPosPiece[4][4].pos;
     bgTuto2.setPosition(pos.x - WIDTH_PIECE/2, pos.y + HEIGHT_PIECE/2);
+    lbTutorial.setPosition(bgTuto2.getX() - 50, bgTuto2.getY() - 200);
 
     bgTuto2.setOrigin(Align.center);
     bgTuto2.setRotation(90);
@@ -236,9 +254,11 @@ public class TutorialUI extends Group {
     isWrap  = false;
     isTuto9 = true;
     controller.setTouchableGamePlayUI(Touchable.disabled);
+    lbTutorial.setText(locale.get("txt_tutorial_9"));
 
     this.addActor(black);
     this.addActor(bgTuto9);
+    this.addActor(lbTutorial);
 
     Vector2 pos = controller.arrPosPiece[3][2].pos;
     bgTuto9.setPosition(pos.x, pos.y);
@@ -314,6 +334,8 @@ public class TutorialUI extends Group {
     arrowR.clearActions();
     arrowL.setRotation(0);
     arrowR.setRotation(0);
+
+    lbTutorial.remove();
 
     for (Item item : lsItem) {
       item.isAlive = false;

@@ -13,7 +13,7 @@ import java.util.HashMap;
 
 public class Particle {
 
-  private ParticleEffects               particle;
+  private ParticleEffects                 particle;
   private HashMap<Integer, Array<Sprite>> hmSpriteEmitter;
 
   public Particle(Group group, FileHandle fileParticle, TextureAtlas atlas) {
@@ -41,8 +41,8 @@ public class Particle {
     resetSprite();
     for (int i=0; i<3; i++) {
       ParticleEmitter emitter = particle.pe.getEmitters().get(i);
-      Sprite s0 = emitter.getSprites().get(0);
-      Sprite s1 = emitter.getSprites().get(id);
+      Sprite          s0      = emitter.getSprites().get(0);
+      Sprite          s1      = emitter.getSprites().get(id);
 
       emitter.getSprites().set(0, s1);
       emitter.getSprites().set(id, s0);

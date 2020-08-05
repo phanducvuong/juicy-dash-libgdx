@@ -6,64 +6,78 @@ filter: Nearest,Nearest
 repeat: none
 box_games
   rotate: false
-  xy: 2, 96
-  size: 171, 217
-  orig: 171, 217
+  xy: 1870, 781
+  size: 169, 206
+  orig: 169, 206
   offset: 0, 0
   index: -1
 btn_blue
   rotate: false
-  xy: 1535, 954
+  xy: 766, 246
   size: 200, 61
   orig: 200, 61
   offset: 0, 0
   index: -1
 btn_ok_ads_time
   rotate: false
-  xy: 1006, 395
-  size: 232, 71
-  orig: 232, 71
+  xy: 579, 229
+  size: 185, 78
+  orig: 185, 78
+  offset: 0, 0
+  index: -1
+btn_x_popup
+  rotate: false
+  xy: 1870, 651
+  size: 122, 128
+  orig: 122, 128
   offset: 0, 0
   index: -1
 btn_yellow
   rotate: false
-  xy: 175, 252
+  xy: 968, 246
   size: 200, 61
   orig: 200, 61
   offset: 0, 0
   index: -1
 decor_left
   rotate: false
-  xy: 2, 2
+  xy: 1870, 462
   size: 133, 92
   orig: 133, 92
   offset: 0, 0
   index: -1
 decor_right
   rotate: false
-  xy: 1535, 859
+  xy: 1870, 556
   size: 127, 93
   orig: 127, 93
   offset: 0, 0
   index: -1
 pop_ads_time
   rotate: false
-  xy: 1006, 468
-  size: 527, 547
-  orig: 527, 547
+  xy: 579, 309
+  size: 693, 678
+  orig: 693, 678
   offset: 0, 0
   index: -1
 popup_game_over
   rotate: false
-  xy: 2, 315
-  size: 500, 700
-  orig: 500, 700
+  xy: 1274, 232
+  size: 594, 755
+  orig: 594, 755
   offset: 0, 0
   index: -1
 popup_games
   rotate: false
-  xy: 504, 315
-  size: 500, 700
-  orig: 500, 700
+  xy: 2, 180
+  size: 575, 807
+  orig: 575, 807
+  offset: 0, 0
+  index: -1
+ribbon_game_over
+  rotate: false
+  xy: 2, 2
+  size: 453, 176
+  orig: 453, 176
   offset: 0, 0
   index: -1
